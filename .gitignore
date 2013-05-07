@@ -1,0 +1,7 @@
+*.py[co]
+*~
+*.swp
+libreestatic/
+libreeDB/
+django.wsgi
+libree/localsettings.py

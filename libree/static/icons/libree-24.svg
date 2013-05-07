@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.1"
+   width="24"
+   height="24"
+   id="svg2">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6">
+    <linearGradient
+       id="linearGradient3103">
+      <stop
+         id="stop3105"
+         style="stop-color:#8b0000;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop3107"
+         style="stop-color:#ff2626;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       x1="31.196802"
+       y1="6.2071066"
+       x2="68.0718"
+       y2="40.957108"
+       id="linearGradient3109"
+       xlink:href="#linearGradient3103"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.5,0,0,0.5,13.223401,24.041053)" />
+  </defs>
+  <text
+     x="1.0606601"
+     y="11.095303"
+     id="text3006"
+     xml:space="preserve"
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><tspan
+       x="1.0606601"
+       y="11.095303"
+       id="tspan3008"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:TeXGyreCursor;-inkscape-font-specification:TeXGyreCursor Bold" /></text>
+  <g
+     transform="translate(-27.446803,-24.082107)"
+     id="text3010"
+     style="font-size:40px;font-style:italic;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Italic">
+    <path
+       d="m 32.446803,26.082107 -3.765625,13.21875 1.890625,-1.921875 -2.328125,8.703125 8.9375,0 0.84375,0 9.921875,0 1.203125,-3 -8.703125,0 2,-6 5,0 1,-3 -5.109375,0 0.546875,-1.96875 -2.0625,1.875 1.625,-4.90625 6.296875,0 0.703125,-3 z m 2,3 6,0 -1.109375,5 -5,0 0.625,-1.96875 -2.0625,1.875 z m -1,8 5,0 -0.84375,2.21875 1.890625,-1.921875 -1.046875,5.703125 -7,0 z"
+       id="path3021"
+       style="fill:url(#linearGradient3109);fill-opacity:1;stroke:none" />
+  </g>
+</svg>

@@ -1,0 +1,79 @@
+
+{% extends "tool.html" %}
+
+{% load render_tools %}
+{% load tools.resistor_codes %}
+
+{% block pagestyle %}
+.picker-header {
+    font-weight: bold;
+}
+
+{% print_styles %}
+
+{% endblock %}
+
+{% block toolcontent %}
+
+<div class="mode-selector">
+    <div class="btn-group" id="mode-selector">
+        <button class="btn mode-btn 4band">4-Band</button>
+        <button class="btn mode-btn 5band">5-Band</button>
+        <button class="btn mode-btn 6band">6-Band</button>
+        <button class="btn mode-btn bed">Body-end-dot</button>
+        <a class="btn mode-btn smd" href="smd_resistor_codes">SMD</a>
+    </div>
+</div>
+
+<div class="feature-container" id="main-image">
+    {% inline_file "tools/resistor_codes/4-band-resistor.svg" %}
+</div>
+
+<div class="feature-result" >
+    <span id="resistor-value">10 kΩ, ±5%</span>
+</div>
+
+<table class="feature-table" id="color-table">
+<tbody>
+    <tr>
+        <th class="colour-name">Color</th>
+        <th class="colour-sf" colspan=3>Significant<br>figures</th>
+        <th class="colour-mult">Muliplier</th>
+        <th class="colour-tol">Tolerance</th>
+        <th class="colour-tc">Temperature<br>coefficient<br>(ppm/K)</th>
+    </tr>
+    {% resistor_code_row "black"   %}
+    {% resistor_code_row "brown"   %}
+    {% resistor_code_row "red"     %}
+    {% resistor_code_row "orange"  %}
+    {% resistor_code_row "yellow"  %}
+    {% resistor_code_row "green"   %}
+    {% resistor_code_row "blue"    %}
+    {% resistor_code_row "violet"  %}
+    {% resistor_code_row "grey"    %}
+    {% resistor_code_row "white"   %}
+    {% resistor_code_row "gold"    %}
+    {% resistor_code_row "silver"  %}
+    {% resistor_code_row "none"    %}
+</tbody>
+</table>
+{% endblock %}
+
+{% block help %}
+<p>
+Click on the <span id="hint-mode" class="help-hint">mode selector</span> to choose the
+type of resistor code to calculate.
+</p>
+
+<p>
+Click on a <span id="hint-band" class="help-hint">band</span> to select the colour -
+hovering will highlight the relevant column in the table. The resulting
+value will be displayed <span id="hint-value" class="help-hint">value</span> the
+resistor.
+</p>
+
+<p>
+You can also click a cell in the <span id="hint-table" class="help-hint">table</span>
+to apply that colour to the relevant band.
+</p>
+{% endblock %}

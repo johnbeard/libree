@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% load render_tools %}
+{% load topic_list %}
+{% load static %}
+{% load require %}
+
+{% block header %}
+<ul class="breadcrumb">
+    <li><a href="/">Home</a> <span class="divider">/</span></li>
+    <li><a href="/topic/{{ toolId|tool_topic  }}">{{ toolId|tool_topic|topic_name }}</a> <span class="divider">/</span></li>
+    <li class="active">{{ toolId|tool_title }}</li>
+</ul>
+                
+<div class="hero-unit" id="tool-heading">
+    <div class="row-fluid">
+        <div class="span2" style="text-align:center;">
+            <img src="{{ STATIC_URL }}icons/tool-{% tool_icon toolId %}-48.svg"/>
+        </div>
+        <div class="span10" style="position:relative">
+            <div class="help-button-container"></div>
+            <h4>{{ toolId|tool_title }}</h4>
+
+            <div class="tool-description">{% tool_description toolId %}</div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<div class="row-fluid tool-main-content-container">
+    <div id="help-container" class="hidden">
+        <div class="help-close-container"></div>
+        {% block help %}
+        {% endblock %}
+    </div>
+    <div class="content-container span12">
+        {% block toolcontent %}
+        {% endblock %}
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<!-- common scripts are loaded statically -->
+{% tool_scripts toolId %}
+
+{% with "../tools/"|add:toolId|add:'/'|add:toolId as module %}
+{% require_module module %}
+{% endwith %}
+
+{% endblock %}

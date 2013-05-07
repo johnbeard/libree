@@ -1,0 +1,46 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{% block title %}LibrEE{% endblock %}</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Bootstrap and global css-->
+	<link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet" media="screen">
+	<link href="{% static 'css/libree.css' %}" rel="stylesheet" media="screen">
+	<link href="{% static 'bootstrap/css/bootstrap-responsive.css' %}" rel="stylesheet" media="screen">
+	
+	<style>
+	{% block pagestyle %}
+	{% endblock %}
+	</style>
+</head>
+
+<body>
+	{% include "header.html" %}
+	<div class="container-fluid">
+
+		<div class="row-fluid">
+				{% block header %}
+				{% endblock %}
+		</div>
+
+		<div class="row-fluid">
+				{% block content %}
+				{% endblock %}
+		</div>
+
+		{% include "footer.html" %}
+	</div>
+
+
+	<!--common scripts for all pages-->
+	<script src="{% static 'js/jquery-2.0.0.min.js' %}"></script>
+	<script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+
+	<!-- extra scripts -->
+	{% block scripts %}
+	{% endblock %}
+</body>
+</html>

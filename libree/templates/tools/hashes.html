@@ -1,0 +1,65 @@
+
+{% extends "tool.html" %}
+
+{% load render_tools %}
+{% load tools.hashes %}
+
+{% block content %}
+
+<div style="max-width:60em; margin:0 auto;">
+
+    <div class="feature-container">
+        <textarea class="feature-input" id="input-data"  placeholder="Input data"></textarea>
+    </div>
+
+    <div style="text-align:left;">
+        <input type="checkbox" id="data-as-hex"/> Interpret data as hexadecimal<br>
+        <input type="checkbox" id="use-hmac"/> Use HMAC
+
+        <div id="hmac-options" class="hidden" style="width:100%">
+            HMAC key: <input type="text" id="hmac-key"><br>
+            <input type="checkbox" id="hmac-as-hex"/> Interpret HMAC as hexadecimal<br>
+        </div>
+    </div>
+
+    <div class="mode-selector">
+        <div class="btn-group mode-selector" data-toggle="buttons-radio" id="main-mode-selector">
+            <button type="button" class="btn mode-btn" id="md5">MD5</button>
+            <button type="button" class="btn mode-btn" id="sha1">SHA-1</button>
+            <button type="button" class="btn mode-btn" id="sha3">SHA-3</button>
+            <button type="button" class="btn mode-btn" id="sha256">SHA-256</button>
+            <button type="button" class="btn mode-btn" id="tiger">Tiger</button>
+            <button type="button" class="btn mode-btn" id="reveal-more-hashes">More</button>
+        </div>
+        <br>
+        <div class="btn-group mode-selector hidden" id="hashes-extra">
+            Select alternative hash: <select id="hash-select">
+                <option value="ripemd160">RIPEMD-160</option>
+                <option value="haval">HAVAL</option>
+                <option value="adler32">Adler-32</option>
+                <option value="tiger">TIGER</option>
+            </select>
+        </div>
+        
+        <div class="hidden" id="hash-options-container">
+            <span id="hash-options-title">Hash options:</span> 
+            <div class="container-fluid">
+                <div id="hash-options" class="row-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <div class="mode-selector">
+        <button class="btn" id="compute">Compute Hash</button>
+    </div>
+
+    <div class="feature-container">
+        <textarea class="feature-result" id="output-data" readonly placeholder="Hash result"></textarea>
+    </div>
+</div>
+
+Cryptographic hash functions....
+{% endblock %}

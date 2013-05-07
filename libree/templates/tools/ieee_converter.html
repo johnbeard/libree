@@ -1,0 +1,114 @@
+
+{% extends "tool.html" %}
+
+{% load render_tools %}
+
+{% block pagestyle %}
+.number-input {
+    width: 50em;
+    font-family: monospace;
+}
+{% endblock %}
+
+{% block content %}
+
+<div style="max-width:60em; margin:0 auto;">
+    
+    <div class="btn-toolbar" style="text-align:center">
+        <div class="btn-group mode-selector" id="ieee-type" data-toggle="button">
+            <button type="button" class="btn mode-btn" id="ieee754-16">IEEE-754 Half (16 bit)</button>
+            <button type="button" class="btn mode-btn active" id="ieee754-32">IEEE-754 Float (32 bit)</button>
+            <button type="button" class="btn mode-btn" id="ieee754-64">IEEE-754 Double (64 bit)</button>
+            <button type="button" class="btn mode-btn" id="ieee754-128">IEEE-754 Quad (128 bit)</button>
+        </div>
+        
+        <div class="btn-group mode-selector" data-toggle="button">
+            <a class="btn mode-btn" href="number_converter">Integer types</a>
+        </div>
+    </div>
+    <div class="btn-toolbar" style="text-align:center">
+        <div class="btn-group mode-selector" id="rounding-mode" data-toggle="button">
+            <button type="button" class="btn mode-btn" id="tozero">Towards zero</button>
+            <button type="button" class="btn mode-btn" id="up">Towards +Infinity </button>
+            <button type="button" class="btn mode-btn" id="down">Towards -Infinity </button>
+            <button type="button" class="btn mode-btn active" id="neareven">To nearest (tie to even)</button>
+            <button type="button" class="btn mode-btn" id="nearafz">To nearest (tie away from zero)</button>
+        </div>
+    </div>
+    <!-- don't need this for now as performance is improved by pre-calculation
+    <div id="precision-warning" class="alert hidden">
+        Warning! This setting requires a precision of <span id="decimal-places">XXX</span> decimal places, which may cause very slow performance on the first calculation, with subsequent calculations being much faster.<br>
+        <input type="checkbox" id="restrict-precision" checked="checked"/> Restrict precision to <span id="restrict-places">2000</span> places. If you do not check this, you need to press "enter" to convert the number.
+    </div>-->
+    <table>
+    <tr>
+        <td>Decimal:</td>
+        <td></td>
+        <td><input type="text" class="number-input source-box" id="decimal" value="0"/></td>
+    </tr>
+    <tr>
+        <td>Hexadecimal:</td>
+        <td>0x</td>
+        <td><input type="text" class="number-input" id="hex" value="0"/></td>
+    </tr>
+    <tr>
+        <td>Binary:</td>
+        <td>0b</td>
+        <td><input type="text" class="number-input" id="binary" value="0"/></td>
+    </tr>
+    <tr>
+        <td>Status:</td>
+        <td></td>
+        <td><div id="ieee-status"></div></td>
+    </tr>
+    </table>
+    <hr/>
+    <div id="ieee-sa">
+        <table "ieee-parts" style="width:100%; table-layout: fixed;" class="light-table">
+            <tr>
+                <th style="width:10em"></th>
+                <th style="width:6em">Sign</th>
+                <th style="width:6em">Exponent</th>
+                <th >Mantissa</th>
+            </tr>
+            <tr>
+                <th>Value</th>
+                <td id="ieee-sign-value"></td>
+                <td id="ieee-exp-value" ></td>
+                <td><div id="ieee-mant-value" class="long-number"></div></td>
+            </tr>
+            <tr>
+                <th>Encoding (decimal)</th>
+                <td id="ieee-sign-dec"></td>
+                <td id="ieee-exp-dec"></td>
+                <td><div id="ieee-mant-dec" class="long-number"></div></td>
+            </tr>
+            <tr>
+                <th>Encoding (hex)</th>
+                <td id="ieee-sign-hex"></td>
+                <td id="ieee-exp-hex"></td>
+                <td><div id="ieee-mant-hex" class="long-number"></div></td>
+            </tr>
+            <tr>
+                <th>Encoding (binary)</th>
+                <td id="ieee-sign-bin"></td>
+                <td id="ieee-exp-bin"></td>
+                <td><div id="ieee-mant-bin" class="long-number"></div></td>
+            </tr>
+            <tr class="ieee754-actual-values">
+                <th>Actual value represented:</th>
+                <td colspan=3><span id="ieee-actual-value" class="long-number"></span></td>
+            </tr>
+            <tr class="ieee754-actual-values">
+                <th>Difference:</th>
+                <td colspan=3><span id="ieee-difference" class="long-number"></span></td>
+            </tr>
+            <tr class="ieee754-actual-values">
+                <th>Difference / nominal value:</th>
+                <td colspan=3><span id="ieee-difference-prop" class="long-number"></span></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

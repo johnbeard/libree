@@ -1,0 +1,62 @@
+
+{% extends "tool.html" %}
+
+{% load render_tools %}
+
+{% block pagestyle %}
+<style>
+.number-input {
+    width: 50em;
+    font-family: monospace;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div style="max-width:60em; margin:0 auto;">
+    
+    <div class="btn-toolbar" style="text-align:center">
+        <div class="btn-group mode-selector" data-toggle="button">
+            <button type="button" class="btn mode-btn" id="arbitrary">Arbitrary number</button>
+        </div>
+        <div class="btn-group mode-selector" data-toggle="button">
+            <button type="button" class="btn mode-btn" id="unsign-8">Unsigned 8-bit</button>
+            <button type="button" class="btn mode-btn" id="sign-8">Signed 8-bit</button>
+        </div>
+        <div class="btn-group mode-selector" data-toggle="button">
+            <button type="button" class="btn mode-btn" id="unsign-16">Unsigned 16-bit</button>
+            <button type="button" class="btn mode-btn" id="sign-16">Signed 16-bit</button>
+        </div>
+        <div class="btn-group mode-selector" data-toggle="button">
+            <button type="button" class="btn mode-btn" id="unsign-32">Unsigned 32-bit</button>
+            <button type="button" class="btn mode-btn" id="sign-32">Signed 32-bit</button>
+        </div>
+        <div class="btn-group mode-selector" data-toggle="button">
+            <button type="button" class="btn mode-btn" id="unsign-64">Unsigned 64-bit</button>
+            <button type="button" class="btn mode-btn" id="sign-64">Signed 64-bit</button>
+        </div>
+        <div class="btn-group mode-selector" data-toggle="button">
+            <a class="btn mode-btn" href="ieee_converter">IEEE-754 floating point</a>
+        </div>
+    </div>
+    <table>
+    <tr>
+        <td>Decimal:</td>
+        <td></td>
+        <td><input type="text" class="number-input source-box" id="decimal" value="0"/></td>
+    </tr>
+    <tr>
+        <td>Hexadecimal:</td>
+        <td>0x</td>
+        <td><input type="text" class="number-input" id="hex" value="0"/></td>
+    </tr>
+    <tr>
+        <td>Binary:</td>
+        <td>0b</td>
+        <td><input type="text" class="number-input" id="binary" value="0"/></td>
+    </tr>
+    </table>
+</div>
+
+{% endblock %}

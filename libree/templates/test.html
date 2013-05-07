@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% load render_tools %}
+{% load topic_list %}
+{% load static %}
+{% load require %}
+
+
+{% block header %}
+<div class="hero-unit" id="tool-heading">
+    <div class="row-fluid">
+        <div class="span2" style="text-align:center;">
+
+        </div>
+        <div class="span10" style="position:relative">
+            Unit tests!
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<div class="row-fluid">
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- testing scripts are loaded statically -->
+<link rel="stylesheet" href="{{ STATIC_URL }}js/quint-1.11.0/qunit-1.11.0.css">
+<script src="{{ STATIC_URL }}js/quint-1.11.0/qunit-1.11.0.js"></script>
+
+{% with "../tests/"|add:testId as module %}
+{% require_module module %}
+{% endwith %}
+
+<script type="text/javascript">
+
+    // HACK from http://joseoncode.com/2012/01/25/hide-passed-tests-by-default-in-qunit/
+    // hides passing tests by default
+    $(document).ready(function(){
+        $('#qunit-tests').addClass('hidepass');
+    })
+    .delegate("#qunit-testrunner-toolbar", "DOMNodeInserted", function(e){
+        $("#qunit-filter-pass").attr("checked", true)
+    })
+    .delegate("#qunit-filter-pass", "click", function(e){
+        e.stopPropagation();
+        var newValue = $(this).is(":checked");
+        $('#qunit-tests').toggleClass('hidepass', newValue);
+    });
+</script>
+
+{% endblock %}

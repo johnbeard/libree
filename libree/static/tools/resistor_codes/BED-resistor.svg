@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="300"
+   height="140"
+   id="svg2"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="BED-resistor.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview21"
+     showgrid="false"
+     inkscape:zoom="0.95"
+     inkscape:cx="150"
+     inkscape:cy="70"
+     inkscape:window-x="150"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3784">
+      <stop
+         id="stop3786"
+         style="stop-color:#e9eae7;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop3788"
+         style="stop-color:#babdb6;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       x1="200"
+       y1="947.36218"
+       x2="200"
+       y2="957.36218"
+       id="linearGradient3790"
+       xlink:href="#linearGradient3784"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,1,-1,0,1077.3622,1047.3622)" />
+    <linearGradient
+       x1="200"
+       y1="947.36218"
+       x2="200"
+       y2="957.36218"
+       id="linearGradient3056"
+       xlink:href="#linearGradient3784"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,1,-1,0,1272.3622,1047.3622)" />
+    <linearGradient
+       x1="200"
+       y1="947.36218"
+       x2="200"
+       y2="957.36218"
+       id="linearGradient3107"
+       xlink:href="#linearGradient3784"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,1,-1,0,1202.8622,1002.8622)" />
+    <linearGradient
+       x1="200"
+       y1="947.36218"
+       x2="200"
+       y2="957.36218"
+       id="linearGradient3109"
+       xlink:href="#linearGradient3784"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,1,-1,0,1002.8622,1002.8622)" />
+    <linearGradient
+       x1="200"
+       y1="947.36218"
+       x2="200"
+       y2="957.36218"
+       id="linearGradient3002"
+       xlink:href="#linearGradient3784"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,1,-1,0,1002.3622,98.00002)" />
+    <linearGradient
+       x1="200"
+       y1="947.36218"
+       x2="200"
+       y2="957.36218"
+       id="linearGradient3005"
+       xlink:href="#linearGradient3784"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,1,-1,0,1203.3622,98.00002)" />
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <path
+     d="m 12.4375,8.43744 c -1.077277,0 -1.9375,0.86022 -1.9375,1.9375 l 0,86.12508 c 0,1.0772 0.860223,1.9375 1.9375,1.9375 l 76.125,0 c 1.07728,0 1.918818,-0.8605 1.9375,-1.9375 l 0,-13.06258 120,0.0625 0,13.06258 c 0,1.0772 0.86022,1.9375 1.9375,1.9375 l 76.125,0 c 1.07728,0 1.9375,-0.8603 1.9375,-1.9375 l 0,-86.12508 c 0,-1.07728 -0.86022,-1.9375 -1.9375,-1.9375 l -76.125,0 c -1.07728,0 -1.9375,0.86022 -1.9375,1.9375 l 0,8.0625 -120,-0.0625 0,-8.0625 c 0,-1.07728 -0.86022,-1.9375 -1.9375,-1.9375 z"
+     id="background"
+     style="fill:#fcaf3e;fill-opacity:1;stroke:none" />
+  <path
+     d="m 256,98.00002 0,40 -10,0 -2e-5,-40"
+     id="lead1"
+     style="fill:url(#linearGradient3005);fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1" />
+  <path
+     d="m 55.00002,98.00002 0,40 -10,0 -2e-5,-40"
+     id="lead2"
+     style="fill:url(#linearGradient3002);fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1" />
+  <path
+     style="stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     d="M 212.4375 8.5 C 211.36023 8.5 210.5 9.360223 210.5 10.4375 L 210.5 18.5 L 90.5 18.4375 L 90.5 83.4375 L 210.5 83.5 L 210.5 96.5625 C 210.5 97.63978 211.36023 98.5 212.4375 98.5 L 288.5625 98.5 C 289.63977 98.5 290.5 97.63978 290.5 96.5625 L 290.5 10.4375 C 290.5 9.360223 289.63977 8.5 288.5625 8.5 L 212.4375 8.5 z "
+     id="band1"
+     class="resistor-band green"/>
+  <path
+     d="m 12.444544,8.500003 76.110912,0 c 1.077278,0 1.944544,0.867266 1.944544,1.944543 l 0,86.110914 C 90.5,97.63274 89.632734,98.5 88.555456,98.5 l -76.110912,0 C 11.367266,98.5 10.5,97.63274 10.5,96.55546 l 0,-86.110914 c 0,-1.077277 0.867266,-1.944543 1.944544,-1.944543 z"
+     id="band2"
+     class="resistor-band black"
+     style="stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1" />
+  <path
+     d="m 173,50.99996 c 0.13501,9.22249 -6.06906,18.07323 -14.76375,21.13471 -8.35995,3.16168 -18.46825,0.71572 -24.39116,-6.00622 -6.32191,-6.74575 -7.66377,-17.50069 -3.25795,-25.61335 4.08233,-8.00691 13.29441,-12.92891 22.21335,-11.89897 9.34426,0.82245 17.62624,8.1429 19.62335,17.30249 0.38457,1.66456 0.57649,3.37307 0.57616,5.08134 z"
+     id="band3"
+     class="resistor-band yellow"
+     style="fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+  <path
+     d="m 212.44454,8.500003 76.11092,0 c 1.07727,0 1.94454,0.867266 1.94454,1.944543 l 0,86.110914 c 0,1.07728 -0.86727,1.94454 -1.94454,1.94454 l -76.11092,0 C 211.36727,98.5 210.5,97.63274 210.5,96.55546 l 0,-86.110914 c 0,-1.077277 0.86727,-1.944543 1.94454,-1.944543 z"
+     id="band4"
+     class="resistor-band none"
+     style="stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1" />
+</svg>

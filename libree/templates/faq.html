@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block pagestyle %}
+div.faq-q {
+	font-weight: 700;
+	clear: both;
+	padding-top:1em;
+	padding-bottom:0.5em;
+}
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid fixed-width" >
+<div class="row-fluid">
+<div class="span12">
+
+	<h2>Frequently asked questions</h2>
+
+	<div class="faq-q">What is LibrEE?</div>
+
+	<div class="faq-a">LibrEE is a collection of free and open-source
+	tools, visualisations and calculators for a wide range of disciplines,
+	from maths to biology.
+
+	You can get involved if you want, and help contribute new tools to
+	LibrEE! See <a href="{% url 'contribute' %}">this page</a> for more information
+	</div>
+
+	<div class="faq-q">Why don't you have $tool? Can you add it?</div>
+
+	<div class="faq-a">Because I haven't written it, or because I haven't
+	thought of it. Feel free to <a href="{% url 'contact' %}">get in touch</a> with
+	your idea and I'll see what I can do about implementing it.
+	Alternatively you can develop it yourself and <a href="{% url 'contribute' %}">
+		contribute it</a>.
+	</div>
+
+	<div class="faq-q">What technologies does LibrEE use?</div>
+
+	<div class="faq-a">Django is the main underlying framework that LibrEE
+	is built on. I also use requireJS, via django-require, to handle the
+	Javascript dependencies.
+	
+	Javascript is used extensively to provide client-side computation of a
+	lot of the tools, as I believe this provides a more "immediate" feel
+	to the tools, and also makes it theoretically possible to have
+	offline versions in future.
+		
+	LibrEE uses Twitter Bootstrap to provide an easy-to-maintain
+	and resolution-sensitive layout, which is important to make the
+	site accessible on mobile devices, where it will be useful.</p>
+	</div>
+
+	<div class="faq-q">You're using SVGs and other modern stuff, my browser can't handle it!
+	I thought you said mobile devices were important!</div>
+
+	<div class="faq-a"><p>Yes I am. If you are using an older browser, you will
+	need to upgrade. I don't have time to carefully consider out-of-date browsers,
+	and there's so many interesting things that newer ones have. The main
+	problem browsers are probably Android &lt; 3.0 and any IE. If you are on an
+	older Android device, you could use Opera Mobile instead of the stock browser.</p>
+
+	<p>While it would be nice to support all browsers of all ages, but I'd
+	rather focus on getting nice tools done instead, and modern technologies
+	help with that. If you know a way that I can do something just as well
+	in a more bckwards-compatible way, let me know and I'll see what I can do.</p>
+	</div>
+
+	<div class="faq-q">Is there an app?</div>
+
+	<div class="faq-a">Only if you want to write and maintain it. I don't
+	have the time or effort to spend on maintaining at least two other
+	versions of librEE. I have tried to make it as usable on mobile devices
+	as a native app. If you would like to develop an app or prepare some
+	sort of offline version of LibrEE, get in touch. I'd welcome it!
+	</div>
+
+	<div class="faq-q">Will you provide translations?</div>
+
+	<div class="faq-a">I would welcome translations of the tools here,
+	but first I need to work out some sort of framework to make that
+	easy to maintain. Please help me!
+	</div>
+	
+	<div class="faq-q">What kind of license is LibrEE under?</div>
+
+	<div class="faq-a">LibrEE uses both BSD and GPL licensed code, and
+	is itself distributed under the GPL.
+	</div>
+</div>
+</div>
+</div>
+{% endblock %}

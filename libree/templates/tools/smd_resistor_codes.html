@@ -1,0 +1,92 @@
+
+{% extends "tool.html" %}
+
+{% load render_tools %}
+
+{% block pagestyle %}
+   
+#code-container {
+    margin:0 auto;
+    height:70px;
+    width:140px;
+    text-align:center;
+    background-color: #333;
+    color:#ffffdd !important;
+    border-right:25px #BBB solid;
+    border-left:25px #BBB solid;
+    border-bottom:1px #333 solid;
+    border-top:1px #FFF solid;
+    border-radius: 10px;
+    text-align:center !important; 
+    font-size:40px;
+    position: relative;
+}
+
+#code-input {
+    width:120px;
+    color: #EEE;
+    text-align:center;
+    font-size:inherit;
+    height:60px;
+    background-color:transparent;
+    border: none;
+    box-shadow:none !important;
+}
+
+#line-select {
+    padding-bottom: 10px;
+}
+
+#line {
+    top:10px;
+    left:60px;
+    border-bottom:2px solid #EEE;
+    height:0px;
+    position:absolute;
+    width: 20px;
+    margin: 0 auto;
+}
+
+#value-note {
+    font-size: smaller;
+}
+
+{% endblock %}
+
+{% block toolcontent %}
+
+<div class="feature-container container-fluid" id="main-image">
+    <div id="input-container" class="row-fluid">
+        <div class="btn-group" id="line-select">
+            <button class="btn active" id="noline" >No line</button>
+            <button class="btn" id="shortline">Short line</button>
+            <button class="btn" id="longlineabove">Long line above</button>
+            <button class="btn" id="longlinebelow">Long line below</button>
+        </div>
+        <div>
+            <div id="code-container" >
+                <div id="line" class="hidden"></div>
+                <input id="code-input" type="text" title="Enter SMD code here" maxlength="4" value="103" name="smd-code">
+                
+            </div>
+        </div>
+        <div class="span3"></div>
+    </div>
+</div>
+
+<div class="feature-result">
+    <span id="resistor-value">10 kΩ</span> <span id="value-note"></span>
+</div>
+
+SMD resistor codes....
+{% endblock %}
+
+{% block help %}
+<p>
+Enter a code into the <span id="hint-text" class="help-hint">SMD label</span>.
+</p>
+
+<p>
+The resulting value will be displayed in the <span id="hint-value" class="help-hint">result</span>.
+</p>
+{% endblock %}

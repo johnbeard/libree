@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="400"
+   height="110"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="4-band-resistor.svg">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3784">
+      <stop
+         style="stop-color:#e9eae7;stop-opacity:1;"
+         offset="0"
+         id="stop3786" />
+      <stop
+         style="stop-color:#babdb6;stop-opacity:1"
+         offset="1"
+         id="stop3788" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3784"
+       id="linearGradient3790"
+       x1="200"
+       y1="947.36218"
+       x2="200"
+       y2="957.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(0,45)" />
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-942.36218)">
+    <path
+       id="body"
+       style="fill:#e9b96e;stroke:none;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 75,987.36218 c 0,-20 15,-40 50,-40 35,0 30,10 75,10 45,0 40,-10 75,-10 35,0 50,20 50,40 0,20.00002 0,10 0,10 0,0 0,-10 0,10.00002 0,20 -15,40 -50,40 -35,0 -30,-10 -75,-10 -45,0 -40,10 -75,10 -35,0 -50,-20 -50,-40 0,-20.00002 0,-10.00002 0,-10.00002 0,0 0,10.00002 0,-10 z"
+       sodipodi:nodetypes="sscsscsscsscs" />
+    <path
+       id="leads"
+       style="fill:url(#linearGradient3790);fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1"
+       d="m 400,1002.3622 -75,0 0,-10.00002 75,0 m -400,0 75,0 0,10.00002 -75,0"
+       sodipodi:nodetypes="cccccccc" />
+    <path
+       style="fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 125,947.36218 c -1.71727,0 -3.37843,0.0623 -5,0.15625 l 0,99.68747 c 1.62157,0.094 3.28273,0.1563 5,0.1563 6.04647,0 10.87708,-0.3187 15,-0.8125 l 0,-98.37502 c -4.12292,-0.49378 -8.95353,-0.8125 -15,-0.8125 z"
+       id="band1"
+       class="resistor-band brown" />
+    <path
+       style="fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 160,952.70593 0,89.31247 c 5.26694,-1.478 11.15039,-2.9043 20,-3.7812 l 0,-81.75002 c -8.84961,-0.87688 -14.73306,-2.30323 -20,-3.78125 z"
+       id="band2"
+       class="resistor-band black" />
+    <path
+       style="fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 220,956.48718 c -5.39606,0.53468 -11.8716,0.875 -20,0.875 l 0,80.00002 c 8.1284,0 14.60394,0.3403 20,0.875 l 0,-81.75002 z"
+       id="band3"
+       class="resistor-band orange" />
+    <path
+       style="fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 275,947.36218 0,100.00002 c 7.58996,0 14.24011,-0.9479 20,-2.625 l 0,-94.75002 c -5.75989,-1.6771 -12.41004,-2.625 -20,-2.625 z"
+       id="band4"
+       class="resistor-band grey" />
+    <path
+       sodipodi:nodetypes="sscsscsscsscs"
+       d="m 75,987.36218 c 0,-20 15,-40 50,-40 35,0 30,10 75,10 45,0 40,-10 75,-10 35,0 50,20 50,40 0,20.00002 0,10 0,10 0,0 0,-10 0,10.00002 0,20 -15,40 -50,40 -35,0 -30,-10 -75,-10 -45,0 -40,10 -75,10 -35,0 -50,-20 -50,-40 0,-20.00002 0,-10.00002 0,-10.00002 0,0 0,10.00002 0,-10 z"
+       style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="border" />
+  </g>
+</svg>

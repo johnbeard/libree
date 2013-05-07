@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load topic_list %}
+{% load static %}
+
+{% block content %}
+
+<div class="hero-unit" style="background:url({{ STATIC_URL }}background/blueprint-bg-48.png);">
+	<div class="row-fluid">
+		<div class="span2" style="text-align:center;">
+			<img src="{{ STATIC_URL }}icons/libree-48.svg"/>
+		</div>
+		<div class="span10">
+			Welcome to LibrEE.org, a free and open-source collection of
+			visualisations, calculators and tools for maths, engineering
+			and the sciences.
+		</div>
+	</div>
+</div>
+
+	<h2>Topic index</h2>
+
+	{% topic_list %}
+
+{% endblock %}
