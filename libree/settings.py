@@ -5,9 +5,6 @@ from localsettings import *
 
 PROJECT_DIR = os.path.dirname(__file__)
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-
 MANAGERS = ADMINS
 
 DATABASES = {
@@ -50,10 +47,6 @@ MEDIA_ROOT = ''
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = ''
-
-# URL prefix for static files.
-# Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
 	#os.path.join(PROJECT_DIR, 'static'),
