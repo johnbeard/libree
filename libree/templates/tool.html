@@ -18,7 +18,13 @@
             <img src="{{ STATIC_URL }}icons/tool-{% tool_icon toolId %}-48.svg"/>
         </div>
         <div class="span10" style="position:relative">
-            <div class="help-button-container"></div>
+            <div class="help-button-container">
+                <img src="{{ STATIC_URL }}/icons/help-22.png" 
+                        alt="Help"
+                        title="Click for tool instructions"
+                        class="help-button hidden" />
+            </div>
+                        
             <h4>{{ toolId|tool_title }}</h4>
 
             <div class="tool-description">{% tool_description toolId %}</div>

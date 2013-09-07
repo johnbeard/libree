@@ -4,29 +4,18 @@ define(function () {
 
     var Libree = function () {};
 
-    Libree.addHelpButton = function() {
-        var me = this;
-        var img = $("<img>",
-                    {'src':"/static/icons/help-22.png",
-                        'alt':"Help",
-                        'title':"Click for tool instructions",
-                        'class':"help-button"
-                    })
-
-        $('.help-button-container').append(img)
-            .on('click', function(evt) {
-                        me.toggleHelp();
-                    });
-
-
-        $('.help-close-container').click( function() {
-            me.hideHelp();
-        });
-    }
-
     Libree.setupTool = function () {
+        var me = this;
         if ($('#help-container').length > 0) {
-            this.addHelpButton();
+            $('.help-button-container img')
+                .removeClass('hidden')
+                .on('click', function(evt) {
+                            me.toggleHelp();
+                        });
+
+            $('.help-close-container').click( function() {
+                me.hideHelp();
+            });
         }
     }
 
