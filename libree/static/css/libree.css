@@ -37,6 +37,10 @@ body {
 	margin: 0 auto;
 }
 
+.container-fluid.fixed-width.text {
+	text-align:left;
+}
+
 .feature-container,
 .feature-table {
 	margin: 0 auto;
