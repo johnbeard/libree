@@ -8,13 +8,34 @@
 
 	<h2>Contribute to Libree</h2>
 	
-	The easist way to contribute to LibrEE is to fork it on Github, set 
+	The easist way to contribute to LibrEE is to fork it on 
+	<a href ="https://github.com/johnbeard/libree">Github</a>, set 
 	up a local Django server on your computer (you don't need administrator
 	access to do this) and hack away!
 	
 	If you have changes to submit for inclusion to LibrEE, lodge a pull
 	request on Github, and I'll look at adding it to LibrEE as soon as
 	possible.
+	
+	<h3>Setting up LibrEE on your machine</h3>
+	
+	LibrEE is supposed to be easy to set up on your own machine. The basic
+	method looks something like this:
+	
+	<ul>
+		<li>Fork the GitHub repo.</li>
+		<li>Clone it to your machine.</li>
+		<li>Install Python 2.7 and Virtualenv if you do not already have them.</li>
+		<li>In a fresh virtualenv, use Pip to install Django and any other required
+		packages needed to run Libree. You may need to install the Python headers
+		as well in order to install some of the packages like LXML.</li>
+		<li>Using the virtualenv, run up the server using the management script.</li>
+		<li>LibrEE should now be accessible at <tt>localhost:8000</tt>,
+		or similar.</li>
+	</ul>
+	
+	More complete and up-to-date instructions can be found in the <tt>README</tt>
+	file at Github.
 </div>
 </div>
 </div>
