@@ -1,5 +1,7 @@
 {% load static from staticfiles %}
 
+{% load cdn %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,9 +11,9 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- Bootstrap and global css-->
-	<link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet" media="screen">
+	<link href="{% cdn 'bootstrap.css' %}" rel="stylesheet" media="screen">
 	<link href="{% static 'css/libree.css' %}" rel="stylesheet" media="screen">
-	<link href="{% static 'bootstrap/css/bootstrap-responsive.css' %}" rel="stylesheet" media="screen">
+	<link href="{% cdn 'bootstrap-responsive.css' %}" rel="stylesheet" media="screen">
 	
 	<style>
 	{% block pagestyle %}
@@ -38,8 +40,8 @@
 
 
 	<!--common scripts for all pages-->
-	<script src="{% static 'js/jquery-2.0.0.min.js' %}"></script>
-	<script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+	<script src="{% cdn 'jquery-2.0.3.js' %}"></script>
+	<script src="{% cdn 'bootstrap.js' %}"></script>
 
 	<!-- extra scripts -->
 	{% block scripts %}

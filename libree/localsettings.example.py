@@ -4,7 +4,14 @@
 
 import os
 
-DEBUG = True #turn this off on a public-facing site!
+# Turn this off on a public-facing site! Turn it on to allow simple
+# serving via runserver
+DEBUG = True 
+
+# True to use CDN services to serve common statics, False to serve from
+# the LibrEE copy. Turn this off for offline development!
+USE_CDN = False
+
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
