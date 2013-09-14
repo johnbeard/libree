@@ -1,0 +1,67 @@
+
+{% extends "tool.html" %}
+
+{% load render_tools %}
+{% load tools.ascii %}
+
+{% block pagestyle %}
+.ascii-table {
+	margin: 0 auto;
+	font-size:smaller;
+	text-align:right;
+}
+
+.ascii-table td {
+	padding: 0 0.4em 0 0.4em !important;
+}
+
+.ascii-table td:nth-child(5),
+.ascii-table td:nth-child(9),
+.ascii-table td:nth-child(13),
+.ascii-table th:nth-child(5),
+.ascii-table th:nth-child(9),
+.ascii-table th:nth-child(13) {
+	border-right: 1px solid black;
+}
+
+.ascii-table td:nth-child(5) {
+	font-style: italic;
+	text-align:left !important;
+}
+
+.ascii-table td:nth-child(4),
+.ascii-table td:nth-child(9),
+.ascii-table td:nth-child(13),
+.ascii-table td:nth-child(17) {
+	color: red;
+	font-family:monospace;
+	text-align:left !important;
+} 
+
+.ascii-table th {
+	border-bottom: 1px solid black;
+	border-top: 1px solid black;
+	text-align:center !important;
+}
+{% endblock %}
+
+{% block toolcontent %}
+
+<div class="feature-container container fixed-width text">
+	<div class="row">
+		<div class="col-md-12">
+			{% ascii_table 'ascii-table' %}
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		ASCII is one of the simplest forms of text encoding used. Every character
+is represented by a single byte, of which only 7 bits are used, giving 
+127 possible codepoints. "Printable" characters are those from 20 (space)
+to 126, the other characters are "non-printing" and include things like 
+new lines, system beep, null characters and so on.
+	</div>
+</div>
+
+{% endblock %}
+

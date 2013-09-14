@@ -90,3 +90,13 @@ registry['led_resistor'] = {
     "categories": ['electronics'],
     "scripts": {}
 }
+
+registry['ascii'] = {
+    "description":"Table of ASCII characters.",
+    "title": "ASCII table",
+    "template": "tools/ascii.html",
+    "icon": "ascii",
+    "tags": ["table"],
+    "categories": ['electronics'],
+    "scripts": {}
+}

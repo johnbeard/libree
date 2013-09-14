@@ -1,0 +1,6 @@
+
+Requirements (Python environment)
+
+* django
+* django-require
+* lxml
