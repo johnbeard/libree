@@ -349,7 +349,7 @@ define(["../libree_tools"], function(Libree) {
             evt.stopPropagation();
         });
 
-        $('.mode-btn').on('click', function(evt) {
+        $('#mode-selector .btn').on('click', function(evt) {
 
             for (var newMode in modeImages) {
                 if ($(evt.target).hasClass(newMode)) {
