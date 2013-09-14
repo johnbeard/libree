@@ -28,16 +28,20 @@ body {
 	width:100%;
 }
 
+.tool-title {
+	font-size: larger;
+}
+
 .tool-description {
 	font-size: smaller;
 }
 
-.container-fluid.fixed-width {
+.container.fixed-width {
 	max-width: 900px;
 	margin: 0 auto;
 }
 
-.container-fluid.fixed-width.text {
+.container.fixed-width.text {
 	text-align:left;
 }
 
