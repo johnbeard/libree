@@ -11,37 +11,39 @@
 
 {% block toolcontent %}
 
-<div class="feature-container container-fluid">
-	<div class="span6">
-		<table class="input-table">
-			<tr>
-				<td>Supply voltage:</td>
-				<td><input type="text" class="number-input" id="vcc" value="5"/></td>
-				<td>V</td>
-			</tr>
-			<tr>
-				<td>LED forward voltage:</td>
-				<td><input type="text" class="number-input" id="vf" value="2"/></td>
-				<td>V</td>
-			</tr>
-			<tr>
-				<td>LED forward current:</td>
-				<td><input type="text" class="number-input" id="if" value="20"/></td>
-				<td>mA</td>
-			</tr>
-			<tr>
-				<td>Number of resistors:</td>
-				<td><input type="text" class="number-input" id="num" value="1"/></td>
-				<td></td>
-			</tr>
-		</table>
-	</div>
-	<div class="span6">
-		Results
-	</div>
+<div class="feature-container container">
+    <div class="row">
+        <div class="col-md-6">
+            <table class="input-table">
+                <tr>
+                    <td>Supply voltage:</td>
+                    <td><input type="text" class="form-control number-input" id="vcc" value="5"/></td>
+                    <td>V</td>
+                </tr>
+                <tr>
+                    <td>LED forward voltage:</td>
+                    <td><input type="text" class="form-control number-input" id="vf" value="2"/></td>
+                    <td>V</td>
+                </tr>
+                <tr>
+                    <td>LED forward current:</td>
+                    <td><input type="text" class="form-control number-input" id="if" value="20"/></td>
+                    <td>mA</td>
+                </tr>
+                <tr>
+                    <td>Number of resistors:</td>
+                    <td><input type="text" class="form-control number-input" id="num" value="1"/></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6">
+            Results
+        </div>
+    </div>
 </div>
 
-<div class="feature-result span12">
+<div class="feature-result col-md-12">
 	<div class="svg-drawing" id="result-canvas">
 	</div>
 </div>

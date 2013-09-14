@@ -8,7 +8,7 @@
 #code-container {
     margin:0 auto;
     height:70px;
-    width:140px;
+    width:150px;
     text-align:center;
     background-color: #333;
     color:#ffffdd !important;
@@ -23,11 +23,11 @@
 }
 
 #code-input {
-    width:120px;
+    width:100px;
     color: #EEE;
     text-align:center;
     font-size:inherit;
-    height:60px;
+    height:70px;
     background-color:transparent;
     border: none;
     box-shadow:none !important;
@@ -38,13 +38,23 @@
 }
 
 #line {
-    top:10px;
-    left:60px;
     border-bottom:2px solid #EEE;
     height:0px;
     position:absolute;
-    width: 20px;
     margin: 0 auto;
+    
+    top: 55px;
+    width: 70px;
+    left: 15px;
+}
+#line.top {
+    top: 10px;
+
+}
+
+#line.short {
+    width: 20px;
+    left: 40px;
 }
 
 #value-note {
@@ -55,13 +65,13 @@
 
 {% block toolcontent %}
 
-<div class="feature-container container-fluid" id="main-image">
-    <div id="input-container" class="row-fluid">
+<div class="feature-container" id="main-image">
+    <div id="input-container">
         <div class="btn-group" id="line-select">
-            <button class="btn active" id="noline" >No line</button>
-            <button class="btn" id="shortline">Short line</button>
-            <button class="btn" id="longlineabove">Long line above</button>
-            <button class="btn" id="longlinebelow">Long line below</button>
+            <button class="btn btn-default active" id="noline" >No line</button>
+            <button class="btn btn-default" id="shortline">Short line</button>
+            <button class="btn btn-default" id="longlineabove">Long line above</button>
+            <button class="btn btn-default" id="longlinebelow">Long line below</button>
         </div>
         <div>
             <div id="code-container" >
@@ -70,7 +80,6 @@
                 
             </div>
         </div>
-        <div class="span3"></div>
     </div>
 </div>
 

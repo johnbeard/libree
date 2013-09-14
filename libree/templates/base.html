@@ -12,8 +12,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- Bootstrap and global css-->
 	<link href="{% cdn 'bootstrap.css' %}" rel="stylesheet" media="screen">
+	<link href="{% static 'css/bootstrap-theme.css' %}" rel="stylesheet" media="screen">
 	<link href="{% static 'css/libree.css' %}" rel="stylesheet" media="screen">
-	<link href="{% cdn 'bootstrap-responsive.css' %}" rel="stylesheet" media="screen">
 	
 	<style>
 	{% block pagestyle %}
@@ -23,14 +23,14 @@
 
 <body>
 	{% include "header.html" %}
-	<div class="container-fluid">
+	<div class="container">
 
-		<div class="row-fluid">
+		<div class="row">
 				{% block header %}
 				{% endblock %}
 		</div>
 
-		<div class="row-fluid">
+		<div class="row">
 				{% block content %}
 				{% endblock %}
 		</div>

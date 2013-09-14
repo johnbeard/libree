@@ -1,22 +1,30 @@
 {% load static from staticfiles %}
 
+{% load topic_list %}
+
 <div class="navbar navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container-fluid">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
+	<div class="container">
+		<div class="navbar-header">
+			<button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" type="button">
+				<span class="glyphicon-bar"></span>
+				<span class="glyphicon-bar"></span>
+			</button>
 
-			<a class="brand" href="/">libr<img src="{% static 'icons/libree-24.svg' %}"/></a>
-
-			<div class="nav-collapse collapse">
-				<ul class="nav">
-					<li><a href="{% url 'contribute' %}">Contribute</a></li>
-					<li><a href="{% url 'faq' %}">FAQ</a></li>
-				</ul>
-			</div>
+			<a class="navbar-brand" href="/">Libr<img src="{% static 'icons/libree-24.svg' %}"/></a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+				<li><a href="{% url 'contribute' %}">Contribute</a></li>
+				<li><a href="{% url 'faq' %}">FAQ</a></li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+						Topics<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						{% topic_menu %}
+					</ul>
+				  </li>
+			</ul>
 		</div>
 	</div>
 </div>

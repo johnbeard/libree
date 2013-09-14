@@ -19,6 +19,18 @@
 #  MA 02110-1301, USA.
 #
 
+categories = {
+    "mathematics": {'name': "Mathematics"},
+    "electronics": {'name': "Electronic engineering and computing", 
+        "desc": "Resources related to electrical, electronic and computer engineering, as well as programming and networking."},
+    "physics": {'name': "Physics"},
+    "chemistry": {'name': "Chemistry"},
+    "mechanics": {'name': "Mechanical engineering"},
+    "biology": {'name': "Biology"},
+    "medicine": { 'name': "Medicine"},
+    "economics": {'name': "Economics"},
+    }
+
 registry = {}
 
 registry['resistor_codes'] = {

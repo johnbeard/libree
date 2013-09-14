@@ -5,18 +5,6 @@ from utils import tool_registry
 
 register = template.Library()
 
-topics = {
-    "mathematics": {'name': "Mathematics"},
-    "electronics": {'name': "Electronic engineering and computing", 
-        "desc": "Resources related to electrical, electronic and computer engineering, as well as programming and networking."},
-    "physics": {'name': "Physics"},
-    "chemistry": {'name': "Chemistry"},
-    "mechanics": {'name': "Mechanical engineering"},
-    "biology": {'name': "Biology"},
-    "medicine": { 'name': "Medicine"},
-    "economics": {'name': "Economics"},
-    }
-    
 topicList = ["mathematics", "electronics", "physics", "chemistry",
                     "mechanics", "biology", "medicine", "economics"]
 
@@ -42,8 +30,8 @@ def topic_name(topicId):
 def topic_desc(topicId):
     """Returns the description of a given topic"""
     
-    if 'desc' in topics[topicId]:
-        return topics[topicId]['desc']
+    if 'desc' in tool_registry.categories[topicId]:
+        return tool_registry.categories[topicId]['desc']
     else:
         return ""
 
@@ -52,14 +40,14 @@ def render_topic_item(topicId):
     topicImgClass = "topic-item-img"
 
     out = ''
-    out += '<div class="span3 %s">' % topicClass
+    out += '<div class="col-lg-3 %s">' % topicClass
 
     out += '<a href="%s">' % topic_url(topicId)
     out += '<div class="%s">' % topicImgClass
     out += '<img src="%s"/>' % topic_icon(topicId)
     out += '</div>'
 
-    out += topics[topicId]['name']
+    out += tool_registry.categories[topicId]['name']
     out += '</a></div>'
 
     return out
@@ -74,7 +62,7 @@ def topic_list():
 
         #start a new row
         if (i % 4) == 0:
-            out += '<div class="row-fluid">\n'
+            out += '<div class="row">\n'
 
         #add the topic
         out += render_topic_item(topicId)
@@ -90,7 +78,7 @@ def topic_list():
 @register.filter
 def topic_name(topicId):
     """Returns the display name of a given id"""
-    return topics[topicId]['name']
+    return tool_registry.categories[topicId]['name']
 
 @register.simple_tag
 def topic_tools_list(topicId):
@@ -111,4 +99,17 @@ def topic_tools_list(topicId):
 
     return out
 
-
+@register.simple_tag
+def topic_menu():
+    
+    
+    out = ''
+    
+    for topic in topicList:
+        name = tool_registry.categories[topic]['name']
+        
+        link = '<a href="/topic/%s">%s</a>' % (topic, name)
+        
+        out += '<li>\n%s\n</li>\n' % link
+    
+    return out;

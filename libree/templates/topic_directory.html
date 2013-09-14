@@ -6,11 +6,11 @@
 {% block content %}
 
 <div class="hero-unit" style="background:url({{ topicId|topic_bg }});">
-	<div class="row-fluid">
-		<div class="span2" style="text-align:center;">
+	<div class="row">
+		<div class="col-lg-2" style="text-align:center;">
 			<img src="{{ topicId|topic_icon }}"/>
 		</div>
-		<div class="span10">
+		<div class="col-lg-10">
 			<h4>{{ topicId|topic_name }}</h4>
 			
 			{{ topicId|topic_desc }}
@@ -18,10 +18,12 @@
 	</div>
 </div>
 
-<div class="row-fluid">
-	<ul>
-{%  topic_tools_list topicId %}
-	</ul>
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+		<ul>
+			{%  topic_tools_list topicId %}
+		</ul>
+	</div>
 </div>
 
 

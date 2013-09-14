@@ -177,11 +177,9 @@ define(["../libree_tools"], function(Libree) {
             
             $("#line")
                 .removeClass("hidden")
-                .css({
-                    'top' : top ? "10px" : "55px",
-                    'width': width + "px",
-                    'left' : (140 - width)/2,
-                });
+                .toggleClass("short", line == "shortline")
+                .toggleClass("top", line == "longlineabove");
+
         } else {
             $("#line").addClass("hidden");
         }
