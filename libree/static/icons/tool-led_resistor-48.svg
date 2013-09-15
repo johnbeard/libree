@@ -213,7 +213,56 @@
        xlink:href="#linearGradient3440"
        gradientUnits="userSpaceOnUse"
        gradientTransform="translate(-0.5,-1)" />
+    <linearGradient
+       x1="24.4375"
+       y1="30.6875"
+       x2="24.4375"
+       y2="37"
+       id="linearGradient3047"
+       xlink:href="#linearGradient3034-4"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-1,-22)" />
+    <linearGradient
+       x1="26.25"
+       y1="31.6875"
+       x2="27.25"
+       y2="37.375"
+       id="linearGradient3049"
+       xlink:href="#linearGradient3440"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-0.5,-1)" />
+    <linearGradient
+       x1="26.25"
+       y1="31.6875"
+       x2="27.25"
+       y2="37.375"
+       id="linearGradient3052"
+       xlink:href="#linearGradient3440"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(-1,0,0,1,47.5,-21)" />
+    <linearGradient
+       x1="24.4375"
+       y1="30.6875"
+       x2="24.4375"
+       y2="37"
+       id="linearGradient3055"
+       xlink:href="#linearGradient3034-4"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-49,-70)" />
+    <linearGradient
+       x1="24.4375"
+       y1="30.6875"
+       x2="24.4375"
+       y2="37"
+       id="linearGradient3077"
+       xlink:href="#linearGradient3034-4"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-49,-70)" />
   </defs>
+  <path
+     d="M 18.5,14 4.9999996,14"
+     id="path3108"
+     style="fill:none;stroke:#2e3436;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   <text
      x="1.0606601"
      y="35.095303"
@@ -225,84 +274,91 @@
        id="tspan3008"
        style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:TeXGyreCursor;-inkscape-font-specification:TeXGyreCursor Bold" /></text>
   <path
-     d="m 31.5,26 0,16 -16,-8 z"
+     d="m 15.5,6 0,16 16,-8 z"
      id="path3101"
      style="fill:#cc0000;stroke:#2e3436;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   <rect
      width="2"
      height="18"
-     x="14"
-     y="25"
+     x="-33"
+     y="5"
+     transform="scale(-1,1)"
      id="rect3103"
      style="fill:#2e3436;fill-opacity:1;stroke:none" />
   <path
-     d="M 16,34 4,34"
-     id="path3108"
-     style="fill:none;stroke:#2e3436;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-  <path
-     d="m 37,12 5,0 0,22 -10,0"
+     d="m 38,36 5,0 0,-22 -10.5,0"
      id="path3110"
      style="fill:none;stroke:#2e3436;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   <path
-     d="M 15,12 3,12"
+     d="M 16,36 3.9999996,36"
      id="path3112"
      style="fill:none;stroke:#2e3436;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-  <rect
-     width="28"
-     height="9"
-     rx="2.0012479"
-     ry="1.978386"
-     x="9.499999"
-     y="7.500001"
-     id="rect3011"
-     style="fill:#e9b96e;fill-opacity:1;stroke:#2e3436;stroke-width:0.99999994;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-  <rect
-     width="3"
-     height="8"
-     rx="0.94070876"
-     ry="0"
-     x="12.999999"
-     y="8.000001"
-     id="rect3009"
-     style="fill:#3465a4;fill-opacity:1;stroke:none" />
-  <rect
-     width="3"
-     height="8"
-     rx="0.94070876"
-     ry="0"
-     x="18.000004"
-     y="8.000001"
-     id="rect3012"
-     style="fill:#cc0000;fill-opacity:1;stroke:none" />
-  <rect
-     width="3"
-     height="8"
-     rx="0.94070876"
-     ry="0"
-     x="23.000004"
-     y="8.000001"
-     id="rect3014"
-     style="fill:#8f5902;fill-opacity:1;stroke:none" />
-  <rect
-     width="3"
-     height="8"
-     rx="0.94070876"
-     ry="0"
-     x="32.000004"
-     y="8.000001"
-     id="rect3016"
-     style="fill:#888a85;fill-opacity:1;stroke:none" />
-  <rect
-     width="26"
-     height="7"
-     rx="0.94070876"
-     ry="0.92554134"
-     x="10.499999"
-     y="8.500001"
-     id="rect3042"
-     style="opacity:0.5;fill:url(#linearGradient3044-2);fill-opacity:1;stroke:#eeeeec;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+  <g
+     transform="matrix(-1,0,0,-1,49,72)"
+     id="g3069">
+    <rect
+       width="28"
+       height="9"
+       rx="2.0012479"
+       ry="1.978386"
+       x="-38.5"
+       y="-40.5"
+       transform="scale(-1,-1)"
+       id="rect3011"
+       style="fill:#e9b96e;fill-opacity:1;stroke:#2e3436;stroke-width:0.99999994;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <rect
+       width="3"
+       height="8"
+       rx="0.94070876"
+       ry="0"
+       x="-35"
+       y="-40"
+       transform="scale(-1,-1)"
+       id="rect3009"
+       style="fill:#3465a4;fill-opacity:1;stroke:none" />
+    <rect
+       width="3"
+       height="8"
+       rx="0.94070876"
+       ry="0"
+       x="-29.999996"
+       y="-40"
+       transform="scale(-1,-1)"
+       id="rect3012"
+       style="fill:#cc0000;fill-opacity:1;stroke:none" />
+    <rect
+       width="3"
+       height="8"
+       rx="0.94070876"
+       ry="0"
+       x="-24.999996"
+       y="-40"
+       transform="scale(-1,-1)"
+       id="rect3014"
+       style="fill:#8f5902;fill-opacity:1;stroke:none" />
+    <rect
+       width="3"
+       height="8"
+       rx="0.94070876"
+       ry="0"
+       x="-15.999997"
+       y="-40"
+       transform="scale(-1,-1)"
+       id="rect3016"
+       style="fill:#888a85;fill-opacity:1;stroke:none" />
+    <rect
+       width="26"
+       height="7"
+       rx="0.94070876"
+       ry="0.92554134"
+       x="-37.5"
+       y="-39.5"
+       transform="scale(-1,-1)"
+       id="rect3042"
+       style="opacity:0.5;fill:url(#linearGradient3077);fill-opacity:1;stroke:#eeeeec;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+  </g>
   <path
-     d="m 30.5,27.609375 0,12.78125 L 17.71875,34 z"
+     d="m 16.5,7.609375 0,12.78125 L 29.28125,14 z"
      id="path3438"
-     style="opacity:0.5;fill:url(#linearGradient3446);fill-opacity:1;stroke:#eeeeec;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+     style="opacity:0.5;fill:url(#linearGradient3052);fill-opacity:1;stroke:#eeeeec;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
 </svg>
