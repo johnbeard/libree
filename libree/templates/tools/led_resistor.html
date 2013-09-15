@@ -7,11 +7,15 @@
 .number-input {
 	width:5em;
 }
+
+.led-results {
+    text-align:left !important;
+}
 {% endblock %}
 
 {% block toolcontent %}
 
-<div class="feature-container container">
+<div class="container">
     <div class="row">
         <div class="col-md-6">
             <table class="input-table">
@@ -31,18 +35,20 @@
                     <td>mA</td>
                 </tr>
                 <tr>
-                    <td>Number of resistors:</td>
+                    <td>Number of LEDs:</td>
                     <td><input type="text" class="form-control number-input" id="num" value="1"/></td>
                     <td></td>
                 </tr>
             </table>
         </div>
-        <div class="col-md-6">
-            Results
+        <div class="col-md-6">            
+            <ul id="led-results">
+            </ul>
         </div>
     </div>
 </div>
 
+<div id="led-warnings"></div>
 <div class="feature-result col-md-12">
 	<div class="svg-drawing" id="result-canvas">
 	</div>

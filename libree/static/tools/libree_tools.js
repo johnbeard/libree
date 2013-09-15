@@ -73,8 +73,18 @@ define(function () {
         if (sf != null)
             result = Libree.sigFigs(result, sf);
 
-        return result + ' ' + prefix + unit;
+        return result + ' ' + prefix + unit; //hair space!
 
+    }
+    
+    // TODO make this a jQuery plugin or something?
+    Libree.doneTyping = function(elem, timer, timeout, cb){
+        $(elem).keyup(function(){
+            clearTimeout(timer);
+            if ($(elem).val) {
+                typingTimer = setTimeout(cb, timeout);
+            }
+        });
     }
 
     return Libree;

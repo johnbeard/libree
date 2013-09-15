@@ -17,11 +17,35 @@ define([
         var leds_per_series = Math.floor(v_cc / v_f);
         var num_series = Math.floor(num / leds_per_series);
         var leftover = num - (leds_per_series * num_series);
+        
+        var r_ser = Math.max(1,(v_cc - (leds_per_series * v_f)) / i_f);
+        var r_left = Math.max(1,(v_cc - (leftover * v_f)) / i_f);
+        
+        var v_ser = i_f * r_ser;
+        var v_left = i_f * r_left;
+        
+        var p_ser = v_ser * i_f;
+        var p_left = v_left * i_f;
+        
+        var p_resist = p_ser * num_series * leds_per_series + p_left * leftover;
+        var p_diode = i_f * v_f 
+        var p_diodes = p_diode * num;
+        var p_total = p_resist + p_diodes;
+        
+        var i_total = p_total / v_cc;
                 
         return {
-            "r_ser": Math.max(1,(v_cc - (leds_per_series * v_f)) / i_f),
-            "r_left": Math.max(1,(v_cc - (leftover * v_f)) / i_f),
+            "r_ser": r_ser,
+            "r_left": r_left,
+            "p_ser": p_ser,
+            "p_left": p_left,
+            "p_resist": p_resist,  
+            "p_diode": p_diode,
+            "p_diodes": p_diodes,
+            "p_total": p_total,
+            "i_total": i_total,
             "ser_len": leds_per_series,
+            "num": num,
             "num_ser": num_series,
             "num_left": leftover,
             'v_cc': v_cc,
@@ -41,14 +65,63 @@ define([
             var values = computeValues(v_cc, v_f, i_f, num);
             
             drawDiagram(values, true);
+            listResults(values);
+            $('#led-warnings').empty();
         } catch(err) {
             if (err instanceof VccTooLowException)
-                console.log("Supply voltage too low");
-                
-            else 
+                reportError("Supply voltage too low (needs to be at least as high as the diode forward voltage)");
+            else
                 throw err;
         }
     };
+    
+    var reportError = function(err) {
+        $('#led-warnings')
+            .empty()
+            .append($("<div>", {'class':'alert alert-warning'})
+                .text(err)
+            );
+            
+        svg.clear().size(0,0);
+    };
+    
+    var ledResult = function(res) {
+        return $("<li>", {'class':'led-result'}).html(res);
+    }
+    
+    var listResults = function(values) {
+        if (values.num_ser > 0)
+            $('#led-results').empty()
+                .append(ledResult(((values.num_ser > 1) ? "Each " : "The ") 
+                    + Libree.formatUnits(values.r_ser, 'Ω', 3)  
+                    + " resistor dissipates " 
+                    + Libree.formatUnits(values.p_ser, 'W', 3)))
+
+        $('#led-results')
+            .append(ledResult("The "
+                + Libree.formatUnits(values.r_left, 'Ω', 3)  
+                + " resistor dissipates " 
+                + Libree.formatUnits(values.p_left, 'W', 3)))
+            .append(ledResult("In total, all the resistors together dissipate "
+                + Libree.formatUnits(values.p_resist, 'W', 3)))
+            .append(ledResult(((values.num > 1) ? "Each " : "The ") 
+                + "LED dissipates "
+                + Libree.formatUnits(values.p_diode, 'W', 3)))
+                
+        if (values.num > 0)
+            $('#led-results')
+                .append(ledResult("In total, all the LEDs together dissipate "
+                    + Libree.formatUnits(values.p_diodes, 'W', 3)));
+        
+        $('#led-results')
+            .append(ledResult("In total, this LED array draws "
+                + Libree.formatUnits(values.p_total, 'W', 3)))
+            .append(ledResult("This array draws "
+                + Libree.formatUnits(values.i_total, 'A', 3)
+                + " from the "
+                + Libree.formatUnits(values.v_cc, 'V', 3)
+                + " source"));
+    }
     
     var drawDiagram = function(values, schematic) {
         svg.clear();
@@ -91,11 +164,11 @@ define([
             var colour, label, num_diodes;
             
             if (i === total_rows-1 && values.num_left > 0) {
-                colour = ['#FF0000', '#964B00', '#FFA500', '#FFA500'];
+                colour = [];//['#FF0000', '#964B00', '#FFA500', '#FFA500'];
                 label = Libree.formatUnits(values.r_left, 'Ω', 3);
                 num_diodes = values.num_left;
             } else {
-                colour = ['#FF0000', '#964B00', '#FFA500'];
+                colour = [];//['#FF0000', '#964B00', '#FFA500'];
                 label = Libree.formatUnits(values.r_ser, 'Ω', 3);
                 num_diodes = values.ser_len;
             }
@@ -124,11 +197,10 @@ define([
             y += 50;
         }
     }
-
+    
+    var typingTimer;
     var makeBindings = function() {
-        $(".number-input").keyup(function(evt){
-            compute();
-        });
+        Libree.doneTyping(".number-input", typingTimer, 500, compute);
     };
 
     $( document ).ready(function() {
