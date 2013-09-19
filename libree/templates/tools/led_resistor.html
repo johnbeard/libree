@@ -18,7 +18,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <table class="input-table">
+            <table class="input-table" id="parameters">
                 <tr>
                     <td>Supply voltage:</td>
                     <td><input type="text" class="form-control number-input" id="vcc" value="5"/></td>
@@ -65,10 +65,13 @@ characteristics.
 
 {% block help %}
 <p>
-Enter a code into the <span id="hint-text" class="help-hint">SMD label</span>.
+Enter values into the <span data-target="parameters" class="help-hint">form</span>.
 </p>
 
 <p>
-The resulting value will be displayed in the <span id="hint-value" class="help-hint">result</span>.
+An array that limits the current in each LED to that given will be
+displayed <span data-target="result-canvas" class="help-hint">below</span>, along
+with some <span data-target="led-results" class="help-hint">useful information</span> 
+about the array.
 </p>
 {% endblock %}

@@ -1,10 +1,6 @@
 
 define(["../libree_tools"], function(Libree) {
 
-    var toTitleCase = function (str) {
-        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    }
-
     var value;
     var mode = "4band"; //initial state
 
@@ -16,7 +12,7 @@ define(["../libree_tools"], function(Libree) {
                         "bed" : "BED-resistor.svg"
                      };
 
-    var modeImageDir = "/static/tools/resistor_codes/";
+    var modeImageDir = Libree.static + "tools/resistor_codes/";
 
     var colours = {'black': {'hex':'#000000', 'sf':0,  'mult':0,  'tol':null, 'tc':250, 'invert':true},
             'brown'     : {'hex':'#964B00', 'sf':1,  'mult':1,  'tol':1, 'tc':100, 'invert':true},
@@ -258,7 +254,7 @@ define(["../libree_tools"], function(Libree) {
             colourLabel = $('<div>')
                 .css({'width':'6em', "float": "left"})
                 .attr('class', 'picker-colour-title')
-                .append(toTitleCase(colour))
+                .append(Libree.toTitleCase(colour))
                 .appendTo(item);
 
 
@@ -349,7 +345,7 @@ define(["../libree_tools"], function(Libree) {
             evt.stopPropagation();
         });
 
-        $('#mode-selector .btn').on('click', function(evt) {
+        $('#type-selector .btn').on('click', function(evt) {
 
             for (var newMode in modeImages) {
                 if ($(evt.target).hasClass(newMode)) {
@@ -379,27 +375,6 @@ define(["../libree_tools"], function(Libree) {
                 highlightBandFromCell(evt.target, false);
             })
             .css({'cursor': 'pointer'});
-
-        //help highlighting
-        $('#hint-mode')
-            .hover(function(evt) {
-                $('#mode-selector').toggleClass("help-highlight");
-            });
-
-        $('#hint-band')
-            .hover(function(evt) {
-                $('.resistor-band').toggleClass("help-highlight");
-            });
-
-        $('#hint-value')
-            .hover(function(evt) {
-                $('#resistor-value').toggleClass("help-highlight");
-            });
-
-        $('#hint-table')
-            .hover(function(evt) {
-                $('#color-table').toggleClass("help-highlight");
-            });
     };
 
     var switchMode = function (newMode) {

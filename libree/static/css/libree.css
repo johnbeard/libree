@@ -146,21 +146,18 @@ div.colour-box {
 	border-radius:6px;
 	padding: 18px 5px 5px 5px;
 	background: #DDD;
+	z-index:1000;
 }
 
 span.help-hint {
-	color: #004;
+	color: #555;
 }
 
 div.help-highlight,
-span.help-highlight {
-	outline: 1px solid red !important;
-}
-
+span.help-highlight,
 table.help-highlight,
-table.help-highlight th,
-table.help-highlight td {
-	border: 1px solid red !important;
+ul.help-highlight {
+	outline: 2px solid red !important;
 }
 
 path.help-highlight {

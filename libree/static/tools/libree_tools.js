@@ -12,12 +12,22 @@ define(function () {
             $('.help-button-container img')
                 .removeClass('hidden')
                 .on('click', function(evt) {
-                            me.toggleHelp();
-                        });
+                    me.toggleHelp();
+                });
 
             $('.help-close-container').click( function() {
                 me.hideHelp();
             });
+            
+            $('.help-hint')
+                .mouseenter( function() {
+                    $('#' + $(this).data("target")).addClass('help-highlight');
+                    $('.' + $(this).data("target")).addClass('help-highlight');
+                })
+                .mouseleave( function() {
+                    $('#' + $(this).data("target")).removeClass('help-highlight');
+                    $('.' + $(this).data("target")).removeClass('help-highlight');
+                });
         }
     }
 

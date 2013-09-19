@@ -16,7 +16,7 @@
 {% block toolcontent %}
 
 <div class="mode-selector">
-    <div class="btn-group" id="mode-selector">
+    <div class="btn-group" id="type-selector">
         <button class="btn btn-default 4band">4-Band</button>
         <button class="btn btn-default 5band">5-Band</button>
         <button class="btn btn-default 6band">6-Band</button>
@@ -59,21 +59,22 @@
 </table>
 {% endblock %}
 
-{% block help %}
+{% block help %}       
+            
 <p>
-Click on the <span id="hint-mode" class="help-hint">mode selector</span> to choose the
+Click on the <span data-target="type-selector" class="help-hint">type selector</span> to choose the
 type of resistor code to calculate.
 </p>
 
 <p>
-Click on a <span id="hint-band" class="help-hint">band</span> to select the colour -
+Click on a <span data-target="resistor-band" class="help-hint">band</span> to select the colour -
 hovering will highlight the relevant column in the table. The resulting
-value will be displayed <span id="hint-value" class="help-hint">value</span> the
+value will be displayed <span data-target="resistor-value" class="help-hint">value</span> the
 resistor.
 </p>
 
 <p>
-You can also click a cell in the <span id="hint-table" class="help-hint">table</span>
+You can also click a cell in the <span data-target="color-table" class="help-hint">table</span>
 to apply that colour to the relevant band.
 </p>
 {% endblock %}
