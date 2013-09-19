@@ -92,29 +92,37 @@ define([
     var listResults = function(values) {
         if (values.num_ser > 0)
             $('#led-results').empty()
-                .append(ledResult(((values.num_ser > 1) ? "Each " : "The ") 
-                    + Libree.formatUnits(values.r_ser, 'Ω', 3)  
-                    + " resistor dissipates " 
+                .append(ledResult(
+                    Libree.pluralEach("resistor", values.num_ser, Libree.formatUnits(values.r_ser, 'Ω', 3))
+                    + " dissipates "
                     + Libree.formatUnits(values.p_ser, 'W', 3)))
 
-        $('#led-results')
-            .append(ledResult("The "
-                + Libree.formatUnits(values.r_left, 'Ω', 3)  
-                + " resistor dissipates " 
-                + Libree.formatUnits(values.p_left, 'W', 3)))
-            .append(ledResult("In total, all the resistors together dissipate "
-                + Libree.formatUnits(values.p_resist, 'W', 3)))
-            .append(ledResult(((values.num > 1) ? "Each " : "The ") 
-                + "LED dissipates "
-                + Libree.formatUnits(values.p_diode, 'W', 3)))
-                
-        if (values.num > 0)
+        if (values.num_left > 0)
             $('#led-results')
+                .append(ledResult("The "
+                    + Libree.formatUnits(values.r_left, 'Ω', 3)  
+                    + " resistor dissipates " 
+                    + Libree.formatUnits(values.p_left, 'W', 3)))
+                
+        if ((values.num_left ? 1 : 0) + values.num_ser > 1)
+            $('#led-results')
+                .append(ledResult("In total, all the resistors together dissipate "
+                    + Libree.formatUnits(values.p_resist, 'W', 3)))
+           
+        if (values.num > 0)        
+            $('#led-results')
+                .append(ledResult(
+                    Libree.pluralEach('LED', values.num)
+                    + " dissipates "
+                    + Libree.formatUnits(values.p_diode, 'W', 3)))
+                    
+        if (values.num > 1)   
+            $('#led-results') 
                 .append(ledResult("In total, all the LEDs together dissipate "
                     + Libree.formatUnits(values.p_diodes, 'W', 3)));
         
         $('#led-results')
-            .append(ledResult("In total, this LED array draws "
+            .append(ledResult("In total, this LED array dissipates "
                 + Libree.formatUnits(values.p_total, 'W', 3)))
             .append(ledResult("This array draws "
                 + Libree.formatUnits(values.i_total, 'A', 3)

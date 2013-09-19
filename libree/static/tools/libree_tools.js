@@ -3,6 +3,8 @@
 define(function () {
 
     var Libree = function () {};
+    
+    Libree.static = "/static"; //FIXME - get this out of this static!
 
     Libree.setupTool = function () {
         var me = this;
@@ -85,6 +87,24 @@ define(function () {
                 typingTimer = setTimeout(cb, timeout);
             }
         });
+    }
+    
+    // very basic routing to uppercase the first letter of words
+    Libree.toTitleCase = function (str) {
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    }
+    
+    Libree.pluralise = function(singular, num, suffix) {
+        return (num > 1) ? (singular + ((typeof suffix !== 'undefined') ? suffix : 's')) : singular;
+    }
+    
+    //construct one of:
+    //  The <descriptor> root
+    //  Each of the <descriptor> <singular><"s"|suffix>
+    Libree.pluralEach = function(singular, num, descriptor, suffix) {
+        return ((num > 1) ? ("Each of the " + num) : "The")
+            + (descriptor ? (" " + descriptor + " ") : " ")
+            + Libree.pluralise(singular, num, suffix);
     }
 
     return Libree;
