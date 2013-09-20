@@ -90,8 +90,9 @@ define([
     }
     
     var listResults = function(values) {
+        $('#led-results').empty();
         if (values.num_ser > 0)
-            $('#led-results').empty()
+            $('#led-results')
                 .append(ledResult(
                     Libree.pluralEach("resistor", values.num_ser, Libree.formatUnits(values.r_ser, 'Ω', 3))
                     + " dissipates "
@@ -208,7 +209,7 @@ define([
     
     var typingTimer;
     var makeBindings = function() {
-        Libree.doneTyping(".number-input", typingTimer, 500, compute);
+        Libree.doneTyping(".number-input input", typingTimer, 500, compute);
     };
 
     $( document ).ready(function() {

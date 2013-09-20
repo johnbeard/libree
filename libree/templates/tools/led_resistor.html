@@ -5,7 +5,7 @@
 
 {% block pagestyle %}
 .number-input {
-	width:5em;
+	width:10em;
 }
 
 .led-results {
@@ -18,28 +18,38 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <table class="input-table" id="parameters">
-                <tr>
-                    <td>Supply voltage:</td>
-                    <td><input type="text" class="form-control number-input" id="vcc" value="5"/></td>
-                    <td>V</td>
-                </tr>
-                <tr>
-                    <td>LED forward voltage:</td>
-                    <td><input type="text" class="form-control number-input" id="vf" value="2"/></td>
-                    <td>V</td>
-                </tr>
-                <tr>
-                    <td>LED forward current:</td>
-                    <td><input type="text" class="form-control number-input" id="if" value="20"/></td>
-                    <td>mA</td>
-                </tr>
-                <tr>
-                    <td>Number of LEDs:</td>
-                    <td><input type="text" class="form-control number-input" id="num" value="1"/></td>
-                    <td></td>
-                </tr>
-            </table>
+            
+            <div id="parameters">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-lg-6 control-label" for="vcc">Supply voltage:</label>
+                    <div class="col-lg-6 input-group number-input" >
+                        <input type="number" class="form-control" id="vcc" value="5" min=0 max=100/>
+                        <span class="input-group-addon">V</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-6 control-label" for="vf">LED forward voltage:</label>
+                    <div class="col-lg-6 input-group number-input" >
+                        <input type="number" class="form-control" id="vf" value="2" min=0 max=100/>
+                        <span class="input-group-addon">V</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-6 control-label" for="if">LED forward current:</label>
+                    <div class="col-lg-6 input-group number-input" >
+                        <input type="number" class="form-control" id="if" value="2" min=0 max=1000/>
+                        <span class="input-group-addon">mA</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-6 control-label" for="num">Number of LEDs:</label>
+                    <div class="col-lg-6 input-group number-input" >
+                        <input type="number" class="form-control" id="num" value="1" min=1 max=200/>
+                    </div>
+                </div>
+            </form>
+            </div>
         </div>
         <div class="col-md-6">            
             <ul id="led-results">

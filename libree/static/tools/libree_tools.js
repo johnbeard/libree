@@ -91,7 +91,7 @@ define(function () {
     
     // TODO make this a jQuery plugin or something?
     Libree.doneTyping = function(elem, timer, timeout, cb){
-        $(elem).keyup(function(){
+        $(elem).change(function(){
             clearTimeout(timer);
             if ($(elem).val) {
                 typingTimer = setTimeout(cb, timeout);
