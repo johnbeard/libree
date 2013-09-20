@@ -1,0 +1,116 @@
+
+{% extends "tool.html" %}
+
+{% load render_tools %}
+
+{% block pagestyle %}
+<style>
+#input-select {
+    padding-bottom: 10px;
+
+    text-align:center;
+}
+.btn-group {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+.menubar {
+    text-align:center;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div style="max-width:60em; margin:0 auto;">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="b64-warnings"></div>   
+
+            <div class="menubar">
+                <div id="input-select" class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default">
+                        <input type="radio" name="input-file" id="input-file"> File
+                    </label>  
+                    <label class="btn btn-default active">
+                        <input type="radio" name="input-text" id="input-text"> Text
+                    </label>     
+                    <label class="btn btn-default">
+                        <input type="radio" name="input-text" id="input-text"> Hexadecimal text
+                    </label>  
+                </div>
+            </div>
+
+            <div id="file-input" class="hidden">
+                Choose a file to encode into Base64:
+                <div class="input">
+                    <input type="file" id="files" name="files[]" />
+                </div>
+            </div>
+            
+            <div id="text-input">
+                <div class="input">
+                    <textarea class="form-control" id="input-text" name="input-text" placeholder="Text to encode"></textarea>
+                </div>
+            </div>
+        
+            <div class="menubar">
+                <div id="convert-select" class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default active">
+                        <input type="radio" name="encode" id="encode"> Encode to Base64
+                    </label>  
+                    <label class="btn btn-default">
+                        <input type="radio" name="decode" id="decode"> Decode from Base64
+                    </label>        
+                </div>
+            </div>
+        
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-lg-2 control-label" for="lineLength" >Line length</label>
+                    <div class="col-lg-4">
+                        <input type="number" class="form-control" id="lineLength" style="width:5em;" value="76">
+                    </div>
+                    <label class="col-lg-2 control-label" for="encoding" >Text encoding</label>
+                    <div class="col-lg-4">
+                        <input type="number" class="form-control" id="encoding" style="width:5em;" value="76">
+                    </div>
+                </div>
+            </form>
+        
+            <div class="input">
+                <textarea class="form-control" id="output-text" name="output-text" placeholder="Data encoded as Base64"></textarea>
+            </div>
+        
+            <div class="menubar">
+                <div id="output-select" class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default active">
+                        <input type="radio" name="encode" id="encode"> Text
+                    </label>  
+                    <label class="btn btn-default">
+                        <input type="radio" name="decode" id="decode"> Hexadecimal
+                    </label> 
+                </div>
+            
+                <div class="btn-group">
+                    <button class="btn btn-default" id="download">Download binary file</button>     
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block help %}
+<p>
+Enter a code into the <span data-target="code-container" class="help-hint">SMD label</span>,
+selecting the type of line from the <span data-target="line-select" class="help-hint">menu</span>
+</p>
+
+<p>
+The resulting value will be displayed in the <span data-target="resistor-value" class="help-hint">result</span>.
+</p>
+{% endblock %}
+
+
