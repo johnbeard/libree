@@ -52,21 +52,31 @@ define([
         }
     }
         
-    var compute = function() {
-        var v_cc = parseFloat($("input#vcc").val());
-        var v_f = parseFloat($("input#vf").val());
-        var i_f = parseFloat($("input#if").val()) / 1000; //mA -> A
-        var num = parseInt($("input#num").val());
+    var compute = function() {       
+        var v_cc = Libree.validateInput("input#vcc", Libree.validatorNumber(false, 'e'));
+        var v_f = Libree.validateInput("input#vf", Libree.validatorNumber(false, 'e'));
+        var i_f = Libree.validateInput("input#if", Libree.validatorNumber(false, 'e'));
+        var num = Libree.validateInput("input#num", Libree.validatorNumber(true, 1, 100));
         
-        if (isNaN(v_cc) || isNaN(v_f) || isNaN(i_f) || isNaN(num))
-            return;
+        $('#led-warnings').empty();
+        
+        var parseErrs = [
+            [v_cc, "Invalid input parameter: Supply voltage must be positive and non-zero"],
+            [v_f, "Invalid input parameter: LED forward voltage must be positive and non-zero"],
+            [i_f, "Invalid input parameter: LED forward current must be positive and non-zero"],
+            [num, "Invalid input parameter: Number of LEDs must be greater than one"]
+        ]
+        
+        if (Libree.checkParseErrors(parseErrs, reportError))
+            return;        
+            
+        i_f /= 1000; // mA -> A
         
         try {
             var values = computeValues(v_cc, v_f, i_f, num);
             
             drawDiagram(values, true);
             listResults(values);
-            $('#led-warnings').empty();
         } catch(err) {
             if (err instanceof VccTooLowException)
                 reportError("Supply voltage too low (needs to be at least as high as the diode forward voltage)");
@@ -77,11 +87,11 @@ define([
     
     var reportError = function(err) {
         $('#led-warnings')
-            .empty()
             .append($("<div>", {'class':'alert alert-warning'})
                 .text(err)
             );
             
+        $('#led-results').empty();
         svg.clear().size(0,0);
     };
     
@@ -206,7 +216,7 @@ define([
             y += 50;
         }
     }
-    
+
     var typingTimer;
     var makeBindings = function() {
         Libree.doneTyping(".number-input input", typingTimer, 500, compute);

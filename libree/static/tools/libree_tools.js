@@ -91,11 +91,24 @@ define(function () {
     
     // TODO make this a jQuery plugin or something?
     Libree.doneTyping = function(elem, timer, timeout, cb){
-        $(elem).change(function(){
+        
+        var timerSet = function (timeout) {
             clearTimeout(timer);
             if ($(elem).val) {
-                typingTimer = setTimeout(cb, timeout);
+                timer = setTimeout(cb, timeout);
             }
+        };
+        
+        $(elem).on('change', function(){
+            timerSet(timeout);
+        })
+        .on('keyup', function(e) { 
+            // on enter go at once
+            if (e.which == 13) {
+                timerSet(0);
+            } else {
+                timerSet(timeout); 
+            }              
         });
     }
     
@@ -115,6 +128,64 @@ define(function () {
         return ((num > 1) ? ("Each of the " + num) : "The")
             + (descriptor ? (" " + descriptor + " ") : " ")
             + Libree.pluralise(singular, num, suffix);
+    }
+    
+    //does the browser support the File element?
+    Libree.supportsFile = function() {
+        return window.File && window.FileReader && window.FileList && window.Blob;
+    }
+    
+    Libree.flagInputValidity = function(sel, valid) {
+        $(sel).toggleClass('error-box', !valid);
+    }
+    
+    Libree.checkParseErrors = function(vals, cb) {
+        var err = false;
+        
+        for (var i = 0; i < vals.length; i++) {
+            if (vals[i][0] === null) {
+                cb(vals[i][1]);
+                err = true;
+            }
+        }
+        
+        return err;
+    }
+    
+    Libree.validateInput = function(inputSelector, validator) {
+        try {
+            var x =  validator($(inputSelector).val());
+            Libree.flagInputValidity(inputSelector, true);
+            return x;
+        } catch (err) {
+            if (err instanceof RangeError) {
+                Libree.flagInputValidity(inputSelector, false);
+                return null;
+            }
+        }
+    }
+    
+    var validators = {
+        number: /^[+\-]?[0-9]*\.?[0-9]*([eE][0-9]*\.?[0-9]*)?$/
+    }
+    
+    Libree.validatorNumber = function(int, min, max) {
+        return function(input) {
+            if (!validators.number.test(input))
+                throw new RangeError();
+            
+            //so it looks like an integer, make it one
+            var x = parseFloat(input);
+            
+            if(typeof max === "undefined") { max = Infinity; }
+            if(typeof min === "undefined") { min = -Infinity; }
+            
+            if ((int && (x % 1 != 0)) || isNaN(x) || x < min || x > max
+                || ((min === 'e' || max === 'e') && x === 0)) //filter zero floats
+                throw new RangeError();
+                
+            return x;
+        };
     }
 
     return Libree;
