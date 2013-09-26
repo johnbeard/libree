@@ -100,3 +100,13 @@ registry['ascii'] = {
     "categories": ['electronics'],
     "scripts": {}
 }
+
+registry['base64'] = {
+    "description":"Base64 encoder and decoder.",
+    "title": "Base64 Encoder/Decoder",
+    "template": "tools/base64.html",
+    "icon": "base64",
+    "tags": ["calculator"],
+    "categories": ['electronics'],
+    "scripts": {}
+}
