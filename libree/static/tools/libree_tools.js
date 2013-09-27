@@ -99,7 +99,7 @@ define(function () {
             }
         };
         
-        $(elem).on('change', function(){
+        $(elem).on('paste', function(e){
             timerSet(timeout);
         })
         .on('keyup', function(e) { 
@@ -109,6 +109,19 @@ define(function () {
             } else {
                 timerSet(timeout); 
             }              
+        });
+    }
+    
+    Libree.setupToggleButton = function(groupSelector, cb, initialId) {
+        $(groupSelector + " .btn").click( function (evt) {  
+            //turn off any current selection
+            $(groupSelector + " .btn").removeClass('active')
+            
+            //and now turn on the new one   
+            $(evt.target).addClass('active');
+            
+            cb($(evt.target).attr('id'));
+            evt.stopImmediatePropagation();
         });
     }
     

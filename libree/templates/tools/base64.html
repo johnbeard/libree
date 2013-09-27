@@ -17,6 +17,10 @@
 .menubar {
     text-align:center;
 }
+
+textarea {
+    font-family: monospace;
+}
 </style>
 {% endblock %}
 
@@ -28,42 +32,29 @@
             <div id="b64-warnings"></div>   
 
             <div class="menubar">
-                <div id="input-select" class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default">
-                        <input type="radio" name="input-file" id="input-file"> File
-                    </label>  
-                    <label class="btn btn-default active">
-                        <input type="radio" name="input-text" id="input-text"> Text
-                    </label>     
-                    <label class="btn btn-default">
-                        <input type="radio" name="input-text" id="input-text"> Hexadecimal text
-                    </label>  
+                <div id="input-select" class="btn-group">
+                    <button class="btn btn-default" id="input-file">File 
+                    </button>  
+                    <button class="btn btn-default active" id="input-text"> Text
+                    </button>     
+                    <button class="btn btn-default" id="input-hex"> Hexadecimal text
+                    </button>  
                 </div>
             </div>
 
-            <div id="file-input" class="hidden">
-                Choose a file to encode into Base64:
+            <div id="file-input" class="input-area hidden">
                 <div class="input">
-                    <input type="file" id="files" name="files[]" />
+                    <input type="file" id="input-filechooser" name="files[]" />
                 </div>
             </div>
             
-            <div id="text-input">
+            <div id="text-input" class="input-area">
                 <div class="input">
-                    <textarea class="form-control" id="input-text" name="input-text" placeholder="Text to encode"></textarea>
+                    <textarea class="form-control" rows=5 id="input-textbox" name="input-textbox" placeholder="Text to encode"></textarea>
                 </div>
             </div>
-        
-            <div class="menubar">
-                <div id="convert-select" class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default active">
-                        <input type="radio" name="encode" id="encode"> Encode to Base64
-                    </label>  
-                    <label class="btn btn-default">
-                        <input type="radio" name="decode" id="decode"> Decode from Base64
-                    </label>        
-                </div>
-            </div>
+            
+            <hr>
         
             <form class="form-horizontal" role="form">
                 <div class="form-group">
@@ -77,9 +68,11 @@
                     </div>
                 </div>
             </form>
+            
+            <hr>
         
             <div class="input">
-                <textarea class="form-control" id="output-text" name="output-text" placeholder="Data encoded as Base64"></textarea>
+                <textarea class="form-control" rows=5 id="output-textbox" name="output-textbox" placeholder="Data encoded as Base64"></textarea>
             </div>
         
             <div class="menubar">
