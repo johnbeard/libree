@@ -12,7 +12,7 @@ define(["../libree_tools"], function(Libree) {
                         "bed" : "BED-resistor.svg"
                      };
 
-    var modeImageDir = Libree.static + "tools/resistor_codes/";
+    var modeImageDir = Libree.static + "/tools/resistor_codes/";
 
     var colours = {'black': {'hex':'#000000', 'sf':0,  'mult':0,  'tol':null, 'tc':250, 'invert':true},
             'brown'     : {'hex':'#964B00', 'sf':1,  'mult':1,  'tol':1, 'tc':100, 'invert':true},
@@ -32,12 +32,26 @@ define(["../libree_tools"], function(Libree) {
     var coloursInOrder = ['black', 'brown', 'red', 'orange', 'yellow',
             'green', 'blue', 'violet', 'grey', 'white', 'gold', 'silver',
             'none'];
+            
+    var svgHasClass = function(e, cls) {
+        return $.inArray(cls, e.attr('class').split(' ')) >= 0
+    }
+    
+    var svgRemoveClass = function(e, cls) {
+        var re = new RegExp("(^|\\s)" + cls + "(\\s|$)", "g");
+        e.attr('class', e.attr('class').replace(re, ' '));
+    }
+    
+    var svgAddClass = function(e, cls) {
+        if (!svgHasClass(e, cls))
+            e.attr('class', e.attr('class') + ' ' + cls);
+    }
 
     //TODO: make this a JQ type function thingy
     var getColourClass = function(e) {
         for (var i = 0; i < coloursInOrder.length; i++) {
 
-            if (e.hasClass(coloursInOrder[i])) {
+            if (svgHasClass(e, coloursInOrder[i])) {
                 return coloursInOrder[i];
             }
         }
@@ -48,7 +62,7 @@ define(["../libree_tools"], function(Libree) {
     //remove all colour classes
     var removeColourClass = function(e) {
         for (var i = 0; i < coloursInOrder.length; i++) {
-            e.removeClass(coloursInOrder[i]);
+            svgRemoveClass(e, coloursInOrder[i]);
         }
     }
 
@@ -131,7 +145,7 @@ define(["../libree_tools"], function(Libree) {
 
         var band = $('#' + bandIdFromIndex(band));
         removeColourClass(band);
-        band.addClass(colour);
+        svgAddClass(band, colour);
 
         $('#' + pickerId).remove();
     }

@@ -43,9 +43,7 @@ registry['resistor_codes'] = {
     "tags" : ["calculator"],
     "categories" : ['electronics'],
 
-    "scripts" : {'common':['jquery-svg-1.4.5a/jquery.svg.min.js',
-                        'jquery-svg-1.4.5a/jquery.svgdom.js']
-            }
+    "scripts" : {}
 }
 
 registry['smd_resistor_codes'] = {
