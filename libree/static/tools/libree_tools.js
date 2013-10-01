@@ -114,14 +114,18 @@ define(function () {
     
     Libree.setupToggleButton = function(groupSelector, cb, initialId) {
         $(groupSelector + " .btn").click( function (evt) {  
-            //turn off any current selection
-            $(groupSelector + " .btn").removeClass('active')
             
-            //and now turn on the new one   
-            $(evt.target).addClass('active');
-            
-            cb($(evt.target).attr('id'));
-            evt.stopImmediatePropagation();
+            var change = true;
+            if (typeof cb !== 'undefined')
+                change = cb($(evt.target).attr('id'));
+                
+            if (change) {
+                //turn off any current selection
+                $(groupSelector + " .btn").removeClass('active')
+                //and now turn on the new one   
+                $(evt.target).addClass('active');
+                evt.stopImmediatePropagation();
+            }
         });
     }
     
@@ -199,6 +203,66 @@ define(function () {
                 
             return x;
         };
+    }
+    
+    Libree.textToHex = function (text) {
+        var hex = ''
+        
+        for (var i = 0; i < text.length; i++)
+            hex += Libree.leftPad(text.charCodeAt(i).toString(16), 2, '0') + ' ';
+            
+        return hex;
+    }
+    
+    Libree.hexToText = function (hex) {
+        var hex = hex.replace(/\s/g, "");
+        var text = ''
+        
+        if (hex.length % 2 === 0) {
+            for (var i = 0; i < hex.length; i+=2) {
+                text += String.fromCharCode(parseInt(hex.substr(i,2), 16));
+            }
+        } else { //we need even number of hexigits
+            throw new RangeError();
+        }
+        
+        return text;
+    }
+    
+    Libree.binToHex = function(bin) {
+        hex = '';
+        for (var i = 0; i < bin.length; i++)
+            hex += Libree.leftPad(bin[i].toString(16), 2, '0') + ' ';
+        
+        return hex
+    }
+    
+    Libree.hexToBin = function(hex) {
+        
+        hex = hex.replace(/[^0-9A-Fa-f]/g, ""); //replace all non-hex
+        
+        var bin = new Uint8Array(Math.ceil(hex.length / 2));
+        var fullBytes = Math.floor(hex.length / 2);
+        var i,j;
+        for (i = 0, j=0; j < fullBytes; i+=2, j+=1)
+            bin[j] = parseInt(hex[i] + hex[i+1], 16);
+        
+        //partial byte - take as the most significant nibble
+        if (hex.length % 2)
+            bin[j] = parseInt(hex[hex.length-1], 16) * 16;
+
+        return bin;
+    }
+    
+    Libree.leftPad = function (val, size, ch) {
+        var result = String(val);
+        if(!ch) {
+            ch = " ";
+        }
+        while (result.length < size) {
+            result = ch + result;
+        }
+        return result;
     }
 
     return Libree;

@@ -1,7 +1,9 @@
-define(["../libree_tools", "../../js/base64"], function(Libree) {
+
+define(["../libree_tools", "../../js/base64"], function(Libree, B64) {
     
     var inputMethod = 'text';
-    var outputMethod;
+    var outputMethod = 'text';
+    var data; //binary data
     
     var printB64 = function (b64) {        
         var lineLength = parseInt($('#lineLength').val());
@@ -10,40 +12,32 @@ define(["../libree_tools", "../../js/base64"], function(Libree) {
         $('#output-textbox').empty();
 
         for (var offset = 0, strLen = b64.length; offset < strLen; offset += lineLength) {
-
             out += (offset > 0)? '\n' : '';
             out += b64.slice(offset, lineLength + offset);
         }
         
         $('#output-textbox').val(out).removeClass('error-box');
-    }
+        
+        setDownloadLink(b64);
+    };
     
-    var decode = function () {
-        try {
-            $('#input-textbox').empty();
-            
-            var b6 = $('#output-textbox').val().replace(/\s/g, "");
-            var text = window.atob(b6);
-            
-            $('#input-textbox').val(text)
-            
-            $('#output-textbox').removeClass('error-box');
-        } catch (err) {
-            if (err instanceof DOMException)
-                $('#output-textbox').addClass('error-box');
-        }
-    }
-    
-    var outputChanged = function () {
-        switchInputMethod('text');
-        decode();
+    var setDownloadLink = function (b64) {
+        $('#btn-download').removeClass('hidden')
+            .attr({'href': 'data:text/plain; charset=utf-8;base64,'+b64});
     }
     
     var encode = function () {
 
         if (inputMethod === 'text') {
-            var b64 = window.btoa($("#input-textbox").val());
+            data = B64.strToUTF8Arr($("#input-textbox").val());
+            
+            var b64 = B64.base64EncArr(data);
             printB64(b64);
+        } else if (inputMethod === 'hex') {
+            data = Libree.hexToBin($("#input-hexbox").val());
+            var b64 = B64.base64EncArr(data);
+            printB64(b64);
+
         } else if (inputMethod === 'file') {
             var file = $('#input-filechooser').get(0).files[0];
             
@@ -51,52 +45,89 @@ define(["../libree_tools", "../../js/base64"], function(Libree) {
             
             fr.onload = (function() {
                 return function(e) {
-                    var b64 = e.target.result.split(',')[1];
+                    data = new Uint8Array(e.target.result)
+                    var b64 = B64.base64EncArr(data);
                     printB64(b64);
                 };
             })(file);
             
-            fr.readAsDataURL( file );
+            fr.readAsArrayBuffer( file );
         }
     }
     
-    // internal changed - updage buttons and areas
-    var switchInputMethod = function(newMethod) {
-        $('.input-area').addClass('hidden');
+    var decode = function () {
+        var error = false;
+        try {            
+            var b64;
+            if (outputMethod === 'text')
+                b64 = $('#output-textbox').val()
+            else
+                b64 = hexToText($('#output-hexbox').val());
+                
+            b64 = b64.replace(/[^a-zA-z0-9\+=]/g, "");
+            
+            data = B64.base64DecToArr(b64);
+            
+            inputMethodChanged();
+            
+            $('#input-filechooser').val(''); 
+            
+            setDownloadLink(b64);
+
+        } catch (err) {
+            if (err instanceof base64.DecodeException)
+                error = true;
+        }
         
-        inputMethod = newMethod;
-        
-        //activate the right button
-        $('#input-select .btn').removeClass('active');
-        $('#' + 'input-' + inputMethod).addClass('active');
-        
-        //show the right area
-        $('#' + inputMethod + '-input').removeClass('hidden');
+        $('#output-textbox').toggleClass('error-box', error);
     }
     
     // button was pressed - update internals and areas
-    var inputMethodChanged = function() {
-        $('.input-area').addClass('hidden');
-        
-        var id = $('#input-select .btn.active').attr('id');
-        
-        var old = inputMethod;
+    var inputMethodChanged = function(id) {
 
-        inputMethod = id.split('-')[1];
+        old = inputMethod;
         
-        // convert the input data to the new stylee
-        if (old !== inputMethod) {
+        if (typeof id !== 'undefined')
+            inputMethod = id.split('-')[1];
+        
+        if (inputMethod !== old || typeof id == 'undefined')
+        {
+            //show the right input area
+            var areaId = inputMethod + '-input';
             
+            if (inputMethod === 'text') {
+                $('#input-textbox').val(B64.UTF8ArrToStr(data || []));
+                
+            } else if (inputMethod === 'hex') {
+                $('#input-hexbox').val(Libree.binToHex(data || []));
+            }
+            
+            $('.input-area').addClass('hidden');
+            $('#' + areaId).removeClass('hidden');
         }
-        
+        return true;
+    }
+    
+    var outputMethodChanged = function(id) {
         //show the right input area
-        var areaId;
-        if (inputMethod === 'hex')
-            areaId = 'text-input';
-        else
-            areaId = inputMethod + '-input';
+        var old = outputMethod;
+        outputMethod = id.split('-')[1];
         
-        $('#' + areaId).removeClass('hidden');
+        if (outputMethod !== old) {
+            var areaId = outputMethod + '-output';
+            
+            //just flip between the two
+            if (outputMethod === 'text') {
+                $('#output-textbox').val(Libree.hexToText($('#output-hexbox').val() || ''));
+                
+            } else if (outputMethod === 'hex') {
+                $('#output-hexbox').val(Libree.textToHex($('#output-textbox').val() || ''));
+            }
+
+            $('.output-area').addClass('hidden');
+            $('#' + areaId).removeClass('hidden');
+        }
+        return true;
     }
         
     var typingTimer;
@@ -107,14 +138,26 @@ define(["../libree_tools", "../../js/base64"], function(Libree) {
             encode();
         });
         
-        $('#lineLength').change( function () {
+        $('#lineLength').change( function (e) {
             //re-parse with new line length
+            e.preventDefault();
             printB64($('#output-textbox').val().replace(/\s/g, ""));
         });
         
-        Libree.doneTyping("#input-textbox", typingTimer, 500, encode);
+        $('#btn-encode').click( function (e) {
+            encode();
+            e.preventDefault();
+        });
         
-        Libree.doneTyping("#output-textbox", typingTimer, 500, outputChanged);
+        $('#btn-decode').click( function (e) {
+            e.preventDefault();
+            decode();
+        });
+        
+        Libree.setupToggleButton("#output-select", outputMethodChanged);
+
+        Libree.doneTyping(".input-area textarea", typingTimer, 500, encode);
+        Libree.doneTyping(".output-area textarea", typingTimer, 500, decode);
     }
 
     $( document ).ready(function () {

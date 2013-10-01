@@ -32,7 +32,8 @@ body {
 	font-size: larger;
 }
 
-.hero-description {
+.hero-description,
+.small-note {
 	font-size: smaller;
 }
 

@@ -31,136 +31,171 @@ define(function() {
         "use strict";
 
 	var base64 = {};
-	base64.PADCHAR = '=';
-	base64.ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+	
+	base64.DecodeException = function () {};
 
-	base64.makeDOMException = function() {
-		// sadly in FF,Safari,Chrome you can't make a DOMException
-		var e, tmp;
+	/* Array of bytes to base64 string decoding */
 
-		try {
-			return new DOMException(DOMException.INVALID_CHARACTER_ERR);
-		} catch (tmp) {
-			// not available, just passback a duck-typed equiv
-			// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Error
-			// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Error/prototype
-			var ex = new Error("DOM Exception 5");
+	base64.b64ToUint6 = function (nChr) {
 
-			// ex.number and ex.description is IE-specific.
-			ex.code = ex.number = 5;
-			ex.name = ex.description = "INVALID_CHARACTER_ERR";
+	  return nChr > 64 && nChr < 91 ?
+		  nChr - 65
+		: nChr > 96 && nChr < 123 ?
+		  nChr - 71
+		: nChr > 47 && nChr < 58 ?
+		  nChr + 4
+		: nChr === 43 ?
+		  62
+		: nChr === 47 ?
+		  63
+		:
+		  0;
 
-			// Safari/Chrome output format
-			ex.toString = function() { return 'Error: ' + ex.name + ': ' + ex.message; };
-			return ex;
-		}
 	}
 
-	base64.getbyte64 = function(s,i) {
-		// This is oddly fast, except on Chrome/V8.
-		//  Minimal or no improvement in performance by using a
-		//   object with properties mapping chars to value (eg. 'A': 0)
-		var idx = base64.ALPHA.indexOf(s.charAt(i));
-		if (idx === -1) {
-			throw base64.makeDOMException();
+	base64.base64DecToArr = function (sBase64, nBlocksSize) {
+
+	  var
+		sB64Enc = sBase64.replace(/[^A-Za-z0-9\+\/]/g, ""), nInLen = sB64Enc.length,
+		nOutLen = nBlocksSize ? Math.ceil((nInLen * 3 + 1 >> 2) / nBlocksSize) * nBlocksSize : nInLen * 3 + 1 >> 2, taBytes = new Uint8Array(nOutLen);
+
+	  for (var nMod3, nMod4, nUint24 = 0, nOutIdx = 0, nInIdx = 0; nInIdx < nInLen; nInIdx++) {
+		nMod4 = nInIdx & 3;
+		nUint24 |= base64.b64ToUint6(sB64Enc.charCodeAt(nInIdx)) << 18 - 6 * nMod4;
+		if (nMod4 === 3 || nInLen - nInIdx === 1) {
+		  for (nMod3 = 0; nMod3 < 3 && nOutIdx < nOutLen; nMod3++, nOutIdx++) {
+			taBytes[nOutIdx] = nUint24 >>> (16 >>> nMod3 & 24) & 255;
+		  }
+		  nUint24 = 0;
+
 		}
-		return idx;
+	  }
+
+	  return taBytes;
 	}
 
-	base64.decode = function(s) {
-		// convert to string
-		s = '' + s;
-		var getbyte64 = base64.getbyte64;
-		var pads, i, b10;
-		var imax = s.length
-		if (imax === 0) {
-			return s;
-		}
+	/* Base64 string to array encoding */
 
-		if (imax % 4 !== 0) {
-			throw base64.makeDOMException();
-		}
+	base64.uint6ToB64 = function (nUint6) {
 
-		pads = 0
-		if (s.charAt(imax - 1) === base64.PADCHAR) {
-			pads = 1;
-			if (s.charAt(imax - 2) === base64.PADCHAR) {
-				pads = 2;
-			}
-			// either way, we want to ignore this last block
-			imax -= 4;
-		}
+	  return nUint6 < 26 ?
+		  nUint6 + 65
+		: nUint6 < 52 ?
+		  nUint6 + 71
+		: nUint6 < 62 ?
+		  nUint6 - 4
+		: nUint6 === 62 ?
+		  43
+		: nUint6 === 63 ?
+		  47
+		:
+		  65;
 
-		var x = [];
-		for (i = 0; i < imax; i += 4) {
-			b10 = (getbyte64(s,i) << 18) | (getbyte64(s,i+1) << 12) |
-				(getbyte64(s,i+2) << 6) | getbyte64(s,i+3);
-			x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) & 0xff, b10 & 0xff));
-		}
-
-		switch (pads) {
-		case 1:
-			b10 = (getbyte64(s,i) << 18) | (getbyte64(s,i+1) << 12) | (getbyte64(s,i+2) << 6);
-			x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) & 0xff));
-			break;
-		case 2:
-			b10 = (getbyte64(s,i) << 18) | (getbyte64(s,i+1) << 12);
-			x.push(String.fromCharCode(b10 >> 16));
-			break;
-		}
-		return x.join('');
 	}
 
-	base64.getbyte = function(s,i) {
-		var x = s.charCodeAt(i);
-		if (x > 255) {
-			throw base64.makeDOMException();
+	base64.base64EncArr = function (aBytes) {
+
+	  var nMod3, sB64Enc = "";
+
+	  for (var nLen = aBytes.length, nUint24 = 0, nIdx = 0; nIdx < nLen; nIdx++) {
+		nMod3 = nIdx % 3;
+		//if (nIdx > 0 && (nIdx * 4 / 3) % 76 === 0) { sB64Enc += "\r\n"; }
+		nUint24 |= aBytes[nIdx] << (16 >>> nMod3 & 24);
+		if (nMod3 === 2 || aBytes.length - nIdx === 1) {
+		  sB64Enc += String.fromCharCode(base64.uint6ToB64(nUint24 >>> 18 & 63), base64.uint6ToB64(nUint24 >>> 12 & 63), base64.uint6ToB64(nUint24 >>> 6 & 63), base64.uint6ToB64(nUint24 & 63));
+		  nUint24 = 0;
 		}
-		return x;
+	  }
+
+	  return sB64Enc.replace(/A(?=A$|$)/g, "=");
+
 	}
 
-	base64.encode = function(s) {
-		if (arguments.length !== 1) {
-			throw new SyntaxError("Not enough arguments");
-		}
-		var padchar = base64.PADCHAR;
-		var alpha   = base64.ALPHA;
-		var getbyte = base64.getbyte;
+	/* UTF-8 array to DOMString and vice versa */
 
-		var i, b10;
-		var x = [];
+	base64.UTF8ArrToStr = function (aBytes) {
 
-		// convert to string
-		s = '' + s;
+	  var sView = "";
 
-		var imax = s.length - s.length % 3;
+	  for (var nPart, nLen = aBytes.length, nIdx = 0; nIdx < nLen; nIdx++) {
+		nPart = aBytes[nIdx];
+		sView += String.fromCharCode(
+		  nPart > 251 && nPart < 254 && nIdx + 5 < nLen ? /* six bytes */
+			/* (nPart - 252 << 32) is not possible in ECMAScript! So...: */
+			(nPart - 252) * 1073741824 + (aBytes[++nIdx] - 128 << 24) + (aBytes[++nIdx] - 128 << 18) + (aBytes[++nIdx] - 128 << 12) + (aBytes[++nIdx] - 128 << 6) + aBytes[++nIdx] - 128
+		  : nPart > 247 && nPart < 252 && nIdx + 4 < nLen ? /* five bytes */
+			(nPart - 248 << 24) + (aBytes[++nIdx] - 128 << 18) + (aBytes[++nIdx] - 128 << 12) + (aBytes[++nIdx] - 128 << 6) + aBytes[++nIdx] - 128
+		  : nPart > 239 && nPart < 248 && nIdx + 3 < nLen ? /* four bytes */
+			(nPart - 240 << 18) + (aBytes[++nIdx] - 128 << 12) + (aBytes[++nIdx] - 128 << 6) + aBytes[++nIdx] - 128
+		  : nPart > 223 && nPart < 240 && nIdx + 2 < nLen ? /* three bytes */
+			(nPart - 224 << 12) + (aBytes[++nIdx] - 128 << 6) + aBytes[++nIdx] - 128
+		  : nPart > 191 && nPart < 224 && nIdx + 1 < nLen ? /* two bytes */
+			(nPart - 192 << 6) + aBytes[++nIdx] - 128
+		  : /* nPart < 127 ? */ /* one byte */
+			nPart
+		);
+	  }
 
-		if (s.length === 0) {
-			return s;
-		}
-		for (i = 0; i < imax; i += 3) {
-			b10 = (getbyte(s,i) << 16) | (getbyte(s,i+1) << 8) | getbyte(s,i+2);
-			x.push(alpha.charAt(b10 >> 18));
-			x.push(alpha.charAt((b10 >> 12) & 0x3F));
-			x.push(alpha.charAt((b10 >> 6) & 0x3f));
-			x.push(alpha.charAt(b10 & 0x3f));
-		}
-		switch (s.length - imax) {
-		case 1:
-			b10 = getbyte(s,i) << 16;
-			x.push(alpha.charAt(b10 >> 18) + alpha.charAt((b10 >> 12) & 0x3F) +
-				   padchar + padchar);
-			break;
-		case 2:
-			b10 = (getbyte(s,i) << 16) | (getbyte(s,i+1) << 8);
-			x.push(alpha.charAt(b10 >> 18) + alpha.charAt((b10 >> 12) & 0x3F) +
-				   alpha.charAt((b10 >> 6) & 0x3f) + padchar);
-			break;
-		}
-		return x.join('');
+	  return sView;
+
 	}
 
-	// and now set the window functions if needed
-	if (!window.btoa) window.btoa = base64.encode
-	if (!window.atob) window.atob = base64.decode
+	base64.strToUTF8Arr = function (sDOMStr) {
+
+	  var aBytes, nChr, nStrLen = sDOMStr.length, nArrLen = 0;
+
+	  /* mapping... */
+
+	  for (var nMapIdx = 0; nMapIdx < nStrLen; nMapIdx++) {
+		nChr = sDOMStr.charCodeAt(nMapIdx);
+		nArrLen += nChr < 0x80 ? 1 : nChr < 0x800 ? 2 : nChr < 0x10000 ? 3 : nChr < 0x200000 ? 4 : nChr < 0x4000000 ? 5 : 6;
+	  }
+
+	  aBytes = new Uint8Array(nArrLen);
+
+	  /* transcription... */
+
+	  for (var nIdx = 0, nChrIdx = 0; nIdx < nArrLen; nChrIdx++) {
+		nChr = sDOMStr.charCodeAt(nChrIdx);
+		if (nChr < 128) {
+		  /* one byte */
+		  aBytes[nIdx++] = nChr;
+		} else if (nChr < 0x800) {
+		  /* two bytes */
+		  aBytes[nIdx++] = 192 + (nChr >>> 6);
+		  aBytes[nIdx++] = 128 + (nChr & 63);
+		} else if (nChr < 0x10000) {
+		  /* three bytes */
+		  aBytes[nIdx++] = 224 + (nChr >>> 12);
+		  aBytes[nIdx++] = 128 + (nChr >>> 6 & 63);
+		  aBytes[nIdx++] = 128 + (nChr & 63);
+		} else if (nChr < 0x200000) {
+		  /* four bytes */
+		  aBytes[nIdx++] = 240 + (nChr >>> 18);
+		  aBytes[nIdx++] = 128 + (nChr >>> 12 & 63);
+		  aBytes[nIdx++] = 128 + (nChr >>> 6 & 63);
+		  aBytes[nIdx++] = 128 + (nChr & 63);
+		} else if (nChr < 0x4000000) {
+		  /* five bytes */
+		  aBytes[nIdx++] = 248 + (nChr >>> 24);
+		  aBytes[nIdx++] = 128 + (nChr >>> 18 & 63);
+		  aBytes[nIdx++] = 128 + (nChr >>> 12 & 63);
+		  aBytes[nIdx++] = 128 + (nChr >>> 6 & 63);
+		  aBytes[nIdx++] = 128 + (nChr & 63);
+		} else /* if (nChr <= 0x7fffffff) */ {
+		  /* six bytes */
+		  aBytes[nIdx++] = 252 + /* (nChr >>> 32) is not possible in ECMAScript! So...: */ (nChr / 1073741824);
+		  aBytes[nIdx++] = 128 + (nChr >>> 24 & 63);
+		  aBytes[nIdx++] = 128 + (nChr >>> 18 & 63);
+		  aBytes[nIdx++] = 128 + (nChr >>> 12 & 63);
+		  aBytes[nIdx++] = 128 + (nChr >>> 6 & 63);
+		  aBytes[nIdx++] = 128 + (nChr & 63);
+		}
+	  }
+
+	  return aBytes;
+
+	}
+	
+	return base64;
 });
