@@ -17,6 +17,13 @@
     modules: [
            // {name: "../tools/resistor_codes/resistor_codes"}
         ],
+        
+    mainConfigFile: "./require-config.js",
+    
+    //exclude CDN things from the optimization
+    paths : { 'jquery': 'empty:',
+        'jquery.bootstrap': 'empty:'
+    },
 
     /*
      * Allow CSS optimizations. Allowed values:

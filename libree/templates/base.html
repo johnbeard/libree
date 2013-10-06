@@ -1,6 +1,7 @@
 {% load static from staticfiles %}
 
 {% load cdn %}
+{% load settings %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -39,13 +40,17 @@
 		{% include "footer.html" %}
 	</div>
 
+	<script src="{% static 'js/require.js' %}"></script>
+	{% if 'REQUIRE_DEBUG'|value_from_settings %}
+	<script src="{% static 'js/require-config.js' %}"></script>
+	{% endif %}
 
-	<!--common scripts for all pages-->
-	<script src="{% cdn 'jquery-2.0.3.js' %}"></script>
-	<script src="{% cdn 'bootstrap.js' %}"></script>
-
-	<!-- extra scripts -->
-	{% block scripts %}
-	{% endblock %}
+	<script>
+		<!-- Load core scripts, along with any page scripts -->
+		require(["jquery", "jquery.bootstrap"], function ($) {
+			{% block page_script %}{% endblock %}
+		});
+	</script>
+	
 </body>
 </html>

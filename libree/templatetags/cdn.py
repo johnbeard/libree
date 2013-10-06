@@ -9,14 +9,10 @@ register = template.Library()
 
 local_resources = {
     'bootstrap.css' : 'external/bootstrap/3.0.0/css/bootstrap.css',
-    'jquery-2.0.3.js': 'external/jquery-2.0.3.min.js',
-    'bootstrap.js': 'external/bootstrap/3.0.0/js/bootstrap.js',
 }
 
 cdn_resources = {
     'bootstrap.css': '//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css',
-    'jquery-2.0.3.js': '//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js',
-    'bootstrap.js': '//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js',
 }
 
 def local_resource(resource):

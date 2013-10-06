@@ -49,12 +49,12 @@
 
 {% endblock %}
 
-{% block scripts %}
-<!-- common scripts are loaded statically -->
-{% tool_scripts toolId %}
+{% block page_script %}
+{% with "tools/"|add:toolId|add:'/'|add:toolId as module %}
 
-{% with "../tools/"|add:toolId|add:'/'|add:toolId as module %}
-{% require_module module %}
+require(["{{ module }}"]);
+
 {% endwith %}
-
 {% endblock %}
+
+
