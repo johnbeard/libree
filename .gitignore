@@ -5,3 +5,4 @@ libreestatic/
 libreeDB/
 django.wsgi
 libree/localsettings.py
+node_modules

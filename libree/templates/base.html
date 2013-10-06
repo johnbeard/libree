@@ -2,6 +2,7 @@
 
 {% load cdn %}
 {% load settings %}
+{% load render_tools %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -40,14 +41,22 @@
 		{% include "footer.html" %}
 	</div>
 
-	<script src="{% static 'js/require.js' %}"></script>
-	{% if 'REQUIRE_DEBUG'|value_from_settings %}
-	<script src="{% static 'js/require-config.js' %}"></script>
-	{% endif %}
+	<script src="{% static 'external/require.js' %}"></script>
 
 	<script>
+		<!-- Global require config -->
+		{% inline_file "js/require-config.js" %}
+		
+		require.config({
+			{% if 'REQUIRE_DEBUG'|value_from_settings %}
+				baseUrl: "/static" 
+			{% else %}
+				baseUrl: "/static/min" 
+			{% endif %}
+		});
+		
 		<!-- Load core scripts, along with any page scripts -->
-		require(["jquery", "jquery.bootstrap"], function ($) {
+		require(["jquery.bootstrap"], function() {
 			{% block page_script %}{% endblock %}
 		});
 	</script>

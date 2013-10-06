@@ -1,6 +1,6 @@
 
 
-define(function () {
+define(['jquery'], function ($) {
 
     var Libree = function () {};
     

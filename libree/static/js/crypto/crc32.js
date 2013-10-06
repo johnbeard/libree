@@ -36,7 +36,7 @@ define(["../../js/crypto/common"], function(Crypto) {
 
             var initialValue = 0xFFFFFFFF;
             var finalXORValue = 0xFFFFFFFF;
-            var crc = initialValue,
+            var crc = initialValue;
             var table = [], i, j, c;
  
             function reverse(x, n) {

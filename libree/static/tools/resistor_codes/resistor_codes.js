@@ -1,5 +1,5 @@
 
-define(["../libree_tools"], function(Libree) {
+define(["jquery", "../libree_tools"], function($, Libree) {
 
     var value;
     var mode = "4band"; //initial state

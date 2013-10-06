@@ -3,7 +3,6 @@
 {% load render_tools %}
 {% load topic_list %}
 {% load static %}
-{% load require %}
 
 {% block header %}
 <ul class="breadcrumb">
@@ -51,9 +50,7 @@
 
 {% block page_script %}
 {% with "tools/"|add:toolId|add:'/'|add:toolId as module %}
-
-require(["{{ module }}"]);
-
+        require(["{{ module }}"]);
 {% endwith %}
 {% endblock %}
 
