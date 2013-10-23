@@ -4,6 +4,13 @@ define(['jquery'], function ($) {
 
     var Libree = function () {};
     
+    //add string trim prototype
+    if(typeof(String.prototype.trim) === "undefined") {
+        String.prototype.trim = function() {
+            return String(this).replace(/^\s+|\s+$/g, '');
+        };
+    }
+    
     Libree.static = "/static"; //FIXME - get this out of this static!
 
     Libree.setupTool = function () {
@@ -90,7 +97,9 @@ define(['jquery'], function ($) {
     }
     
     // TODO make this a jQuery plugin or something?
-    Libree.doneTyping = function(elem, timer, timeout, cb){
+    Libree.doneTyping = function(elem, timer, timeout, cb, event){
+        
+        event = event || 'keyup';
         
         var timerSet = function (timeout) {
             clearTimeout(timer);
@@ -102,7 +111,7 @@ define(['jquery'], function ($) {
         $(elem).on('paste', function(e){
             timerSet(timeout);
         })
-        .on('keyup', function(e) { 
+        .on(event, function(e) { 
             // on enter go at once
             if (e.which == 13) {
                 timerSet(0);
@@ -175,7 +184,7 @@ define(['jquery'], function ($) {
             Libree.flagInputValidity(inputSelector, true);
             return x;
         } catch (err) {
-            if (err instanceof RangeError) {
+            if (err instanceof Libree.inputException) {
                 Libree.flagInputValidity(inputSelector, false);
                 return null;
             }
@@ -183,15 +192,25 @@ define(['jquery'], function ($) {
     }
     
     var validators = {
-        number: /^[+\-]?[0-9]*\.?[0-9]*([eE][0-9]*\.?[0-9]*)?$/
+        number: /^[+\-]?[0-9]*\.?[0-9]*([eE][0-9]*\.?[0-9]*)?$/,
+        hex: /^([0-9A-Fa-f]{2}\s*)*$/
+    }
+    
+    Libree.validatorHex = function() {
+        return function(input) {
+            if (!validators.hex.test(input))
+                throw new Libree.inputException();
+                                            
+            return input.replace(/\s/g, '');
+        };
     }
     
     Libree.validatorNumber = function(int, min, max) {
         return function(input) {
             if (!validators.number.test(input))
-                throw new RangeError();
+                throw new Libree.inputException();
             
-            //so it looks like an integer, make it one
+            //so it looks like a number, make it one
             var x = parseFloat(input);
             
             if(typeof max === "undefined") { max = Infinity; }
@@ -199,7 +218,7 @@ define(['jquery'], function ($) {
             
             if ((int && (x % 1 != 0)) || isNaN(x) || x < min || x > max
                 || ((min === 'e' || max === 'e') && x === 0)) //filter zero floats
-                throw new RangeError();
+                throw new Libree.inputException();
                 
             return x;
         };
@@ -215,15 +234,19 @@ define(['jquery'], function ($) {
     }
     
     Libree.hexToText = function (hex) {
-        var hex = hex.replace(/\s/g, "");
+        
         var text = ''
         
-        if (hex.length % 2 === 0) {
-            for (var i = 0; i < hex.length; i+=2) {
-                text += String.fromCharCode(parseInt(hex.substr(i,2), 16));
+        if (hex) {
+            var hex = hex.replace(/\s/g, "");
+            
+            if (hex.length % 2 === 0) {
+                for (var i = 0; i < hex.length; i+=2) {
+                    text += String.fromCharCode(parseInt(hex.substr(i,2), 16));
+                }
+            } else { //we need even number of hexigits
+                throw new Libree.inputException();
             }
-        } else { //we need even number of hexigits
-            throw new RangeError();
         }
         
         return text;
@@ -254,6 +277,15 @@ define(['jquery'], function ($) {
         return bin;
     }
     
+    Libree.textToBin = function(text) {
+        var bin = new Uint8Array(text.length);
+
+        for (i = 0; i < text.length; i+=1)
+            bin[i] = text.charCodeAt(i);
+
+        return bin;
+    }
+    
     Libree.leftPad = function (val, size, ch) {
         var result = String(val);
         if(!ch) {
@@ -263,6 +295,70 @@ define(['jquery'], function ($) {
             result = ch + result;
         }
         return result;
+    }
+    
+    Libree.inputException = function () {}
+    
+    // For a dropdown input combo, bind an event to copy the selected
+    // value into the input, and trigger a keyup 
+    Libree.dropdownSelectValue = function(sel) {
+        $(sel + ' li').click(function(e) {
+            $(sel + ' input').val($(e.target).text()).keyup();
+            
+            e.preventDefault();
+        });
+    }
+    
+    // for a dropdown input combo, change the selected menu item
+    // to the one that is clicked
+    Libree.dropdownChangeSelected = function(sel, callback) {
+        
+        $(sel + ' li').click(function(e) {
+
+            var title = $(sel + ' span.dropdown-title');
+            var oldVal = title.text().trim();
+            
+            var newVal = $(e.target).text();
+            title.text(newVal + ' ');
+            
+            if (typeof callback === 'function')
+                callback(oldVal, newVal);
+                
+            e.preventDefault();
+        });
+    }
+    
+    // for a dropdown input combo, change the selected menu item
+    // to the one that is clicked
+    Libree.dropdownGetSelected = function(sel) {
+        return $(sel + ' span.dropdown-title').text().trim();
+    }
+    
+    Libree.dropdownGetVal = function(sel) {
+        return $(sel + ' input').val();
+    }
+    
+    Libree.bindInputEnable = function(sel, callback) {
+        var cb = $(sel + ' input:checkbox')        
+        cb.change( function (e) {
+            $(sel + ' input.main-input').prop("disabled", !cb.prop('checked'))
+        
+            if (typeof callback === 'function')
+                callback(cb.prop('checked'));
+        });
+    }
+    
+    Libree.showError = function(msg, errContainer, clearContainer) {
+        $(errContainer)
+            .append($("<div>", {'class':'alert alert-warning'})
+                .text(msg)
+            );
+        $(clearContainer).addClass('hidden');
+    }
+    
+    Libree.clearError = function(errContainer, clearContainer) {
+        $(errContainer).empty();
+        $(clearContainer).removeClass('hidden');
     }
 
     return Libree;

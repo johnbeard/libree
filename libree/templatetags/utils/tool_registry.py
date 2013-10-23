@@ -108,3 +108,13 @@ registry['base64'] = {
     "categories": ['electronics'],
     "scripts": {}
 }
+
+registry['uart'] = {
+    "description":"UART waveform visualiser",
+    "title": "UART Visualiser",
+    "template": "tools/uart.html",
+    "icon": "uart",
+    "tags": ["calculator"],
+    "categories": ['electronics'],
+    "scripts": {}
+}

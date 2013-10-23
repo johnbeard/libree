@@ -210,3 +210,7 @@ hidden {
 	padding-left: 0.5em;
 	padding-right: 0.5em;
 }
+
+.code {
+	font-family: monospace
+}

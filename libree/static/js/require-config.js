@@ -9,10 +9,22 @@ require.config({
 			'external/jquery-2.0.3.min'],
 		"jquery.bootstrap": ["//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap", 
 			'external/bootstrap/3.0.0/js/bootstrap'],
+		"jquery.flot" : 'external/flot/flot-0.8.1/jquery.flot.min',
+		"jquery.flot.resize" : 'external/flot/flot-0.8.1/jquery.flot.resize.min',
+		"jquery.flot.axislabels" : 'external/flot/flot-0.8.1/jquery.flot.axislabels',
 	},
 	shim: {
 		"jquery.bootstrap": {
 			deps: ["jquery"]
+			},
+		"jquery.flot": {
+			deps: ["jquery"]
+			},
+		"jquery.flot.resize": {
+			deps: ["jquery", "jquery.flot"]
+			},
+		"jquery.flot.axislabels": {
+			deps: ["jquery", "jquery.flot"]
 			},
 	}
 });

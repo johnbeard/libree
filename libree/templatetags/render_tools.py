@@ -44,3 +44,13 @@ def tool_scripts(toolId):
 def inline_file(filename):
     return open(settings.STATIC_ROOT + filename, 'r').read()
 
+@register.inclusion_tag('components/input-with-dropdown.html')
+def input_with_dropdown(title, choices, default, idName, leftSide, splitChar=' '):
+    
+    return { 
+        'button_left' : leftSide,
+        'dropdown_title': title,
+        'dropdown_items': choices.split(splitChar),
+        'default_value': default,
+        'group_id': idName
+    }

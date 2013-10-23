@@ -1,0 +1,19 @@
+<div class="input-group" id="{{ group_id }}">
+	{% if not button_left %}
+	<input class="form-control main-input" type="text" value="{{ default_value }}">
+	{% endif %}
+	<span class="input-group-btn">
+		<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+			<span class="dropdown-title">{{ dropdown_title }}</span>
+			<span class="caret"></span>
+		</a>
+		<ul class="dropdown-menu pull-right">
+		{% for item in dropdown_items %}
+			<li><a href='#'>{{ item }}</a></li>
+		{% endfor %}
+		</ul> 
+	</span>
+	{% if button_left %}
+	<input class="form-control" type="text" value="{{ default_value }}">
+	{% endif %}
+</div>
