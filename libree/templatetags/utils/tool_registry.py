@@ -101,7 +101,7 @@ registry['ascii'] = {
 
 registry['base64'] = {
     "description":"Base64 encoder and decoder.",
-    "title": "Base64 Encoder/Decoder",
+    "title": "Base64 encoder/decoder",
     "template": "tools/base64.html",
     "icon": "base64",
     "tags": ["calculator"],
@@ -111,7 +111,7 @@ registry['base64'] = {
 
 registry['uart'] = {
     "description":"UART waveform visualiser",
-    "title": "UART Visualiser",
+    "title": "UART visualiser",
     "template": "tools/uart.html",
     "icon": "uart",
     "tags": ["calculator"],
