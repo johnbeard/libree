@@ -269,7 +269,9 @@ define(["../libree_tools", 'jquery.flot', 'jquery.flot.resize', 'jquery.flot.axi
         Libree.bindInputEnable("#slew-input", compute);
         
         Libree.doneTyping("input", typingTimer, 500, compute);
-        Libree.doneTyping("select", typingTimer, 500, compute, 'click');
+        Libree.doneTyping("select", typingTimer, 500, compute, 'click change');
+        
+        $(".btn#visualise").click( function() {compute();});
     }
 
     $( document ).ready(function() {
