@@ -1,5 +1,6 @@
 
-define(["../js/crypto/common",
+define(["qunit",
+	"../js/crypto/common",
     "../js/crypto/md5",
     "../js/crypto/sha1",
     "../js/crypto/ripemd160",
@@ -9,9 +10,9 @@ define(["../js/crypto/common",
     "../js/crypto/gost",
     "../js/crypto/crc",
     ],
-    function(Crypto, MD5, SHA1, RMD160, SHA256, SHA512, TIGER, GOST, CRC) {
+    function(Q, Crypto, MD5, SHA1, RMD160, SHA256, SHA512, TIGER, GOST, CRC) {
 
-    $( document ).ready(function () {
+    return { run: function() {
 
 
 
@@ -303,6 +304,6 @@ define(["../js/crypto/common",
             );
         });
 
-    });
+    }};
 
 });

@@ -1,8 +1,8 @@
 
-define(["../js/number_convert"],
-    function(NumConvert) {
+define(["qunit", "../js/number_convert"],
+    function(Q, NumConvert) {
 
-    $( document ).ready(function () {
+    return { run: function () {
 		
         module("Int to int");
         
@@ -295,5 +295,5 @@ define(["../js/number_convert"],
                 "1"
             );
         });
-    });
+    }};
 });

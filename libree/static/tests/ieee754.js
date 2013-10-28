@@ -1,8 +1,8 @@
 
-define(["../js/ieee754"],
-    function(IEEE754) {
+define(["qunit", "../js/ieee754"],
+    function(Q, IEEE754) {
 
-    $( document ).ready(function () {
+    return { run: function () {
 		
         module("Parsing binary");
         
@@ -423,5 +423,5 @@ define(["../js/ieee754"],
             equal(ieee.getHex(), "3FFC000000000000");
         });
  
-    });
+    }};
 });

@@ -12,6 +12,7 @@ require.config({
 		"jquery.flot" : 'external/flot/flot-0.8.1/jquery.flot.min',
 		"jquery.flot.resize" : 'external/flot/flot-0.8.1/jquery.flot.resize.min',
 		"jquery.flot.axislabels" : 'external/flot/flot-0.8.1/jquery.flot.axislabels',
+		"qunit" : 'external/qunit/1.12.0/qunit-1.12.0',
 	},
 	shim: {
 		"jquery.bootstrap": {
@@ -25,6 +26,10 @@ require.config({
 			},
 		"jquery.flot.axislabels": {
 			deps: ["jquery", "jquery.flot"]
+			},
+		"qunit": {
+			deps: ["jquery"],
+			exports: 'QUnit'
 			},
 	}
 });
