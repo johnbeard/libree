@@ -47,10 +47,25 @@ def inline_file(filename):
 @register.inclusion_tag('components/input-with-dropdown.html')
 def input_with_dropdown(title, choices, default, idName, leftSide, splitChar=' '):
     
+    choices = choices.split(splitChar);
+    
+    if type(title) is int and title < len(choices) :
+        title = choices[title]
+    
     return { 
         'button_left' : leftSide,
         'dropdown_title': title,
-        'dropdown_items': choices.split(splitChar),
+        'dropdown_items': choices,
         'default_value': default,
         'group_id': idName
+    }
+
+@register.inclusion_tag('components/list-select.html')
+def list_select(id, choices, splitChar=' '):
+
+    choices = choices.split(splitChar);
+
+    return { 
+        'id' : id,
+        'choices': choices
     }

@@ -1,0 +1,104 @@
+{% extends "tool.html" %}
+
+{% load static from staticfiles %}
+
+{% load render_tools %}
+
+{% block pagestyle %}
+.btn {
+    width:100%;
+}
+{% endblock %}
+
+{% block toolcontent %}
+
+{% include "components/unfinished-warning.html" %}
+
+<div class="row" id="encoded-area">
+    <div class="col-lg-1">
+        LTC:
+    </div>
+    <div class="col-lg-8">
+        {% input_with_dropdown 'Hexadecimal' 'Hexadecimal Binary' 'A0000000000000003FFD' 'data-input' 0 %}
+    </div>
+    <div class="col-lg-1">
+        FPS:
+    </div>
+    <div class="col-lg-2">
+        {% list_select 'fps' '24 25 30' %}
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-lg-6">
+        <button type="button" class="btn btn-default" id="decode">
+            Decode
+        </button>
+    </div>
+    <div class="col-lg-6">
+        <button type="button" class="btn btn-default" id="encode">
+             Encode
+        </button>
+    </div>
+</div>
+<hr>
+
+<div class="row">
+    <div class="col-lg-2">
+        Timecode (HH:MM:SS:FF):
+    </div>
+    <div class="col-lg-2">
+        <input class="form-control" type="text" id="timecode" value=""/>
+    </div>
+    <div class="col-lg-6">
+        <div class="row">
+            <div class="col-lg-3">
+                <input type="checkbox" id="dropframe"> Drop frame
+            </div>
+            <div class="col-lg-3">
+                <input type="checkbox" id="colourframe"> Colour frame
+            </div>
+            <div class="col-lg-3">
+                <input type="checkbox" id="parity"> Parity
+            </div>
+            <div class="col-lg-3">
+                <input type="checkbox" id="reserved"> Reserved
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-1">
+        Binary flag:
+    </div>
+    <div class="col-lg-1">
+        <input class="form-control" type="text" id="binflag" value=""/>
+    </div>
+</div>
+
+<div class="row" style="padding-top:20px">
+    <div class="col-lg-2">
+        User bits:
+    </div>
+    <div class="col-lg-7">
+        {% input_with_dropdown 0 'Hexadecimal (MSB on left);Hexadecimal (LSB on left);Decimal (MSB on left);Decimal (LSB on left);Binary (MSB on left);Binary (LSB on left);SMPTE 309M-1999 Date' '0' 'userbits-input' 0 ';' %}
+    </div>
+    <div class="col-lg-2">
+        Sync pattern:
+    </div>
+    <div class="col-lg-1">
+        <input class="form-control" type="text" id="sync" value=""/>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block help %}       
+            
+<p>
+To interpret an LTC sequence, enter it in the top section.
+
+To create an LTC frame, enter the data in the bottom section. The parity
+bit will be set for you according to what you enter.
+</p>
+{% endblock %}
+
+

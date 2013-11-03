@@ -11,6 +11,44 @@ define(['jquery'], function ($) {
         };
     }
     
+    String.prototype.reverse=function(){return this.split("").reverse().join("");}
+    
+    // return true only if the string contains the substring
+    String.prototype.contains = function(substr) {
+        return this.indexOf(substr) !== -1;
+    }
+    
+    // return true only if the stirng contains all the substrings
+    String.prototype.containsAll = function(substrs) {
+        for (var i = 0; i < substrs.length; i+=1) {
+            if (this.indexOf(substrs[i]) === -1)
+                return false;
+        }
+        return true;
+    }
+    
+    String.prototype.leftPad = function (size, ch) {
+        var result = this;
+        ch = ch || " ";
+        while (result.length < size) { 
+            result = ch + result;
+        }
+        return result;
+    }
+    
+    String.prototype.regroup = function (groupSize, sep) {
+        var result = '';
+        sep = sep || ' ';
+        for (var i = 0; i < this.length; i+=groupSize) {
+            result += this.substr(i, groupSize) + sep;
+        }
+        return result;
+    }
+    
+    String.prototype.stripSpace = function () {
+        return this.replace(/\s/g, "");
+    }
+    
     Libree.static = "/static"; //FIXME - get this out of this static!
 
     Libree.setupTool = function () {
@@ -156,6 +194,15 @@ define(['jquery'], function ($) {
             + Libree.pluralise(singular, num, suffix);
     }
     
+    // return true only if the stirng contains all the substrings
+    Libree.containsAll = function(str, substrs) {
+        for (var i = 0; i < substrs.length; i+=1) {
+            if (str.indexOf(substrs[i]) === -1)
+                return false;
+        }
+        return true;
+    }
+    
     //does the browser support the File element?
     Libree.supportsFile = function() {
         return window.File && window.FileReader && window.FileList && window.Blob;
@@ -193,7 +240,8 @@ define(['jquery'], function ($) {
     
     var validators = {
         number: /^[+\-]?[0-9]*\.?[0-9]*([eE][0-9]*\.?[0-9]*)?$/,
-        hex: /^([0-9A-Fa-f]{2}\s*)*$/
+        hex: /^([0-9A-Fa-f]{2}\s*)*$/,
+        bin: /^([01]\s*)*$/
     }
     
     Libree.validatorHex = function() {
@@ -201,9 +249,19 @@ define(['jquery'], function ($) {
             if (!validators.hex.test(input))
                 throw new Libree.inputException();
                                             
-            return input.replace(/\s/g, '');
+            return input.replace(/[^A-Fa-f0-9]/g, '');
         };
     }
+    
+    Libree.validatorBinary = function() {
+        return function(input) {
+            if (!validators.bin.test(input))
+                throw new Libree.inputException();
+                                            
+            return input.replace(/[^01]/g, '');
+        };
+    }
+    
     
     Libree.validatorNumber = function(int, min, max) {
         return function(input) {
@@ -260,6 +318,33 @@ define(['jquery'], function ($) {
         return hex
     }
     
+    //Hex string to string of 1s and 0s
+    // do it char by char rather than as one potentially huge number
+    // as we don't want to overflow or loe precision!
+    Libree.hexToBinary = function(hex, leadingZeros) {
+        bin = '';
+        hex = hex.stripSpace();
+        
+        for (var i = 0; i < hex.length; i++)
+            bin += Libree.leftPad(parseInt(hex.charAt(i),16).toString(2), 4, '0');
+            
+        if (!leadingZeros)
+            bin = bin.replace(/^0*(?!$)/, ''); //strip leading zeros
+            
+        return bin;
+    }
+    
+    Libree.binaryToHex = function(bin) {
+        bin = bin.stripSpace();
+        bin = bin.leftPad(Math.ceil(bin.length/4) * 4, '0'); //left pad to a whole number of hex chars
+        
+        var hex = ''
+        for (var i = 0; i < bin.length; i+=4)
+            hex += parseInt(bin.substr(i,4),2).toString(16);
+             
+        return hex;
+    }
+    
     Libree.hexToBin = function(hex) {
         
         hex = hex.replace(/[^0-9A-Fa-f]/g, ""); //replace all non-hex
@@ -295,6 +380,20 @@ define(['jquery'], function ($) {
             result = ch + result;
         }
         return result;
+    }
+    
+    Libree.flipHex = function(n, bits) {
+        var padHex = Libree.leftPad(n, bits/4, '0');
+        var revBits = parseInt(padHex, 16).toString(2).reverse();
+        return parseInt(Libree.leftPad(revBits, bits, '0'), 2).toString(16);
+    }
+    
+    Libree.splitFuncJoin = function(str, split, func) {
+        return str.split(split).map(func).join(split);
+    }
+    
+    Libree.valSplitFuncJoin = function(sel, split, func) {
+        $(sel).val(Libree.splitFuncJoin($(sel).val(),":",func));
     }
     
     Libree.inputException = function () {}
