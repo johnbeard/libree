@@ -3,6 +3,7 @@
 {% load cdn %}
 {% load settings %}
 {% load render_tools %}
+{% load require_config %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +14,7 @@
 	<link rel="shortcut icon" href="{% static 'icons/libree-16.ico' %}">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Bootstrap and global css-->
+	{# Bootstrap and global css #}
 	<link href="{% cdn 'bootstrap.css' %}" rel="stylesheet" media="screen">
 	<link href="{% static 'css/bootstrap-theme.css' %}" rel="stylesheet" media="screen">
 	<link href="{% static 'css/libree.css' %}" rel="stylesheet" media="screen">
@@ -44,18 +45,10 @@
 	<script src="{% static 'external/require.js' %}"></script>
 
 	<script>
-		<!-- Global require config -->
-		{% inline_file "js/require-config.js" %}
+		{# Global require config #}
+		{% require_config %} 
 		
-		require.config({
-			{% if 'REQUIRE_DEBUG'|value_from_settings %}
-				baseUrl: "/static" 
-			{% else %}
-				baseUrl: "/static/min" 
-			{% endif %}
-		});
-		
-		<!-- Load core scripts, along with any page scripts -->
+		{# Load core scripts, along with any page scripts #}
 		require(["jquery.bootstrap"], function() {
 			{% block page_script %}{% endblock %}
 		});
