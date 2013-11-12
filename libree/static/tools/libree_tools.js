@@ -49,7 +49,7 @@ define(['jquery'], function ($) {
         return this.replace(/\s/g, "");
     }
     
-    Libree.static = "/static"; //FIXME - get this out of this static!
+    Libree.static = require.toUrl('');
 
     Libree.setupTool = function () {
         var me = this;
@@ -159,6 +159,7 @@ define(['jquery'], function ($) {
         });
     }
     
+    // For a group of buttons in a menu bar
     Libree.setupToggleButton = function(groupSelector, cb, initialId) {
         $(groupSelector + " .btn").click( function (evt) {  
             
