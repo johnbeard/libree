@@ -69,3 +69,15 @@ def list_select(id, choices, splitChar=' '):
         'id' : id,
         'choices': choices
     }
+    
+@register.inclusion_tag('components/menubar-buttons.html')
+def menubar(id, groupId, prefix, choiceIds, choiceDisplay, splitChar=' '):
+
+    choices = choices.split(splitChar);
+
+    return { 
+        'groupId' : groupId,
+        'btnClass': "btn-default"
+    }
+
+

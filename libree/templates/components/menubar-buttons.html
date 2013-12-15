@@ -1,0 +1,9 @@
+<div class="menubar">
+	<div id="{{ groupId }}" class="btn-group">
+		
+		{% for item in dropdown_items %}
+			<button class="btn {{ btnClass }}" id="{{ optionPrefix }}{{ itemId }}">{{ item }}
+			</button>  
+		{% endfor %}
+	</div>
+</div>

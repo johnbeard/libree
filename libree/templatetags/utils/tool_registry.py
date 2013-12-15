@@ -7,12 +7,12 @@
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation; either version 2 of the License, or
 #  (at your option) any later version.
-#  
+#
 #  This program is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -21,7 +21,7 @@
 
 categories = {
     "mathematics": {'name': "Mathematics"},
-    "electronics": {'name': "Electronic engineering and computing", 
+    "electronics": {'name': "Electronic engineering and computing",
         "desc": "Resources related to electrical, electronic and computer engineering, as well as programming and networking."},
     "physics": {'name': "Physics"},
     "chemistry": {'name': "Chemistry"},
@@ -65,7 +65,7 @@ registry['number_converter'] = {
     "template": "tools/number_converter.html",
     "icon": "number_converter",
     "tags": ["calculator"],
-    "categories": ['mathematics', 'electronics'],
+    "categories": ['electronics'],
     "scripts": {}
 }
 
@@ -118,3 +118,24 @@ registry['uart'] = {
     "categories": ['electronics'],
     "scripts": {}
 }
+
+registry['average'] = {
+    "description":"Compute the mean, median or mode of a set of numbers",
+    "title": "Average calculator",
+    "template": "tools/average.html",
+    "icon": "average",
+    "tags": ["calculator"],
+    "categories": ['mathematics'],
+    "scripts": {}
+}
+
+"""
+registry['ltc'] = {
+    "description":"Linear timecode encoder/decoder",
+    "title": "LTC encoder/decoder",
+    "template": "tools/ltc.html",
+    "icon": "ltc",
+    "tags": ["calculator"],
+    "categories": ['electronics'],
+    "scripts": {}
+}"""

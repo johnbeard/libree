@@ -7,20 +7,28 @@ register = template.Library()
 
 @register.simple_tag
 def require_config():
-    
+
     paths = {
-        "jquery.flot" : 
+        "jquery.flot" :
             'external/flot/flot-0.8.1/jquery.flot.min',
-        "jquery.flot.resize" : 
+        "jquery.flot.resize" :
             'external/flot/flot-0.8.1/jquery.flot.resize.min',
-        "jquery.flot.axislabels" : 
+        "jquery.flot.axislabels" :
             'external/flot/flot-0.8.1/jquery.flot.axislabels',
-        "qunit" : 
+        "qunit" :
             'external/qunit/1.12.0/qunit-1.12.0',
+        "raphael" :
+            'external/raphael/raphael-min',
+        "raphael.g" :
+            'external/raphael/g.raphael-min',
+        "raphael.g.line" :
+            'external/raphael/g.line-min',
+        "mathjax" :
+            "https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML",
     }
 
     if (settings.USE_CDN):
-        paths['jquery'] = "//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min"     
+        paths['jquery'] = "//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min"
         paths['jquery.bootstrap'] = "//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap"
     else:
         paths['jquery'] = "external/jquery-2.0.3.min"
@@ -37,24 +45,30 @@ def require_config():
             "deps": ["jquery"]
             },
         "jquery.flot.resize": {
-            "deps": ["jquery", "jquery.flot"]
+            "deps": ["jquery.flot"]
             },
         "jquery.flot.axislabels": {
-            "deps": ["jquery", "jquery.flot"]
+            "deps": ["jquery.flot"]
             },
         "qunit": {
             "deps": ["jquery"],
             "exports": 'QUnit'
             },
+        "raphael.g": {
+            "deps": ["raphael"]
+            },
+        "raphael.g.line": {
+            "deps": ["raphael.g"]
+            },
         }
-        
+
     jsn = {'paths': paths,
         'shim': shims
         }
-        
+
     jsn['baseUrl'] = settings.STATIC_URL
-    
-    if settings.REQUIRE_DEBUG:
+
+    if not settings.REQUIRE_DEBUG:
         jsn['baseUrl'] + '/min'
 
     return "require.config(%s);" % json.dumps(jsn)
