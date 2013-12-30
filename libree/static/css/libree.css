@@ -223,3 +223,7 @@ hidden {
 	background-color: #fee;
 	opacity: 0.80;
 }
+
+.menubar {
+	text-align:center;
+}

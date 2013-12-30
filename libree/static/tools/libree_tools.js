@@ -1,4 +1,8 @@
-
+/*
+ * General-purpose JS utils for LibrEE tools
+ * 
+ * TODO: Split this into relevant modules
+ */
 
 define(['jquery'], function ($) {
 
@@ -160,12 +164,12 @@ define(['jquery'], function ($) {
     }
 
     // For a group of buttons in a menu bar
-    Libree.setupToggleButton = function(groupSelector, cb, initialId) {
+    Libree.setupToggleButton = function(groupSelector, cb, canChange) {
         $(groupSelector + " .btn").click( function (evt) {
 
             var change = true;
-            if (typeof cb !== 'undefined')
-                change = cb($(evt.target).attr('id'));
+            if (typeof canChange !== 'undefined')
+                change = canChange($(evt.target).attr('id'));
 
             if (change) {
                 //turn off any current selection
@@ -173,12 +177,20 @@ define(['jquery'], function ($) {
                 //and now turn on the new one
                 $(evt.target).addClass('active');
                 evt.stopImmediatePropagation();
+
+                //send the change callback
+                if (typeof cb !== 'undefined')
+                    cb($(evt.target).attr('id'));
             }
         });
     }
 
-    // For a group of buttons in a menu bar
-    // callback gets (id, currentState), return true to allow toggle
+    /*! For a group of buttons in a menu bar
+     * groupSelector selects the menu bar
+     * shouldChangeFunc gets (id, currentState), return true to allow a
+     *   change
+     * cbFunc gets (id, currentState), return is ignored
+     */
     Libree.setupIndependentToggleButtons = function(groupSelector, cbFunc, shouldChangeFunc) {
         $(groupSelector + " .btn").click( function (evt) {
 
@@ -191,6 +203,7 @@ define(['jquery'], function ($) {
                 $(evt.target).toggleClass('active');
                 evt.stopImmediatePropagation();
 
+				//send a callback if needed
                 if (typeof cbFunc !== 'undefined')
                     change = cbFunc($(evt.target).attr('id'), $(evt.target).hasClass('active'));
             }

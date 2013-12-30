@@ -23,16 +23,16 @@ def require_config():
             'external/raphael/g.raphael-min',
         "raphael.g.line" :
             'external/raphael/g.line-min',
-        "mathjax" :
-            "https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML",
     }
 
     if (settings.USE_CDN):
         paths['jquery'] = "//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min"
         paths['jquery.bootstrap'] = "//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap"
+        paths['mathjax'] = "https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     else:
         paths['jquery'] = "external/jquery-2.0.3.min"
         paths['jquery.bootstrap'] = "external/bootstrap/3.0.0/js/bootstrap"
+        paths['mathjax'] = "external/mathjax/MathJax"
 
     shims = {
         "jquery" : {
