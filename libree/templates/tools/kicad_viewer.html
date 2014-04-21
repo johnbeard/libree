@@ -1,0 +1,48 @@
+{% extends "tool.html" %}
+
+{% load static from staticfiles %}
+
+{% load render_tools %}
+
+{% block pagestyle %}
+
+#view_container {
+	text-align: center;
+}
+
+{% endblock %}
+
+{% block toolcontent %}
+
+<div class="feature-container container fixed-width text">
+	<div class="row">
+		<div class="col-md-12">
+			Footprint library table: <select id="fptab">
+				<option value="kicad_github">KiCAD Github library table</option>
+			</select>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-md-6">
+			Footprint library: <select id="fplib">
+			</select>
+		</div>
+		<div class="col-md-6">
+			Footprint: <select id="fp">
+			</select>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-md-12" id="view_container">
+
+		</div>
+	</div>
+</div>
+
+</div>
+
+{% endblock %}
+
+

@@ -129,6 +129,16 @@ registry['average'] = {
     "scripts": {}
 }
 
+registry['kicad_viewer'] = {
+    "description":"View KiCAD footprints",
+    "title": "KiCAD footprint viewer",
+    "template": "tools/kicad_viewer.html",
+    "icon": "kicad",
+    "tags": ["viewer"],
+    "categories": ['electronics'],
+    "scripts": {}
+}
+
 """
 registry['ltc'] = {
     "description":"Linear timecode encoder/decoder",
