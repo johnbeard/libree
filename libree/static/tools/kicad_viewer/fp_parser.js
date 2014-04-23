@@ -1,9 +1,9 @@
-define(["jquery", "../../js/sexp/parse"], function($, SExpParse) {
+define(["jquery", "sexpression"], function($, SExp) {
 
     FPS = function () {};
 
     FPS.prototype.getLibrariesFromFpTable = function (table) {
-        var parsed = SExpParse(table);
+        var parsed = SExp.parse(table);
 
         if (parsed[0].name != "fp_lib_table") {
             console.log("Unknown footprint library table format!");

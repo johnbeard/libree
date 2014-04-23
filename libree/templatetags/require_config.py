@@ -8,6 +8,12 @@ register = template.Library()
 @register.simple_tag
 def require_config():
 
+    packages = [{
+            "name": "sexpression",
+            "location": "external/sexpression",
+            "main": "index"
+        }]
+
     paths = {
         "jquery.flot" :
             'external/flot/flot-0.8.1/jquery.flot.min',
@@ -75,8 +81,9 @@ def require_config():
             },
         }
 
-    jsn = {'paths': paths,
-        'shim': shims
+    jsn = {'packages':packages,
+            'paths': paths,
+            'shim': shims
         }
 
     jsn['baseUrl'] = settings.STATIC_URL
