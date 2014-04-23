@@ -1,0 +1,3 @@
+[submodule "libree/static/external/sexpression"]
+	path = libree/static/external/sexpression
+	url = github.com:johnbeard/sexpression.git
