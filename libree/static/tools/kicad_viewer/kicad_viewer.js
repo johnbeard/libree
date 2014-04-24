@@ -105,22 +105,23 @@ define(["raphael", "jquery", "./fp_parser", "github", "../libree_tools"],
 
         graphElem.attr({
             fill: getColorFromLayers(p.layers),
-            stroke: "none",
-            strokeWidth : 0
+            stroke: "none"
         });
 
         if (p.drill) {
             var drillHole = paper.circle(p.at[0], p.at[1], p.drill/2).attr({
-                "fill":"black"
+                fill : "black",
+                stroke : "none"
             });
         }
     }
 
     var drawLine = function (e) {
+        var width = e.width;
         var options = {
             fill: "none",
             stroke: getColorFromLayers([e.layer]),
-            "stroke-width" : e.width*20,
+            "stroke-width" : width,
             "stroke-linecap": "round"};
 
         var graphElem = paper.path("M" + e.start[0] + "," + e.start[1]
@@ -133,7 +134,7 @@ define(["raphael", "jquery", "./fp_parser", "github", "../libree_tools"],
         var options = {
             fill: "none",
             stroke: getColorFromLayers([e.layer]),
-            "stroke-width" : e.width*20
+            "stroke-width" : e.width
         };
 
         var r = Math.pow(e.center[0] - e.end[0], 2) + Math.pow(e.center[1] - e.end[1], 2);
@@ -162,8 +163,21 @@ define(["raphael", "jquery", "./fp_parser", "github", "../libree_tools"],
 
         var modSet = paper.setFinish();
 
-        modSet.transform("s20,20,0,0");
-        modSet.transform("t250,250...");
+        var bbox = modSet.getBBox();
+
+        var sx = sy = 500;
+
+        var scaleX = sx / bbox.width;
+        var scaleY = sy / bbox.height;
+
+        var scale = Math.min(scaleX, scaleY) * 0.85;
+        console.log(scale);
+
+        var cx = (sx / 2) - scale * (bbox.x + bbox.x2) / 2;
+        var cy = (sy / 2) - scale * (bbox.y + bbox.y2) / 2;
+
+        modSet.transform("s" + scale + "," + scale + ",0,0");
+        modSet.transform("t" + cx + "," + cy + "...");
     };
 
 
