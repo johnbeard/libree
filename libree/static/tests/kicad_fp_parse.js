@@ -39,6 +39,8 @@ define(["qunit", "../tools/kicad_viewer/fp_parser", "sexpression"],
             equal(l.at[0], 0);
             equal(l.at[1], 2.54);
             equal(l.layers[0], "*.Cu");
+            equal(l.layers[1], "*.Mask");
+            equal(l.layers[2], "F.SilkS");
         });
 
     }};

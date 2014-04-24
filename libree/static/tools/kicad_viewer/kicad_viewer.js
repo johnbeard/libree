@@ -81,81 +81,21 @@ define(["raphael", "jquery", "./fp_parser", "github", "../libree_tools"],
         });
     }
 
-    var renderFootprint = function (fp) {
-        var data = SExpParse(fp);
-
-        refreshCanvas();
-
-        for (var i = 0; i < data.length; i++) {
-            if (Array.isArray(data[i])) {
-                var name = data[i][0].name
-                if (name == "pad") {
-                    drawPad(data[i])
-                } else if (name == "fp_line") {
-                    drawLine(data[i])
-                } else if (name == "fp_circle") {
-                    drawCircle(data[i])
-                }
-            }
-        }
-
-        var modSet = paper.setFinish();
-
-        modSet.transform("s20,20,0,0");
-        modSet.transform("t250,250...");
-    }
-
     var getColorFromLayers = function (layers) {
-        if ($.inArray("F.SilkS", layers) !== -1) {
-            return "cyan";
-        } else if ($.inArray("F.Cu", layers) !== -1) {
+        if ($.inArray("F.Cu", layers) !== -1) {
             return "red";
         } else if ($.inArray("B.Cu", layers) !== -1) {
             return "green";
         } else if ($.inArray("*.Cu", layers) !== -1) {
             return "yellow";
+        } else if ($.inArray("F.SilkS", layers) !== -1) {
+            return "cyan";
         }
 
         return "white";
     }
 
-    var parseElement = function (elem, e, headPos) {
-
-        for (var i = headPos; i < elem.length; i++) {
-            var name = elem[i][0].name;
-            if (elem[i].length > 2){
-                e[name] = [];
-
-                for (var j = 1; j < elem[i].length; j++) {
-
-                    if (typeof(elem[i][j]) == "Symbol") {
-                        e[name].push(elem[i][j].name);
-                    } else {
-                        e[name].push(elem[i][j]);
-                    }
-                }
-
-            } else if (elem[i].length == 2) {
-                if (typeof(elem[i] == "Symbol")) {
-                    e[name] = elem[i][1].name;
-                } else {
-                    e[name] = elem[i][1];
-                }
-            }
-        }
-
-        return e;
-    }
-
-    var drawPad = function (elem, modSet) {
-
-        var p = {"num": elem[1],
-                "type": elem[2].name,
-                "shape": elem[3].name};
-
-        var p = parseElement(elem, p, 4);
-
-        var graphElem;
+    var drawPad = function (p, modSet) {
 
         if (p.shape == "rect") {
             graphElem = paper.rect(p.at[0] - p.size[0]/2, p.at[1] - p.size[1]/2, p.size[0], p.size[1])
@@ -176,9 +116,7 @@ define(["raphael", "jquery", "./fp_parser", "github", "../libree_tools"],
         }
     }
 
-    var drawLine = function (elem) {
-        var e = parseElement(elem, {}, 1);
-
+    var drawLine = function (e) {
         var options = {
             fill: "none",
             stroke: getColorFromLayers([e.layer]),
@@ -191,9 +129,7 @@ define(["raphael", "jquery", "./fp_parser", "github", "../libree_tools"],
     };
 
     //  (fp_circle (center 0 0) (end 5.08 0.381) (layer F.SilkS) (width 0.254))
-    var drawCircle = function (elem) {
-        var e = parseElement(elem, {}, 1);
-
+    var drawCircle = function (e) {
         var options = {
             fill: "none",
             stroke: getColorFromLayers([e.layer]),
@@ -205,6 +141,31 @@ define(["raphael", "jquery", "./fp_parser", "github", "../libree_tools"],
 
         graphElem = paper.circle(e.center[0], e.center[1], r).attr(options);
     }
+
+    var elementRenderers = {
+        "fp_line": drawLine,
+        "fp_circle": drawCircle,
+        "pad": drawPad
+    };
+
+    var renderFootprint = function (text) {
+
+        refreshCanvas();
+
+        var fp = fp_parser.parseFootprint(text);
+
+        for (var i = 0; i < fp.length; i++) {
+            if (fp[i].type in elementRenderers) {
+                elementRenderers[fp[i].type](fp[i].data);
+            }
+        }
+
+        var modSet = paper.setFinish();
+
+        modSet.transform("s20,20,0,0");
+        modSet.transform("t250,250...");
+    };
+
 
     var paper;
 

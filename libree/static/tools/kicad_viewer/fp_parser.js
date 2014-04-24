@@ -38,7 +38,7 @@ define(["jquery", "sexpression"], function($, SExp) {
         return libraries;
     }
 
-    FPS.prototype.parseElement = function (elem, e) {
+    FPS.parseElement = function (elem, e) {
 
         for (var i = 0; i < elem.length; i++) {
 
@@ -51,7 +51,7 @@ define(["jquery", "sexpression"], function($, SExp) {
 
                 for (var j = 1; j < elem[i].length; j++) {
 
-                    if (typeof(elem[i][j]) == "Symbol") {
+                    if (elem[i][j] instanceof SExp.Symbol) {
                         e[name].push(elem[i][j].name);
                     } else {
                         e[name].push(elem[i][j]);
@@ -59,7 +59,7 @@ define(["jquery", "sexpression"], function($, SExp) {
                 }
 
             } else if (elem[i].length == 2) {
-                if (typeof(elem[i] == "Symbol")) {
+                if (elem[i][1] instanceof SExp.Symbol) {
                     e[name] = elem[i][1].name;
                 } else {
                     e[name] = elem[i][1];
@@ -68,6 +68,56 @@ define(["jquery", "sexpression"], function($, SExp) {
         }
 
         return e;
+    }
+
+    var parsePad = function (sexp_elem)
+    {
+        var p = {"num": sexp_elem[1],
+                "type": sexp_elem[2].name,
+                "shape": sexp_elem[3].name};
+
+        p = FPS.parseElement(sexp_elem, p, 4);
+
+        return p;
+    }
+
+    var parseLine = function (sexp_elem)
+    {
+        return FPS.parseElement(sexp_elem, {}, 1);
+    }
+
+    var parseCircle = function (sexp_elem)
+    {
+        return FPS.parseElement(sexp_elem, {}, 1);
+    }
+
+    FPS.prototype.parseFootprint = function (text)
+    {
+        var data = SExp.parse(text);
+
+        var fp_elems = [];
+
+        for (var i = 0; i < data.length; i++) {
+            if (Array.isArray(data[i])) {
+
+                var elem = null;
+
+                var name = data[i][0].name
+                if (name == "pad") {
+                    elem = parsePad(data[i])
+                } else if (name == "fp_line") {
+                    elem = parseLine(data[i])
+                } else if (name == "fp_circle") {
+                    elem = parseCircle(data[i])
+                }
+
+                if (elem) {
+                    fp_elems.push({ "type": name, "data": elem});
+                }
+            }
+        }
+
+        return fp_elems;
     }
 
     return FPS;
