@@ -1,4 +1,4 @@
-define(["jquery", "sexpression"], function($, SExp) {
+define(["sexpression"], function(SExp) {
 
     FPS = function () {};
 
@@ -91,6 +91,17 @@ define(["jquery", "sexpression"], function($, SExp) {
         return FPS.parseElement(sexp_elem, {}, 1);
     }
 
+    var parseText = function (sexp_elem)
+    {
+        var e = {type: sexp_elem[1].name,
+                text: sexp_elem[2].name,
+            }
+
+        e = FPS.parseElement(sexp_elem, e, 3);
+
+        return e
+    }
+
     FPS.prototype.parseFootprint = function (text)
     {
         var data = SExp.parse(text);
@@ -109,6 +120,8 @@ define(["jquery", "sexpression"], function($, SExp) {
                     elem = parseLine(data[i])
                 } else if (name == "fp_circle") {
                     elem = parseCircle(data[i])
+                } else if (name == "fp_text") {
+                    elem = parseText(data[i])
                 }
 
                 if (elem) {

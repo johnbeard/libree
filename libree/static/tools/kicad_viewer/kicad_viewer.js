@@ -1,5 +1,5 @@
-define(["raphael", "jquery", "./fp_parser", "github", "../libree_tools"],
-    function(Raphael, $, FPS, Github, Libree) {
+define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "github", "../libree_tools"],
+    function(Raphael, $, FPS, HersheyFont, Github, Libree) {
 
     var github = new Github({token: "154c906062068b8d8a694f5d85c7f1bb3ff1f6ad",
                              auth: "oauth"
@@ -143,10 +143,63 @@ define(["raphael", "jquery", "./fp_parser", "github", "../libree_tools"],
         graphElem = paper.circle(e.center[0], e.center[1], r).attr(options);
     }
 
+    var drawText = function (e) {
+
+        var options = {
+            fill: "none",
+            stroke: getColorFromLayers([e.layer]),
+            "stroke-width" : 0.2,
+            "stroke-linecap": "round"};
+
+
+        var pos = 0;
+        var offset = 82; // "R".charCodeAt(0);
+
+        for (var i = 0; i < e.text.length; i++)
+        {
+            if (e.text.charCodeAt(i) in HersheyFont) {
+                hchar = HersheyFont[e.text.charCodeAt(i)]
+            } else {
+                hchar = "F^K[KFYFY[K[" // no-char box of doom
+            }
+
+            var startX = hchar.charCodeAt(0) - offset;
+            var endX = hchar.charCodeAt(1) - offset;
+
+            var newSeg = true;
+            var pathStr = ""
+
+            for (var c = 2; c < hchar.length; c += 2) {
+
+                if (hchar[c] === " " && hchar[c+1] === "R") {
+                    newSeg = true;
+                    continue;
+                }
+
+                var x = hchar.charCodeAt(c) - offset;
+                var y = hchar.charCodeAt(c + 1) - offset;
+
+                if (newSeg) {
+                    newSeg = false;
+                    pathStr += "M" + (pos + x) + "," + y;
+                } else {
+                    pathStr += "L" + (pos + x) + "," + y;
+                }
+            }
+
+            console.log(pathStr);
+
+            var graphElem = paper.path(pathStr).attr(options);
+
+            pos += endX - startX;
+        }
+    }
+
     var elementRenderers = {
         "fp_line": drawLine,
         "fp_circle": drawCircle,
-        "pad": drawPad
+        "pad": drawPad,
+        "fp_text": drawText,
     };
 
     var renderFootprint = function (text) {
@@ -171,7 +224,6 @@ define(["raphael", "jquery", "./fp_parser", "github", "../libree_tools"],
         var scaleY = sy / bbox.height;
 
         var scale = Math.min(scaleX, scaleY) * 0.85;
-        console.log(scale);
 
         var cx = (sx / 2) - scale * (bbox.x + bbox.x2) / 2;
         var cy = (sy / 2) - scale * (bbox.y + bbox.y2) / 2;
