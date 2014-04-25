@@ -4,6 +4,8 @@ from django.conf import settings
 
 from utils import tool_registry
 
+import os
+
 from ..libree_html import html_markup as H
 
 register = template.Library()
@@ -50,6 +52,18 @@ def tool_scripts(toolId):
 @register.simple_tag
 def inline_file(filename):
     return open(settings.STATIC_ROOT + filename, 'r').read()
+
+@register.filter
+def get_test_js(testId):
+    jsLoc = settings.STATIC_URL + "tests/" + testId
+
+    if os.path.isdir(os.path.join(settings.STATIC_ROOT, "tests", testId)):
+        jsLoc += "/main.js"
+    else:
+        jsLoc += ".js"
+
+    return jsLoc
+
 
 @register.inclusion_tag('components/input-with-dropdown.html')
 def input_with_dropdown(title, choices, default, idName, leftSide, splitChar=' '):

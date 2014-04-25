@@ -12,7 +12,7 @@
 
         </div>
         <div class="col-md-10" style="position:relative">
-            Unit tests!
+            Unit test: {{ testId }}
         </div>
     </div>
 </div>
@@ -30,17 +30,15 @@
 {% endblock %}
 
 {% block page_script %}
-{% with "tests/"|add:testId as module %}
-    require(['qunit', "{{ module }}"], function(Q, testModule) {
+    require(['qunit', "{{ testId | get_test_js }}"], function(Q, testModule) {
         Q.config.autostart = false;
         Q.config.autoload = false;
 
         testModule.run();
-        
+
         Q.load();
         Q.start();
     });
-{% endwith %}
 
 
 // HACK from http://joseoncode.com/2012/01/25/hide-passed-tests-by-default-in-qunit/
