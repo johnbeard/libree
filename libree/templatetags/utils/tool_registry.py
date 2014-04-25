@@ -133,7 +133,7 @@ registry['kicad_viewer'] = {
     "description":"View KiCAD footprints",
     "title": "KiCAD footprint viewer",
     "template": "tools/kicad_viewer.html",
-    "icon": "kicad",
+    "icon": "kicad.png",
     "tags": ["viewer"],
     "categories": ['electronics'],
     "scripts": {}

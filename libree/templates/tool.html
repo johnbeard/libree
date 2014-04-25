@@ -10,15 +10,15 @@
     <li><a href="/topic/{{ toolId|tool_topic  }}">{{ toolId|tool_topic|topic_name }}</a> <span class="divider"></span></li>
     <li class="active">{{ toolId|tool_title }}</li>
 </ul>
-                
+
 <div class="hero-unit" id="tool-heading">
     <div class="row">
         <div class="col-lg-2" style="text-align:center;">
-            <img src="{{ STATIC_URL }}icons/tool-{% tool_icon toolId %}-48.svg"/>
+            <img src="{{ STATIC_URL }}icons/tool-{% tool_icon toolId %}"/>
         </div>
         <div class="col-lg-10" style="position:relative">
             <div class="help-button-container">
-                <img src="{{ STATIC_URL }}icons/help-22.png" 
+                <img src="{{ STATIC_URL }}icons/help-22.png"
                         alt="Help"
                         title="Click for tool instructions"
                         class="help-button hidden" />

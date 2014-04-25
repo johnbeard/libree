@@ -11,7 +11,7 @@ register = template.Library()
 @register.filter
 def tool_title(toolId):
     return tool_registry.registry[toolId]['title']
-    
+
 @register.filter
 def tool_topic(toolId):
     return tool_registry.registry[toolId]['categories'][0]
@@ -24,7 +24,14 @@ def tool_description(toolId):
 def tool_icon(toolId):
     icon = tool_registry.registry[toolId]['icon']
 
-    return icon
+    extn = '.svg'
+    for ext in ['.png', '.jpg', '.jpeg', '.gif']:
+        if icon.endswith(ext):
+            extn = ext
+            icon = icon[:-len(extn)]
+            break
+
+    return icon + "-48" + extn
 
 @register.simple_tag
 def tool_scripts(toolId):
@@ -46,13 +53,13 @@ def inline_file(filename):
 
 @register.inclusion_tag('components/input-with-dropdown.html')
 def input_with_dropdown(title, choices, default, idName, leftSide, splitChar=' '):
-    
+
     choices = choices.split(splitChar);
-    
+
     if type(title) is int and title < len(choices) :
         title = choices[title]
-    
-    return { 
+
+    return {
         'button_left' : leftSide,
         'dropdown_title': title,
         'dropdown_items': choices,
@@ -65,17 +72,17 @@ def list_select(id, choices, splitChar=' '):
 
     choices = choices.split(splitChar);
 
-    return { 
+    return {
         'id' : id,
         'choices': choices
     }
-    
+
 @register.inclusion_tag('components/menubar-buttons.html')
 def menubar(id, groupId, prefix, choiceIds, choiceDisplay, splitChar=' '):
 
     choices = choices.split(splitChar);
 
-    return { 
+    return {
         'groupId' : groupId,
         'btnClass': "btn-default"
     }
