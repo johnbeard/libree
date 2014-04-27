@@ -34,24 +34,29 @@ define(["qunit", "jquery", "../../tools/kicad_viewer/fp_parser.js"],
 
         asyncTest( "Parse footprint", function() {
 
-            expect(7);
+            expect(8);
 
             asyncTestWithData("/static/tests/kicad_fp_parse/test.kicad_mod", function (data) {
                 var fps = new FPS();
                 var fp = fps.parseFootprint(data);
 
-                var l = fp[0].data
+                var t = fp["fp_text"][0];
 
-                equal(l.start[0], -16.51);
-                equal(l.layer, "F.SilkS");
+                equal(t.class, "reference");
+                equal(t.text, "U***");
+                equal(t.at.x, -11.43);
 
-                var p = fp[2].data
+                var p = fp["pad"][0];
 
-                equal(p.at[0], -11.43 );
-                equal(p.at[1], 3.81);
-                equal(p.layers[0], "*.Cu");
-                equal(p.layers[1], "*.Mask");
-                equal(p.layers[2], "F.SilkS");
+                equal(p.shape, "rect");
+                equal(p.at.y, 3.81);
+                equal(p.layers.values[0], "*.Cu");
+
+                var l = fp["fp_line"][0];
+
+                equal(l.start.x, -16.51);
+                equal(l.layer.value, "F.SilkS");
+
             });
         });
     };

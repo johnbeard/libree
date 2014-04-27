@@ -1,23 +1,68 @@
-define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "github", "../libree_tools"],
-    function(Raphael, $, FPS, HersheyFont, Github, Libree) {
+define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "github", "bootbox", "../libree_tools"],
+    function(Raphael, $, FPS, HersheyFont, Github, Bootbox, Libree) {
 
-    var github = new Github({token: "154c906062068b8d8a694f5d85c7f1bb3ff1f6ad",
-                             auth: "oauth"
-                            });
+
+    var github = null;
+
+    var setupGithub = function (token) {
+
+        var ghToken = localStorage.getItem('githubAPIToken');
+
+        if (ghToken) {
+            // try to use the token from storage
+            console.log("using token from storage: " + ghToken);
+            github = new Github({token: ghToken,
+                                 auth: "oauth"
+                                });
+        }
+
+        // either we have no token, or the one we had didn't work,
+        // get another one!
+        if (!github) {
+            ghToken = getGithubToken();
+            return;
+        } else {
+            var tableRepo = github.getRepo("KiCad", "kicad-library");
+
+            getTable(tableRepo); //start by downloading the default table
+        }
+    }
+
+    var getGithubToken = function () {
+
+        Bootbox.dialog({
+            message: "A GitHub OAuth key is required to access the KiCad libraries. Please enter it below.\
+It will be stored only on your machine, and will not be sent to LibrEE\
+<input id='githubToken' style='width:100%' />",
+            title: "GitHub OAuth key required",
+            buttons: {
+                main: {
+                    label: "OK",
+                    className: "btn-primary",
+                    callback: function(result) {
+                        githubToken = $('input#githubToken').val();
+                        localStorage.setItem('githubAPIToken', githubToken);
+                        console.log("Settings gh token: " + githubToken);
+                        setupGithub();
+                    }
+                }
+            }
+        });
+
+    }
 
     var fp_parser = new FPS();
-    var tableRepo = github.getRepo("KiCad", "kicad-library");
     var libRepo = null;
     var branch = "master";
 
-    var getTable = function () {
+    var getTable = function (repo) {
 
         var tab = $("#fptab").val();
 
         var url = '';
 
         if (tab = 'kicad_github') {
-            tableRepo.read(branch, "template/fp-lib-table.for-github", function(err, contents) {
+            repo.read(branch, "template/fp-lib-table.for-github", function(err, contents) {
                 onNewFPTable(contents);
             });
         }
@@ -95,70 +140,117 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "github", "../lib
         return "white";
     }
 
-    var drawPad = function (p, modSet) {
+    var drawTextInternal = function (text, size, pos, width) {
 
-        if (p.shape == "rect") {
-            graphElem = paper.rect(p.at[0] - p.size[0]/2, p.at[1] - p.size[1]/2, p.size[0], p.size[1])
-        } else if (p.shape == "circle") {
-            graphElem = paper.circle(p.at[0], p.at[1], p.size[0]/2)
+        var pathStr = hersheyText(text.toString());
+
+        var textElem = paper.path(pathStr).attr({"stroke-width": 0});
+
+        var nativeW = textElem.getBBox().width;
+
+        var scale = size / fontHeight;
+
+        textElem.transform("s" + scale + "," + scale + ",0,0");
+        textElem.transform("t" + (pos.x - (nativeW) * scale / 2) + "," + pos.y + "...");
+
+        textElem.attr({"stroke-width": width / scale});
+
+        return textElem;
+    }
+
+    var drawPad = function (e) {
+        var padElem;
+        if (e.shape == "rect") {
+            padElem = paper.rect(e.at.x - e.size.x/2, e.at.y - e.size.y/2, e.size.x, e.size.y);
+        } else if (e.shape == "circle") {
+            padElem = paper.circle(e.at.x, e.at.y, e.size.x/2);
+        } else {
+            console.log("Unssuported pad type: " + e.shape);
+            return;
         }
 
-        graphElem.attr({
-            fill: getColorFromLayers(p.layers),
+        padElem.attr({
+            fill: getColorFromLayers(e.layers.values),
             stroke: "none"
         });
 
-        if (p.drill) {
-            var drillHole = paper.circle(p.at[0], p.at[1], p.drill/2).attr({
+        padElem.data("num", e.num);
+
+/*
+        padElem.hover(function() {
+            var bbox = this.getBBox();
+            label.attr({text: this.data("num")}).update(bbox.x, bbox.y + bbox.height/2, bbox.width).toFront().show();
+        },
+        function() {
+            label.hide();
+        });*/
+
+        var size = 0.5; //60 mils default
+        textElem = drawTextInternal(e.num, size, e.at, 0.1);
+
+        // stroke is always 1
+        textElem.attr({
+            fill: "none",
+            stroke: "#fff",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round"
+        });
+
+        layers.mod.push(padElem);
+        layers.overlay.push(textElem);
+
+        if (e.drill && e.class !== "np_thru_hole") {
+            var drillHole = paper.circle(e.at.x, e.at.y, e.drill.value/2).attr({
                 fill : "black",
                 stroke : "none"
             });
+
+            layers.drills.push(drillHole);
         }
     }
 
     var drawLine = function (e) {
-        var width = e.width;
+        var width = e.width.value;
         var options = {
             fill: "none",
-            stroke: getColorFromLayers([e.layer]),
+            stroke: getColorFromLayers([e.layer.value]),
             "stroke-width" : width,
             "stroke-linecap": "round"};
 
-        var graphElem = paper.path("M" + e.start[0] + "," + e.start[1]
-                        + "L" + e.end[0] + "," + e.end[1]).attr(options);
+        layers.mod.push(
+            paper.path("M" + e.start.x + "," + e.start.y
+                        + "L" + e.end.x + "," + e.end.y).attr(options)
+        );
 
     };
 
-    //  (fp_circle (center 0 0) (end 5.08 0.381) (layer F.SilkS) (width 0.254))
     var drawCircle = function (e) {
         var options = {
             fill: "none",
-            stroke: getColorFromLayers([e.layer]),
-            "stroke-width" : e.width
+            stroke: getColorFromLayers([e.layer.value]),
+            "stroke-width" : e.width.value
         };
 
-        var r = Math.pow(e.center[0] - e.end[0], 2) + Math.pow(e.center[1] - e.end[1], 2);
+        var r = Math.pow(e.center.x - e.end.x, 2) + Math.pow(e.center.y - e.end.y, 2);
         r = Math.sqrt(r);
 
-        graphElem = paper.circle(e.center[0], e.center[1], r).attr(options);
+        layers.mod.push(
+            paper.circle(e.center.x, e.center.y, r).attr(options)
+        );
     }
 
-    var drawText = function (e) {
-
-        var options = {
-            fill: "none",
-            stroke: getColorFromLayers([e.layer]),
-            "stroke-width" : 0.2,
-            "stroke-linecap": "round"};
-
-
+    // return the path string
+    var hersheyText = function (text) {
         var pos = 0;
         var offset = 82; // "R".charCodeAt(0);
 
-        for (var i = 0; i < e.text.length; i++)
+        var pathStr = ""
+        var startPos;
+
+        for (var i = 0; i < text.length; i++)
         {
-            if (e.text.charCodeAt(i) in HersheyFont) {
-                hchar = HersheyFont[e.text.charCodeAt(i)]
+            if (text.charCodeAt(i) in HersheyFont) {
+                hchar = HersheyFont[text.charCodeAt(i)]
             } else {
                 hchar = "F^K[KFYFY[K[" // no-char box of doom
             }
@@ -166,33 +258,94 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "github", "../lib
             var startX = hchar.charCodeAt(0) - offset;
             var endX = hchar.charCodeAt(1) - offset;
 
-            var newSeg = true;
-            var pathStr = ""
+            // collect the co-ords
+            var coords = [[Infinity, Infinity]]; //start with a new segment
 
             for (var c = 2; c < hchar.length; c += 2) {
 
                 if (hchar[c] === " " && hchar[c+1] === "R") {
-                    newSeg = true;
+                    coords.push([Infinity, Infinity]); //mark a new segment
                     continue;
                 }
 
                 var x = hchar.charCodeAt(c) - offset;
                 var y = hchar.charCodeAt(c + 1) - offset;
 
-                if (newSeg) {
-                    newSeg = false;
-                    pathStr += "M" + (pos + x) + "," + y;
+                coords.push([x,y]);
+            }
+
+            // apply the initial offset by finding the dead space on the
+            // left of the first char
+            if (i == 0)
+            {
+                var minX = coords[0][0];
+                for (var coord = 1; coord < coords.length; coord++) {
+                    minX = Math.min(minX, coords[coord][0]);
+                }
+                pos += startX - minX;
+            }
+
+            //draw the coords
+            for (var coord = 1; coord < coords.length; coord++) {
+                if (coords[coord][0] == Infinity) {
+                    continue;
                 } else {
-                    pathStr += "L" + (pos + x) + "," + y;
+                    pathStr += (coords[coord-1][0] == Infinity) ? "M" : "L";
+
+                    pathStr += (pos + coords[coord][0] - startX) + "," + coords[coord][1];
                 }
             }
 
-            console.log(pathStr);
-
-            var graphElem = paper.path(pathStr).attr(options);
-
             pos += endX - startX;
         }
+
+        return pathStr;
+    }
+
+    var getFontHeight = function() {
+        var pathStr = hersheyText("X");
+
+        var path = paper.path(pathStr).attr({"stroke-width":0});
+        var h = path.getBBox().height;
+
+        path.remove();
+
+        return h;
+    }
+
+    var drawText = function (e) {
+
+        var size = 1.524; //60 mils default
+
+        if ("size" in e.effects.font)
+            size = e.effects.font.size.y;
+
+        var graphElem = drawTextInternal(e.text, size, e.at, 0.9 * e.effects.font.thickness.value);
+
+        // do this after the scale from hershey-size to real-size
+        graphElem.attr({
+            fill: "none",
+            stroke: "#eee",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round"
+        });
+
+        layers.mod.push(graphElem);
+    }
+
+    var drawOrigin = function (e) {
+
+        var options = {
+            fill: "none",
+            stroke: "blue",
+            "stroke-width" : 2};
+
+        var hLine = paper.path("M" + -500 + "," + 0
+                        + "L" + 500 + "," + 0).attr(options);
+        var vLine = paper.path("M" + 0 + "," + -500
+                        + "L" + 0 + "," + 500).attr(options);
+
+        layers.origin.push(hLine, vLine);
     }
 
     var elementRenderers = {
@@ -200,7 +353,15 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "github", "../lib
         "fp_circle": drawCircle,
         "pad": drawPad,
         "fp_text": drawText,
+        "at": drawOrigin,
     };
+
+    var singleElements = ["at"];
+
+    var paper;
+    var layers;
+    var label;
+    var fontHeight;
 
     var renderFootprint = function (text) {
 
@@ -208,15 +369,21 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "github", "../lib
 
         var fp = fp_parser.parseFootprint(text);
 
-        for (var i = 0; i < fp.length; i++) {
-            if (fp[i].type in elementRenderers) {
-                elementRenderers[fp[i].type](fp[i].data);
+        for (var type in elementRenderers) {
+
+            if (type in fp) {
+
+                if (singleElements.indexOf(type) > -1) {
+                    elementRenderers[type](fp[type]);
+                } else {
+                    for (var j = 0; j < fp[type].length; j++) {
+                        elementRenderers[type](fp[type][j]);
+                    }
+                }
             }
         }
 
-        var modSet = paper.setFinish();
-
-        var bbox = modSet.getBBox();
+        var bbox = layers.mod.getBBox();
 
         var sx = sy = 500;
 
@@ -228,24 +395,37 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "github", "../lib
         var cx = (sx / 2) - scale * (bbox.x + bbox.x2) / 2;
         var cy = (sy / 2) - scale * (bbox.y + bbox.y2) / 2;
 
-        modSet.transform("s" + scale + "," + scale + ",0,0");
-        modSet.transform("t" + cx + "," + cy + "...");
+        var transformLayers = ["mod", "overlay", "drills"];
+
+        for (var i in transformLayers) {
+            layers[transformLayers[i]].transform("s" + scale + "," + scale + ",0,0...");
+            layers[transformLayers[i]].transform("t" + cx + "," + cy + "...");
+        }
+
+        layers.origin.transform("t" + cx + "," + cy + "...");
+
+        layers.origin.toBack();
+        layers.mod.toFront();
+        layers.drills.toFront();
+        layers.overlay.toFront();
     };
-
-
-    var paper;
 
     var refreshCanvas = function () {
 
         paper = new Raphael($('#view_container').empty().get(0), 500, 500);
 
         // background
-        paper.rect(0, 0, 500, 500).attr({
-            fill : "black",
-            strokeWidth : 0,
-        });
+        paper.canvas.style.backgroundColor = '#000';
 
-        paper.setStart();
+        fontHeight = getFontHeight();
+
+        layers = {
+            grid: paper.set(),
+            origin: paper.set(),
+            mod: paper.set(),
+            drills: paper.set(),
+            overlay: paper.set(),
+        }
     }
 
     var makeBindings = function () {
@@ -259,10 +439,12 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "github", "../lib
     };
 
     $( document ).ready(function () {
+
+        setupGithub();
+
         makeBindings();
         refreshCanvas();
 
-        getTable(); //start by downloading the default table
         Libree.setupTool();
     });
 });
