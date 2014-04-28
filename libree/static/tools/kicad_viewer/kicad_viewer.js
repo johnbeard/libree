@@ -1,4 +1,4 @@
-define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "github", "bootbox", "../libree_tools"],
+define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "github", "bootbox", "../libree_tools", "raphael.pan-zoom"],
     function(Raphael, $, FPS, HersheyFont, Github, Bootbox, Libree) {
 
 
@@ -382,6 +382,9 @@ It will be stored only on your machine, and will not be sent to LibrEE\
     var layers;
     var label;
     var fontHeight;
+    var everythingSet;
+    var canvasSize = 500;
+    var panZoom;
 
     var layerList = ["grid", "origin", "B.SilkS", "B.Adhes", "B.Cu", "mod",
                     "F.Cu", "drills", "F.Mask", "F.Paste", "F.Adhes", "F.SilkS", "overlay"];
@@ -406,14 +409,9 @@ It will be stored only on your machine, and will not be sent to LibrEE\
             }
         }
 
-        rescaleView();
-    }
-
-    var rescaleView = function () {
-
         var noScaleLayers = ["origin"];
 
-        var everythingSet = paper.set();
+        everythingSet = paper.set();
 
         for (var l = 0; l < layerList.length; l++) {
             var lay = layers[layerList[l]];
@@ -425,35 +423,62 @@ It will be stored only on your machine, and will not be sent to LibrEE\
             layers[layerList[l]].toFront();
         }
 
+        rescaleView();
+    }
+
+    var rescaleView = function () {
+
+        everythingSet.transform("t" + canvasSize/2 + "," + canvasSize/2 + "...");
+
         var bbox = everythingSet.getBBox();
 
         var cx = bbox.x + bbox.width / 2;
         var cy = bbox.y + bbox.height / 2;
 
-        var maxDim = 1.1 * Math.max(bbox.width, bbox.height); //max distance from the centres
+        var maxDim = Math.max(bbox.width, bbox.height);
 
-        paper.setViewBox(cx - maxDim / 2, cy - maxDim / 2,
-                maxDim, maxDim, false);
+        var margin = 0.05;
+
+        var zoomSteps = 100;
+
+        var scale = maxDim / (canvasSize);
+
+        //paper.setViewBox(cx - maxDim / 2, cy - maxDim / 2,
+        //        maxDim, maxDim, false);
+
+        panZoom = paper.panzoom({
+            initialZoom: zoomSteps * (1 - scale),
+            initialPosition: {
+                x: bbox.x - maxDim * margin,
+                y: bbox.y - maxDim * margin
+            },
+            zoomStep : 1/zoomSteps,
+            maxZoom: zoomSteps,
+        });
+        panZoom.enable();
 
         scaleOrigin(bbox);
+
     };
 
     var scaleOrigin = function (bbox) {
-        var sx = sy = canvasSize;
+        /*var sx = sy = canvasSize;
 
         var scaleX = bbox.width / sx;
         var scaleY = bbox.height / sy;
 
         var scale = Math.max(scaleX, scaleY);
 
-        layers["origin"].transform("s" + scale + "," + scale + ",0,0...");
+        layers["origin"].transform("s" + scale + "," + scale + ",0,0...");*/
     }
 
-    var canvasSize = 500;
-
     var refreshCanvas = function () {
+        var vc = $('#view_container').empty().css({
+            width: canvasSize,
+            height: canvasSize
+        });
 
-        paper = new Raphael($('#view_container').empty().get(0), canvasSize, canvasSize);
+        paper = new Raphael("view_container", vc.width(), vc.height());
 
         // background
         paper.canvas.style.backgroundColor = '#000';
@@ -474,6 +499,18 @@ It will be stored only on your machine, and will not be sent to LibrEE\
         $("#fp").change( function() {
             onChooseFP($(this).val())
         });
+
+        /*$("#view_container").bind("mousewheel DOMMouseScroll wheel", function (e) {
+            console.log("wheel");
+
+            if (e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
+                panZoom.zoomIn(1);
+            } else {
+                panZoom.zoomOut(1);
+            }
+
+            event.preventDefault();
+        });*/
     };
 
     $( document ).ready(function () {

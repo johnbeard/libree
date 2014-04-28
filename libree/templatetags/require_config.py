@@ -27,6 +27,8 @@ def require_config():
             'external/raphael/g.raphael-min',
         "raphael.g.line" :
             'external/raphael/g.line-min',
+        "raphael.pan-zoom" :
+            'external/raphael/raphael.pan-zoom.min',
         "bootbox" :
             'external/bootbox.min',
         "github" :
@@ -71,6 +73,9 @@ def require_config():
             },
         "raphael.g.line": {
             "deps": ["raphael.g"]
+            },
+        "raphael.pan-zoom": {
+            "deps": ["raphael"]
             },
         "bootbox": {
             "deps": ["jquery.bootstrap"]
