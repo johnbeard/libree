@@ -128,16 +128,29 @@ It will be stored only on your machine, and will not be sent to LibrEE\
 
     var getColorFromLayers = function (layers) {
         if ($.inArray("F.Cu", layers) !== -1) {
-            return "red";
+            return "#840000";
         } else if ($.inArray("B.Cu", layers) !== -1) {
             return "green";
         } else if ($.inArray("*.Cu", layers) !== -1) {
             return "yellow";
         } else if ($.inArray("F.SilkS", layers) !== -1) {
             return "cyan";
+        } else if ($.inArray("F.Adhes", layers) !== -1
+                    || $.inArray("F.Mask", layers) !== -1
+                    || $.inArray("F.Paste", layers) !== -1) {
+            return "magenta";
         }
 
         return "white";
+    }
+
+    var getSetFromLayers = function (layers) {
+        if ($.inArray("*.Cu", layers) !== -1) {
+            return "F.Cu";
+
+        } else {
+            return layers[0]
+        }
     }
 
     var drawTextInternal = function (text, size, pos, width) {
@@ -164,8 +177,10 @@ It will be stored only on your machine, and will not be sent to LibrEE\
             padElem = paper.rect(e.at.x - e.size.x/2, e.at.y - e.size.y/2, e.size.x, e.size.y);
         } else if (e.shape == "circle") {
             padElem = paper.circle(e.at.x, e.at.y, e.size.x/2);
+        } else if (e.shape == "oval") {
+            padElem = paper.rect(e.at.x - e.size.x/2, e.at.y - e.size.y/2, e.size.x, e.size.y, e.size.y/2);
         } else {
-            console.log("Unssuported pad type: " + e.shape);
+            console.log("Unsupported pad type: " + e.shape);
             return;
         }
 
@@ -196,7 +211,7 @@ It will be stored only on your machine, and will not be sent to LibrEE\
             "stroke-linejoin": "round"
         });
 
-        layers.mod.push(padElem);
+        layers[getSetFromLayers(e.layers.values)].push(padElem);
         layers.overlay.push(textElem);
 
         if (e.drill && e.class !== "np_thru_hole") {
@@ -217,7 +232,7 @@ It will be stored only on your machine, and will not be sent to LibrEE\
             "stroke-width" : width,
             "stroke-linecap": "round"};
 
-        layers.mod.push(
+         layers[getSetFromLayers([e.layer.value])].push(
             paper.path("M" + e.start.x + "," + e.start.y
                         + "L" + e.end.x + "," + e.end.y).attr(options)
         );
@@ -234,7 +249,7 @@ It will be stored only on your machine, and will not be sent to LibrEE\
         var r = Math.pow(e.center.x - e.end.x, 2) + Math.pow(e.center.y - e.end.y, 2);
         r = Math.sqrt(r);
 
-        layers.mod.push(
+        layers[getSetFromLayers([e.layer.value])].push(
             paper.circle(e.center.x, e.center.y, r).attr(options)
         );
     }
@@ -330,7 +345,7 @@ It will be stored only on your machine, and will not be sent to LibrEE\
             "stroke-linejoin": "round"
         });
 
-        layers.mod.push(graphElem);
+        layers["F.SilkS"].push(graphElem);
     }
 
     var drawOrigin = function (e) {
@@ -363,6 +378,9 @@ It will be stored only on your machine, and will not be sent to LibrEE\
     var label;
     var fontHeight;
 
+    var layerList = ["grid", "origin", "B.SilkS", "B.Adhes", "B.Cu", "mod",
+                    "F.Cu", "drills", "F.Mask", "F.Paste", "F.Adhes", "F.SilkS", "overlay"];
+
     var renderFootprint = function (text) {
 
         refreshCanvas();
@@ -383,31 +401,41 @@ It will be stored only on your machine, and will not be sent to LibrEE\
             }
         }
 
-        var bbox = layers.mod.getBBox();
+        rescaleView();
+    }
+
+    var rescaleView = function () {
+
+        var noScaleLayers = ["origin"];
+
+        var everythingSet = paper.set();
+
+        for (var l = 0; l < layerList.length; l++) {
+            var lay = layers[layerList[l]];
+
+            if (lay.length && noScaleLayers.indexOf(layerList[l]) === -1) {
+                everythingSet.push(layers[layerList[l]]);
+            }
+
+            layers[layerList[l]].toFront();
+        }
+
+        var bbox = everythingSet.getBBox();
 
         var sx = sy = 500;
 
-        var scaleX = sx / bbox.width;
-        var scaleY = sy / bbox.height;
+        var scaleX = bbox.width / sx;
+        var scaleY = bbox.height / sy;
 
-        var scale = Math.min(scaleX, scaleY) * 0.85;
+        var scale = Math.max(scaleX, scaleY);
 
-        var cx = (sx / 2) - scale * (bbox.x + bbox.x2) / 2;
-        var cy = (sy / 2) - scale * (bbox.y + bbox.y2) / 2;
+        layers["origin"].transform("s" + scale + "," + scale + ",0,0...");
 
-        var transformLayers = ["mod", "overlay", "drills"];
 
-        for (var i in transformLayers) {
-            layers[transformLayers[i]].transform("s" + scale + "," + scale + ",0,0...");
-            layers[transformLayers[i]].transform("t" + cx + "," + cy + "...");
-        }
+        var margin = Math.max(bbox.width, bbox.height) * 0.10;
 
-        layers.origin.transform("t" + cx + "," + cy + "...");
-
-        layers.origin.toBack();
-        layers.mod.toFront();
-        layers.drills.toFront();
-        layers.overlay.toFront();
+        paper.setViewBox(bbox.x - margin, bbox.y - margin,
+                bbox.width + margin*2, bbox.height + margin*2, false);
     };
 
     var refreshCanvas = function () {
@@ -419,14 +447,11 @@ It will be stored only on your machine, and will not be sent to LibrEE\
 
         fontHeight = getFontHeight();
 
-        layers = {
-            grid: paper.set(),
-            origin: paper.set(),
-            mod: paper.set(),
-            drills: paper.set(),
-            overlay: paper.set(),
+        layers = {};
+        for (var l = 0; l < layerList.length; l++) {
+            layers[layerList[l]] = paper.set();
         }
-    }
+    };
 
     var makeBindings = function () {
         $("#fplib").change( function() {
