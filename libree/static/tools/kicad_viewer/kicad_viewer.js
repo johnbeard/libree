@@ -40,7 +40,7 @@ It will be stored only on your machine, and will not be sent to LibrEE\
                     label: "OK",
                     className: "btn-primary",
                     callback: function(result) {
-                        githubToken = $('input#githubToken').val();
+                        githubToken = $('input#githubToken').val().trim();
                         localStorage.setItem('githubAPIToken', githubToken);
                         console.log("Settings gh token: " + githubToken);
                         setupGithub();
@@ -63,7 +63,12 @@ It will be stored only on your machine, and will not be sent to LibrEE\
 
         if (tab = 'kicad_github') {
             repo.read(branch, "template/fp-lib-table.for-github", function(err, contents) {
-                onNewFPTable(contents);
+
+                if (err) {
+                    getGithubToken();
+                } else {
+                    onNewFPTable(contents);
+                }
             });
         }
 
@@ -355,10 +360,10 @@ It will be stored only on your machine, and will not be sent to LibrEE\
             stroke: "blue",
             "stroke-width" : 2};
 
-        var hLine = paper.path("M" + -500 + "," + 0
-                        + "L" + 500 + "," + 0).attr(options);
-        var vLine = paper.path("M" + 0 + "," + -500
-                        + "L" + 0 + "," + 500).attr(options);
+        var hLine = paper.path("M" + -canvasSize + "," + 0
+                        + "L" + canvasSize + "," + 0).attr(options);
+        var vLine = paper.path("M" + 0 + "," + -canvasSize
+                        + "L" + 0 + "," + canvasSize).attr(options);
 
         layers.origin.push(hLine, vLine);
     }
@@ -422,7 +427,19 @@ It will be stored only on your machine, and will not be sent to LibrEE\
 
         var bbox = everythingSet.getBBox();
 
-        var sx = sy = 500;
+        var cx = bbox.x + bbox.width / 2;
+        var cy = bbox.y + bbox.height / 2;
+
+        var maxDim = 1.1 * Math.max(bbox.width, bbox.height); //max distance from the centres
+
+        paper.setViewBox(cx - maxDim / 2, cy - maxDim / 2,
+                maxDim, maxDim, false);
+
+        scaleOrigin(bbox);
+    };
+
+    var scaleOrigin = function (bbox) {
+        var sx = sy = canvasSize;
 
         var scaleX = bbox.width / sx;
         var scaleY = bbox.height / sy;
@@ -430,17 +447,13 @@ It will be stored only on your machine, and will not be sent to LibrEE\
         var scale = Math.max(scaleX, scaleY);
 
         layers["origin"].transform("s" + scale + "," + scale + ",0,0...");
+    }
 
-
-        var margin = Math.max(bbox.width, bbox.height) * 0.10;
-
-        paper.setViewBox(bbox.x - margin, bbox.y - margin,
-                bbox.width + margin*2, bbox.height + margin*2, false);
-    };
+    var canvasSize = 500;
 
     var refreshCanvas = function () {
 
-        paper = new Raphael($('#view_container').empty().get(0), 500, 500);
+        paper = new Raphael($('#view_container').empty().get(0), canvasSize, canvasSize);
 
         // background
         paper.canvas.style.backgroundColor = '#000';
