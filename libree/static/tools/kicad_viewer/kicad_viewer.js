@@ -1,53 +1,7 @@
-define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "github", "bootbox", "../libree_tools", "raphael.pan-zoom"],
-    function(Raphael, $, FPS, HersheyFont, Github, Bootbox, Libree) {
-
+define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/github", "../libree_tools", "raphael.pan-zoom"],
+    function(Raphael, $, FPS, HersheyFont, Github, Libree) {
 
     var github = null;
-
-    var setupGithub = function (token) {
-
-        var ghToken = localStorage.getItem('githubAPIToken');
-
-        if (ghToken) {
-            // try to use the token from storage
-            github = new Github({token: ghToken,
-                                 auth: "oauth"
-                                });
-        }
-
-        // either we have no token, or the one we had didn't work,
-        // get another one!
-        if (!github) {
-            ghToken = getGithubToken();
-            return;
-        } else {
-            var tableRepo = github.getRepo("KiCad", "kicad-library");
-
-            getTable(tableRepo); //start by downloading the default table
-        }
-    }
-
-    var getGithubToken = function () {
-
-        Bootbox.dialog({
-            message: "A GitHub OAuth key is required to access the KiCad libraries. Please enter it below.\
-It will be stored only on your machine, and will not be sent to LibrEE\
-<input id='githubToken' style='width:100%' />",
-            title: "GitHub OAuth key required",
-            buttons: {
-                main: {
-                    label: "OK",
-                    className: "btn-primary",
-                    callback: function(result) {
-                        githubToken = $('input#githubToken').val().trim();
-                        localStorage.setItem('githubAPIToken', githubToken);
-                        console.log("Settings gh token: " + githubToken);
-                        setupGithub();
-                    }
-                }
-            }
-        });
-    }
 
     var fp_parser = new FPS();
     var libRepo = null;
@@ -63,13 +17,12 @@ It will be stored only on your machine, and will not be sent to LibrEE\
             repo.read(branch, "template/fp-lib-table.for-github", function(err, contents) {
 
                 if (err) {
-                    getGithubToken();
+                    Github.setupGithub(githubSetupCallback);
                 } else {
                     onNewFPTable(contents);
                 }
             });
         }
-
     }
 
     var libraries = [];
@@ -495,9 +448,16 @@ It will be stored only on your machine, and will not be sent to LibrEE\
         });
     };
 
+    var githubSetupCallback = function (github_) {
+        github = github_;
+
+        var tableRepo = github.getRepo("KiCad", "kicad-library");
+        getTable(tableRepo); //start by downloading the default table
+    }
+
     $( document ).ready(function () {
 
-        setupGithub();
+        Github.setupGithub(githubSetupCallback);
 
         makeBindings();
         refreshCanvas();
