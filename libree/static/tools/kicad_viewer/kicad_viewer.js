@@ -300,21 +300,6 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/github"
         layers["F.SilkS"].push(graphElem);
     }
 
-    var drawOrigin = function (e) {
-
-        var options = {
-            fill: "none",
-            stroke: "blue",
-            "stroke-width" : 2};
-
-        var hLine = paper.path("M" + -canvasSize + "," + 0
-                        + "L" + canvasSize + "," + 0).attr(options);
-        var vLine = paper.path("M" + 0 + "," + -canvasSize
-                        + "L" + 0 + "," + canvasSize).attr(options);
-
-        layers.origin.push(hLine, vLine);
-    }
-
     var elementRenderers = {
         "fp_line": drawLine,
         "fp_circle": drawCircle,
@@ -331,16 +316,16 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/github"
     var fontHeight;
     var everythingSet;
     var canvasSize = 500;
-    var panZoom;
+    var panZoom, fp;
 
     var layerList = ["grid", "origin", "B.SilkS", "B.Adhes", "B.Cu", "mod",
-                    "F.Cu", "drills", "F.Mask", "F.Paste", "F.Adhes", "F.SilkS", "overlay"];
+                    "F.Cu", "drills", "F.Mask", "F.Paste", "F.Adhes", "F.SilkS", "Edge.Cuts", "overlay"];
 
     var renderFootprint = function (text) {
 
         refreshCanvas();
 
-        var fp = fp_parser.parseFootprint(text);
+        fp = fp_parser.parseFootprint(text);
 
         for (var type in elementRenderers) {
 
@@ -361,13 +346,15 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/github"
         everythingSet = paper.set();
 
         for (var l = 0; l < layerList.length; l++) {
-            var lay = layers[layerList[l]];
+            var name = layerList[l];
+            var lay = layers[name];
 
-            if (lay.length && noScaleLayers.indexOf(layerList[l]) === -1) {
-                everythingSet.push(layers[layerList[l]]);
+
+            if (lay.length && noScaleLayers.indexOf(name) === -1) {
+                everythingSet.push(lay);
             }
 
-            layers[layerList[l]].toFront();
+            lay.toFront();
         }
 
         rescaleView();
@@ -375,7 +362,7 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/github"
 
     var rescaleView = function () {
 
-        everythingSet.transform("t" + canvasSize/2 + "," + canvasSize/2 + "...");
+        //everythingSet.transform("t" + canvasSize/2 + "," + canvasSize/2 + "...");
 
         var bbox = everythingSet.getBBox();
 
@@ -390,33 +377,45 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/github"
 
         var scale = (1 + 2 * margin) * maxDim / (canvasSize);
 
-        //paper.setViewBox(cx - maxDim / 2, cy - maxDim / 2,
-        //        maxDim, maxDim, false);
-
         panZoom = paper.panzoom({
             initialZoom: zoomSteps * (1 - scale),
             initialPosition: {
-                x: cx - canvasSize*scale/(2 * (1 + margin)),
-                y: cy - canvasSize*scale/(2 * (1 + 0)) //WHY?
+                x: cx,
+                y: cy
             },
             zoomStep : 1/zoomSteps,
+            repaintCallback: onRepaint,
             maxZoom: zoomSteps,
         });
         panZoom.enable();
 
-        scaleOrigin(bbox);
-
     };
 
-    var scaleOrigin = function (bbox) {
-        /*var sx = sy = canvasSize;
+    var onRepaint = function (pos, scale) {
+        console.log(pos, scale);
 
-        var scaleX = bbox.width / sx;
-        var scaleY = bbox.height / sy;
+        var options = {
+            fill: "none",
+            stroke: "blue",
+            "stroke-width" : 1 * scale};
 
-        var scale = Math.max(scaleX, scaleY);
+        var originSize = canvasSize * scale;
 
-        layers["origin"].transform("s" + scale + "," + scale + ",0,0...");*/
+        var widthOfView = originSize; // in FP units
+
+        var l = pos.x
+
+        var hLine = paper.path("M" + (pos.x - originSize/2) + "," + fp.at.y
+                        + "L" + (pos.x + originSize/2) + "," + fp.at.y).attr(options);
+        var vLine = paper.path("M" + fp.at.x + "," + (pos.y - originSize/2)
+                        + "L" + fp.at.x + "," + (pos.y + originSize/2)).attr(options);
+
+        layers.origin.forEach(function(elem) {
+            elem.remove();
+        });
+        layers.origin.push(hLine, vLine);
+
+        layers.origin.toBack();
     }
 
     var refreshCanvas = function () {
