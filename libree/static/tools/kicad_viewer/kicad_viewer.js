@@ -405,10 +405,10 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/github"
 
         var l = pos.x
 
-        var hLine = paper.path("M" + (pos.x - originSize/2) + "," + fp.at.y
-                        + "L" + (pos.x + originSize/2) + "," + fp.at.y).attr(options);
-        var vLine = paper.path("M" + fp.at.x + "," + (pos.y - originSize/2)
-                        + "L" + fp.at.x + "," + (pos.y + originSize/2)).attr(options);
+        var hLine = paper.path("M" + (pos.x - originSize/2) + "," + -fp.at.y
+                        + "L" + (pos.x + originSize/2) + "," + -fp.at.y).attr(options);
+        var vLine = paper.path("M" + -fp.at.x + "," + (pos.y - originSize/2)
+                        + "L" + -fp.at.x + "," + (pos.y + originSize/2)).attr(options);
 
         layers.origin.forEach(function(elem) {
             elem.remove();
