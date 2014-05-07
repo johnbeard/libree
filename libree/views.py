@@ -49,3 +49,12 @@ def test(request, testId):
         'testId': testId
     })
     return HttpResponse(t.render(c))
+
+def auth(request, authId):
+
+    template = "auth.html"
+    t = loader.get_template(template)
+    c = RequestContext(request, {
+        'authId': authId
+    })
+    return HttpResponse(t.render(c))

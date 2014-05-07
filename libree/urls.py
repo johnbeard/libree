@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^topic/([^/]+)$', 'libree.views.topic_directory', name='topic_directory'),
     url(r'^tool/([^/]+)$', 'libree.views.tool', name='tool'),
     url(r'^test/([^/]+)$', 'libree.views.test', name='test'),
+    url(r'^auth/([^/]+)$', 'libree.views.auth', name='auth'),
     # url(r'^libree/', include('libree.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

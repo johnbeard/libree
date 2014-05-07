@@ -17,7 +17,7 @@ define(["github", "bootbox"],
         // either we have no token, or the one we had didn't work,
         // get another one!
         if (!github) {
-            ghToken = getGithubToken();
+            ghToken = this.getGithubToken();
             return;
         } else {
             cb(github);
@@ -26,6 +26,8 @@ define(["github", "bootbox"],
 
     Github.getGithubToken = function () {
 
+        this.goToAuth();
+/*
         Bootbox.dialog({
             message: "A GitHub OAuth key is required to access the KiCad libraries. Please enter it below.\
 It will be stored only on your machine, and will not be sent to LibrEE\
@@ -43,8 +45,16 @@ It will be stored only on your machine, and will not be sent to LibrEE\
                     }
                 }
             }
-        });
+        });*/
     }
+
+    Github.goToAuth = function () {
+
+        uri = "https://github.com/login/oauth/authorize?" + "client_id=" + "784a03d1cbb34b2a25c2" + "&state=tool/kicad_viewer|qwertyuiop" + "&redirect_uri=" + "http://localhost:8000/tool/kicad_viewer" + "&scope=" + "public_repo";
+
+        window.location.href = uri;
+
+    };
 
     return Github;
 });
