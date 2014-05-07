@@ -392,18 +392,12 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/github"
     };
 
     var onRepaint = function (pos, scale) {
-        console.log(pos, scale);
-
         var options = {
             fill: "none",
             stroke: "blue",
             "stroke-width" : 1 * scale};
 
         var originSize = canvasSize * scale;
-
-        var widthOfView = originSize; // in FP units
-
-        var l = pos.x
 
         var hLine = paper.path("M" + (pos.x - originSize/2) + "," + -fp.at.y
                         + "L" + (pos.x + originSize/2) + "," + -fp.at.y).attr(options);
