@@ -83,7 +83,8 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/github"
             return "#840000";
         } else if ($.inArray("B.Cu", layers) !== -1) {
             return "green";
-        } else if ($.inArray("*.Cu", layers) !== -1) {
+        } else if ($.inArray("*.Cu", layers) !== -1
+                || $.inArray("Edge.Cuts", layers) !== -1) {
             return "yellow";
         } else if ($.inArray("F.SilkS", layers) !== -1) {
             return "cyan";
