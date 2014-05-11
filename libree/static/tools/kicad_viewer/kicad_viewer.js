@@ -1,4 +1,4 @@
-define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/github", "../libree_tools", "raphael.pan-zoom"],
+define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/github", "../libree_tools", "raphael.pan-zoom"],
     function(Raphael, $, FPS, HersheyFont, Github, Libree) {
 
     var github = null;
@@ -132,6 +132,30 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/github"
             padElem = paper.circle(e.at.x, e.at.y, e.size.x/2);
         } else if (e.shape == "oval") {
             padElem = paper.rect(e.at.x - e.size.x/2, e.at.y - e.size.y/2, e.size.x, e.size.y, e.size.y/2);
+        } else if (e.shape == "trapezoid") {
+            var size = {'t': e.size.x, 'r': e.size.y, 'b': e.size.x, 'l': e.size.y};
+
+            if (e.rect_delta.x == 0 || e.rect_delta.y == 0) {
+                if (e.rect_delta.x != 0) {
+                    if (e.rect_delta.x > 0) {
+                        size.l -= e.rect_delta.x
+                    } else {
+                        size.r += e.rect_delta.x
+                    }
+                } else if (e.rect_delta.y != 0) { //else
+                    if (e.rect_delta.y > 0) {
+                        size.t -= e.rect_delta.y
+                    } else {
+                        size.b += e.rect_delta.y
+                    }
+                }
+            }
+
+            padElem = paper.path("M" + (e.at.x - size.t/2) + "," + (e.at.y - size.r/2)
+                                + "L" + (e.at.x + size.t/2) + "," + (e.at.y - size.l/2)
+                                + "L" + (e.at.x + size.b/2) + "," + (e.at.y + size.l/2)
+                                + "L" + (e.at.x - size.b/2) + "," + (e.at.y + size.r/2)
+                                + "Z")
         } else {
             console.log("Unsupported pad type: " + e.shape);
             return;
@@ -143,6 +167,10 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/github"
         });
 
         padElem.data("num", e.num);
+
+        if (e.at.rot) {
+            padElem.transform("R" + e.at.rot + "...");
+        }
 
 /*
         padElem.hover(function() {

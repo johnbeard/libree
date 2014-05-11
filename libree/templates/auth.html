@@ -20,5 +20,14 @@
 {% endblock %}
 
 {% block content %}
-Authentication!
+Authenticating with {{ authId }}.
+{% endblock %}
+
+
+{% block page_script %}
+{% with "js/auth/"|add:'/'|add:authId as module %}
+        require(["{{ module }}"], function(AuthModule) {
+            AuthModule.authCallback();
+        });
+{% endwith %}
 {% endblock %}

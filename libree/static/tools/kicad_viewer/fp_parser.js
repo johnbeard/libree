@@ -59,7 +59,7 @@ define(["sexpression"], function(SExp) {
         obj["x"] = s[i++];
         obj["y"] = s[i++];
 
-        obj["rot"] = (s.len >= i) ? s[i++] : 0;
+        obj["rot"] = (s.length >= i) ? s[i++] : 0;
 
         return i;
     }
@@ -122,6 +122,7 @@ define(["sexpression"], function(SExp) {
         "fp_circle": parseNone,
         "pad": parsePad,
         "layers": parseArray,
+        "rect_delta": parseCoords,
     };
 
     var multipleElements = {

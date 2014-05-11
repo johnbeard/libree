@@ -1,7 +1,7 @@
 from django.template import RequestContext, loader
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseServerError
 
-from templatetags.utils import tool_registry
+from templatetags.utils import tool_registry, auth
 
 def top_level_page(request, template):
     """Get a "simple" top-level page with no arguments, like "index" or
@@ -50,7 +50,10 @@ def test(request, testId):
     })
     return HttpResponse(t.render(c))
 
-def auth(request, authId):
+def authinfo(request):
+    return top_level_page(request, "authinfo.html")
+
+def authView(request, authId):
 
     template = "auth.html"
     t = loader.get_template(template)
@@ -58,3 +61,12 @@ def auth(request, authId):
         'authId': authId
     })
     return HttpResponse(t.render(c))
+
+def authinternal(request, authId):
+
+    try:
+        return HttpResponse(auth.authenticate(request, authId))
+    except auth.AuthError:
+        pass
+
+    return HttpResponseServerError()
