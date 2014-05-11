@@ -16,15 +16,19 @@ define(["sexpression"], function(SExp) {
 
         for (var i = 0; i < libData.lib.length; i++) {
             var uri = libData.lib[i].uri.value;
+            var libType = libData.lib[i].type.value;
 
-
-            if (libData.lib[i].type.value === "Github") {
+            if (libType === "Github") {
 
                 for (var j = 0; j < substitutions.length; j++) {
                     uri = uri.replace("${"+substitutions[j][0]+"}", substitutions[j][1]);
                 }
 
-                libraries.push({uri: uri, name:libData.lib[i].name.value});
+                libraries.push({
+                    uri: uri,
+                    type: libType,
+                    name:libData.lib[i].name.value
+                });
             }
         }
 

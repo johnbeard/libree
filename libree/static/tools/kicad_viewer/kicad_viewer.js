@@ -60,8 +60,6 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
         }
     }
 
-    var libraries = [];
-
     var onNewFPTable = function(table) {
         var subs = [];
 
@@ -75,18 +73,21 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
             }
         }
 
-        libraries = fp_parser.getLibrariesFromFpTable(table, subs)
+        var libraries = fp_parser.getLibrariesFromFpTable(table, subs)
 
-        addLibrariesToChooser()
+        addLibrariesToChooser(libraries)
     };
 
-    var addLibrariesToChooser = function () {
+    var addLibrariesToChooser = function (libraries) {
         var chooser = $('#fplib').empty();
 
         for (var i = 0; i < libraries.length; i++) {
             var name = libraries[i].name;
 
-            var newOpt = $('<option>', {'val': name}).append(name);
+            var newOpt = $('<option>', {
+                "val": name,
+                "data-libdesc": JSON.stringify(libraries[i])
+            }).append(name);
 
             chooser.append(newOpt);
         }
@@ -96,13 +97,36 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
 
     var fps = {}
 
-    var onChooseFPLib = function (libName) {
+    var githubURIRegex = /https?:\/\/github\.com\/([^\/]+)\/(.*)/;
 
-        libRepo = github.getRepo("KiCad", libName + ".pretty");
+    var onChooseFPLib = function (lib) {
 
-        libRepo.contents(branch, "", function(err, contents) {
-            addFootprintsToChooser(JSON.parse(contents));
-        });
+        var libDesc = lib.find(":selected").attr("data-libdesc");
+
+        if (!libDesc) {
+            return;
+        }
+
+        libDesc = JSON.parse(libDesc);
+
+        if (libDesc.type == "Github")
+        {
+            //"https://github.com/KiCad/Capacitors_Tantalum_SMD.pretty"
+
+            var match = githubURIRegex.exec(libDesc.uri);
+
+            if (match.length != 3) {
+                return;
+            }
+
+            var owner = match[1];
+            var repo = match[2];
+            libRepo = github.getRepo(owner, repo);
+
+            libRepo.contents("master", "", function(err, contents) {
+                addFootprintsToChooser(JSON.parse(contents));
+            });
+        }
     }
 
     var addFootprintsToChooser = function (data) {
@@ -509,7 +533,7 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
 
     var makeBindings = function () {
         $("#fplib").change( function() {
-            onChooseFPLib($(this).val())
+            onChooseFPLib($(this))
         });
 
         $("#fp").change( function() {
