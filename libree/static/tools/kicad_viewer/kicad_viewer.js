@@ -7,17 +7,52 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
     var libRepo = null;
     var branch = "master";
 
-    var getTable = function (repo) {
+    var getMode = function () {
+        return $("#mode-select .active").attr("id");
+    }
+
+    var modeChanged = function (id) {
+        if (id == "input-fplt-gh") {
+
+            $("#fplt-url-area").toggleClass("hidden", false);
+            $("#fplt-text-area").toggleClass("hidden", true);
+
+            $("#fplt-input-container,#fplib-select-area,#fp-select-area").toggleClass("hidden", false);
+            $("#fp-text-area").toggleClass("hidden", true);
+
+        } else if (id == "input-fplt-text") {
+
+            $("#fplt-url-area").toggleClass("hidden", true);
+            $("#fplt-text-area").toggleClass("hidden", false);
+
+            $("#fplt-input-container,#fplib-select-area,#fp-select-area").toggleClass("hidden", false);
+            $("#fp-text-area").toggleClass("hidden", true);
+
+        } else { //manual footprint input
+            $("#fplt-input-container").toggleClass("hidden", true);
+
+            $("#fplib-select-area").toggleClass("hidden", true);
+            $("#fp-select-area").toggleClass("hidden", true);
+            $("#fp-text-area").toggleClass("hidden", false);
+        }
+    }
+
+    var getTable = function () {
 
         var tab = $("#fptab").val();
 
-        var url = '';
+        if (getMode() == "input-fplt-gh") {
 
-        if (tab = 'kicad_github') {
-            repo.read(branch, "template/fp-lib-table.for-github", function(err, contents) {
+            if (!github) {
+                Github.setupGithub(githubSetupCallback);
+            }
+
+            var tableRepo = github.getRepo($("#fplt-gh-owner").val(), $("#fplt-gh-repo").val());
+
+            tableRepo.read($("#fplt-gh-branch").val(), $("#fplt-gh-path").val(), function(err, contents) {
 
                 if (err) {
-                    Github.setupGithub(githubSetupCallback);
+                    alert("Error getting fp-lib-table from Github: " + err);
                 } else {
                     onNewFPTable(contents);
                 }
@@ -28,7 +63,19 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
     var libraries = [];
 
     var onNewFPTable = function(table) {
-        libraries = fp_parser.getLibrariesFromFpTable(table)
+        var subs = [];
+
+        var substrs = $('#fplt-subst').val().split("\n");
+
+        for (var i = 0; i < substrs.length; i++) {
+            var parts = substrs[i].trim().split("=", 2);
+
+            if (parts.length == 2) {
+                subs.push(substrs[i].trim().split("=", 2));
+            }
+        }
+
+        libraries = fp_parser.getLibrariesFromFpTable(table, subs)
 
         addLibrariesToChooser()
     };
@@ -50,6 +97,7 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
     var fps = {}
 
     var onChooseFPLib = function (libName) {
+
         libRepo = github.getRepo("KiCad", libName + ".pretty");
 
         libRepo.contents(branch, "", function(err, contents) {
@@ -333,8 +381,7 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
         "fp_line": drawLine,
         "fp_circle": drawCircle,
         "pad": drawPad,
-        "fp_text": drawText,
-        //"at": drawOrigin,
+        "fp_text": drawText
     };
 
     var singleElements = ["at"];
@@ -468,21 +515,19 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
         $("#fp").change( function() {
             onChooseFP($(this).val())
         });
+
+         Libree.setupToggleButton("#mode-select", modeChanged);
     };
 
     var githubSetupCallback = function (github_) {
         github = github_;
-
-        var tableRepo = github.getRepo("KiCad", "kicad-library");
-        getTable(tableRepo); //start by downloading the default table
     }
 
     $( document ).ready(function () {
 
-        Github.setupGithub(githubSetupCallback);
-
         makeBindings();
         refreshCanvas();
+        getTable();
 
         Libree.setupTool();
     });

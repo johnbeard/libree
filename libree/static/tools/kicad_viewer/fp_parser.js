@@ -2,7 +2,7 @@ define(["sexpression"], function(SExp) {
 
     FPS = function () {};
 
-    FPS.prototype.getLibrariesFromFpTable = function (table) {
+    FPS.prototype.getLibrariesFromFpTable = function (table, substitutions) {
         var parsed = SExp.parse(table);
 
         if (parsed[0].name != "fp_lib_table") {
@@ -10,29 +10,22 @@ define(["sexpression"], function(SExp) {
             return;
         }
 
+        var libData = parsePart(parsed);
+
         var libraries = [];
 
-        //read out the libraries
-        for (var i = 1; i < parsed.length; i++) {
-            if (parsed[i][0].name != "lib")
-                continue;
+        for (var i = 0; i < libData.lib.length; i++) {
+            var uri = libData.lib[i].uri.value;
 
-            newLib = {};
 
-            for (var j = 1; j < parsed[i].length; j++) {
-                if (parsed[i][j].length === 2) {
-                    var key = parsed[i][j][0].name;
+            if (libData.lib[i].type.value === "Github") {
 
-                    if (parsed[i][j][1].name != undefined)
-                    {
-                        newLib[key] = parsed[i][j][1].name
-                    } else {
-                        newLib[key] = parsed[i][j][1]
-                    }
+                for (var j = 0; j < substitutions.length; j++) {
+                    uri = uri.replace("${"+substitutions[j][0]+"}", substitutions[j][1]);
                 }
-            }
 
-            libraries.push(newLib);
+                libraries.push({uri: uri, name:libData.lib[i].name.value});
+            }
         }
 
         return libraries;
@@ -101,44 +94,57 @@ define(["sexpression"], function(SExp) {
         return i;
     }
 
-
     var parsers = {
-        "module": parseModule,
-        "at": parseCoords,
-        "descr": parseValue,
-        "tags": parseIdentifier,
-        "fp_text": parseText,
-        "layer": parseIdentifier,
-        "size": parseCoords,
-        "thickness": parseValue,
-        "effects": parseNone,
-        "font": parseNone,
-        "start": parseCoords,
-        "center": parseCoords,
-        "end": parseCoords,
-        "width": parseValue,
-        "drill": parseValue,
-        "fp_line": parseNone,
-        "fp_circle": parseNone,
-        "pad": parsePad,
-        "layers": parseArray,
-        "rect_delta": parseCoords,
+        "module" : {
+            "module": parseModule,
+            "at": parseCoords,
+            "descr": parseIdentifier,
+            "tags": parseIdentifier,
+            "fp_text": parseText,
+            "layer": parseIdentifier,
+            "size": parseCoords,
+            "thickness": parseValue,
+            "effects": parseNone,
+            "font": parseNone,
+            "start": parseCoords,
+            "center": parseCoords,
+            "end": parseCoords,
+            "width": parseValue,
+            "drill": parseValue,
+            "fp_line": parseNone,
+            "fp_circle": parseNone,
+            "pad": parsePad,
+            "layers": parseArray,
+            "rect_delta": parseCoords
+        },
+        "fp_lib_table": {
+            "name": parseIdentifier,
+            "type": parseIdentifier,
+            "uri": parseIdentifier,
+            "options": parseIdentifier,
+            "descr": parseIdentifier,
+            "fp_lib_table": parseNone,
+            "lib": parseNone,
+        }
     };
 
     var multipleElements = {
-        "module": ["fp_line", "fp_text", "pad", "fp_circle"]
+        "module": ["fp_line", "fp_text", "pad", "fp_circle"],
+        "fp_lib_table": ["lib"]
     }
 
 
-    var parsePart = function(s) {
-        var type = s[0].name;
+    var parsePart = function(s, topType) {
+        var sexpType = s[0].name;
 
         var obj = {
-            type: type
+            sexpType: sexpType
         };
 
-        if (type in parsers) {
-            var arrayStartIndex = parsers[obj.type](s, obj);
+        topType = topType || sexpType;
+
+        if (sexpType in parsers[topType]) {
+            var arrayStartIndex = parsers[topType][sexpType](s, obj);
 
             for (var i = arrayStartIndex; i < s.length; i++) {
 
@@ -146,16 +152,16 @@ define(["sexpression"], function(SExp) {
                     continue;
                 }
 
-                var inner = parsePart(s[i]);
+                var inner = parsePart(s[i], topType);
 
-                if (type in multipleElements && (multipleElements[type].indexOf(inner.type) > -1)) {
-                    if (inner.type in obj) {
-                        obj[inner.type].push(inner);
+                if (sexpType in multipleElements && (multipleElements[sexpType].indexOf(inner.sexpType) > -1)) {
+                    if (inner.sexpType in obj) {
+                        obj[inner.sexpType].push(inner);
                     } else {
-                        obj[inner.type] = [inner];
+                        obj[inner.sexpType] = [inner];
                     }
                 } else {
-                    obj[inner.type] = inner;
+                    obj[inner.sexpType] = inner;
                 }
             }
         }

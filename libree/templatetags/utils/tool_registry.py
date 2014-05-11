@@ -130,8 +130,8 @@ registry['average'] = {
 }
 
 registry['kicad_viewer'] = {
-    "description":"View KiCAD footprints",
-    "title": "KiCAD footprint viewer",
+    "description":"View KiCad footprints",
+    "title": "KiCad footprint viewer",
     "template": "tools/kicad_viewer.html",
     "icon": "kicad.png",
     "tags": ["viewer"],
