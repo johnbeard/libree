@@ -37,46 +37,47 @@
 			</div>
 			<div class="col-md-9" id="fplt-url-area">
 				<div class="row">
-					<div class="col-md-1">
-						Owner:
+					<div class="col-md-4">
+						<div class="input-group">
+							<span class="input-group-addon">Owner</span>
+							<input type="text" class="form-control main-input" id="fplt-gh-owner"
+								value="KiCad"
+							/>
+						</div>
 					</div>
-					<div class="col-md-3">
-						<input type="text" class="form-control main-input" id="fplt-gh-owner"
-							value="KiCad"
-						/>
+					<div class="col-md-4">
+						<div class="input-group">
+							<span class="input-group-addon">Repo</span>
+							<input type="text" class="form-control main-input" id="fplt-gh-repo"
+								value="kicad-library"
+							/>
+						</div>
 					</div>
-					<div class="col-md-1">
-						Repo:
-					</div>
-					<div class="col-md-3">
-						<input type="text" class="form-control main-input" id="fplt-gh-repo"
-							value="kicad-library"
-						/>
-					</div>
-					<div class="col-md-1">
-						Branch:
-					</div>
-					<div class="col-md-3">
-						<input type="text" class="form-control main-input" id="fplt-gh-branch"
-							value="master"
-						/>
+					<div class="col-md-4">
+						<div class="input-group">
+							<span class="input-group-addon">Branch</span>
+							<input type="text" class="form-control main-input" id="fplt-gh-branch"
+								value="master"
+							/>
+						</div>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-1">
-						Path:
-					</div>
-					<div class="col-md-11">
-						<input type="text" class="form-control main-input" id="fplt-gh-path"
-							value="template/fp-lib-table.for-github"
-						/>
+					<div class="col-md-12">
+						<div class="input-group">
+							<span class="input-group-addon">Path</span>
+							<input type="text" class="form-control main-input" id="fplt-gh-path"
+								value="template/fp-lib-table.for-github"
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-9 hidden" id="fplt-text-area">
-				<textarea id="fplt-text" class="form-control main-input">
-LT
-				</textarea>
+				<textarea id="fplt-text" rows=5 class="form-control main-input">
+(fp_lib_table
+  (lib (name Sockets)(type Github)(uri ${KIGITHUB}/Sockets.pretty)(options "")(descr "Assorted sockets"))
+)</textarea>
 			</div>
 		</div>
 		<div class="row">
@@ -85,10 +86,14 @@ LT
 			</div>
 			<div class="col-md-9" id="fplt-subs-area">
 				<textarea id="fplt-subst" class="form-control main-input">
-KIGITHUB=https://github.com/KiCad
-				</textarea>
+KIGITHUB=https://github.com/KiCad</textarea>
 			</div>
 		</div>
+	</div>
+	<div class="row" style="text-align:center;">
+		<button class="btn btn-primary" id="fetch-libraries">
+			Fetch libraries
+		</button>
 	</div>
 	<hr>
 	<div class="row" id="fplib-select-area">
@@ -107,11 +112,10 @@ KIGITHUB=https://github.com/KiCad
 			<select id="fp" class="form-control main-input"></select>
 		</div>
 		<div class="col-md-9 hidden" id="fp-text-area">
-			<textarea class="form-control main-input" id="fp-text">
+			<textarea class="form-control main-input" rows=5 id="fp-text">
 (module
   (pad)
-)
-			</textarea>
+)</textarea>
 		</div>
 	</div>
 	<hr>
