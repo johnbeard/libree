@@ -29,32 +29,54 @@ define(["jquery","github", "bootbox"], function($, Github, Bootbox) {
         }
     })($)
 
-    var github = null;
+    var authDoneCallback = null;
 
-    Github.setupGithub = function (cb) {
+    var getToken = function () {
+        var githubAuth = JSON.parse(localStorage.getItem("auth.github"));
+        return githubAuth && githubAuth.accessToken;
+    }
 
-        var ghToken;
+    var initGithubObject = function () {
+        var token = getToken();
+        var github;
 
-        var githubAuth = JSON.parse(localStorage.getItem('auth.github'));
-
-        if (githubAuth && "accessToken" in githubAuth) {
-            ghToken = githubAuth.accessToken;
-        }
-
-        if (ghToken) {
+        if (token) {
             // try to use the token from storage
-            github = new Github({token: ghToken,
+            github = new Github({token: token,
                                  auth: "oauth"
                                 });
         }
+        return github;
+    }
+
+    Github.instance = null;
+
+    Github.executeIfNoAuthRequired = function (cb) {
+
+        var github = initGithubObject();
+        if (github) {
+            this.instance = github;
+            cb();
+        }
+    }
+
+    Github.setupGithub = function (cb) {
+        authDoneCallback = cb;
+
+        if (this.instance) {
+            authDoneCallback();
+            return;
+        }
+
+        var github = initGithubObject();
 
         // either we have no token, or the one we had didn't work,
         // get another one!
         if (!github) {
-            ghToken = getGithubToken();
-            return;
+            getGithubToken();
         } else {
-            cb(github);
+            this.instance = github;
+            authDoneCallback();
         }
     }
 
@@ -97,7 +119,7 @@ LibrEE server does not see your Github credentials.",
             "&scope=" + githubAuth.scope;
 
         // go to the github auth endpoint
-        window.location.href = uri;
+        window.open(uri, '_blank');
     };
 
     var handleAccessToken = function (fromGithub) {
@@ -106,20 +128,29 @@ LibrEE server does not see your Github credentials.",
         var tokenData = JSON.parse(fromGithub);
 
         var newGithubAuth = {};
+        var token = tokenData["access_token"];
 
         if ("access_token" in tokenData) {
-            newGithubAuth["accessToken"] = tokenData["access_token"];
+            newGithubAuth["accessToken"] = token;
         }
 
         //could check for scope agreement here
 
-
         //save the token back to the local storage
         localStorage.setItem("auth.github", JSON.stringify(newGithubAuth));
 
-        // and go back to whoever asked for auth
-        window.location.href = githubAuth.preAuthOriginUri;
+        // and send back to whoever asked for auth
+        window.opener.postMessage(token, window.location);
+
+        //and close this window...
+        window.close();
     }
+
+    // callback from other window -  try to setup again
+    window.addEventListener('message', function () {
+        //var token = event.data;
+        Github.setupGithub(authDoneCallback);
+    });
 
     // implement the LibrEE auth callback API
     Github.authCallback = function () {
@@ -129,8 +160,6 @@ LibrEE server does not see your Github credentials.",
         // now we need to get the code and turn it into an access token
         // we need to ask the librEE server for this, as it needs the
         // client secret
-
-
 
         $.ajax({
             url: "/auth/internal/github?code=" + $.QueryString["code"],

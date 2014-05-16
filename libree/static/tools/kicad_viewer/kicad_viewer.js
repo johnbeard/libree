@@ -1,8 +1,6 @@
 define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/github", "../libree_tools", "raphael.pan-zoom"],
     function(Raphael, $, FPS, HersheyFont, Github, Libree) {
 
-    var github = null;
-
     var fp_parser = new FPS();
     var libRepo = null;
     var branch = "master";
@@ -42,22 +40,23 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
         var tab = $("#fptab").val();
 
         if (getMode() == "input-fplt-gh") {
-
-            if (!github) {
-                Github.setupGithub(githubSetupCallback);
-            }
-
-            var tableRepo = github.getRepo($("#fplt-gh-owner").val(), $("#fplt-gh-repo").val());
-
-            tableRepo.read($("#fplt-gh-branch").val(), $("#fplt-gh-path").val(), function(err, contents) {
-
-                if (err) {
-                    alert("Error getting fp-lib-table from Github: " + err);
-                } else {
-                    onNewFPTable(contents);
-                }
+            Github.setupGithub(function (gh) {
+                getTableFromGithub();
             });
         }
+    }
+
+    var getTableFromGithub = function() {
+        var tableRepo = Github.instance.getRepo($("#fplt-gh-owner").val(), $("#fplt-gh-repo").val());
+
+        tableRepo.read($("#fplt-gh-branch").val(), $("#fplt-gh-path").val(), function(err, contents) {
+
+            if (err) {
+                alert("Error getting fp-lib-table from Github: " + err);
+            } else {
+                onNewFPTable(contents);
+            }
+        });
     }
 
     var onNewFPTable = function(table) {
@@ -121,7 +120,7 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
 
             var owner = match[1];
             var repo = match[2];
-            libRepo = github.getRepo(owner, repo);
+            libRepo = Github.instance.getRepo(owner, repo);
 
             libRepo.contents("master", "", function(err, contents) {
                 addFootprintsToChooser(JSON.parse(contents));
@@ -540,18 +539,21 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
             onChooseFP($(this).val())
         });
 
+        $('#fetch-libraries').click( function() {
+            getTable(null);
+        });
+
          Libree.setupToggleButton("#mode-select", modeChanged);
     };
-
-    var githubSetupCallback = function (github_) {
-        github = github_;
-    }
 
     $( document ).ready(function () {
 
         makeBindings();
         refreshCanvas();
-        getTable();
+
+        Github.executeIfNoAuthRequired( function() {
+            getTable();
+        });
 
         Libree.setupTool();
     });
