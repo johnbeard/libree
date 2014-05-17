@@ -35,19 +35,18 @@ def require_config():
             'external/github',
         "underscore" :
             'external/underscore.min',
+        "raphael" : # Modded, can't be CDN'd
+            'external/raphael/raphael-min',
     }
 
     if (settings.USE_CDN):
         paths['jquery'] = "//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min"
         paths['jquery.bootstrap'] = "//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap"
         paths['mathjax'] = "https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-        paths['raphael'] = "//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"
     else:
         paths['jquery'] = "external/jquery-2.0.3.min"
         paths['jquery.bootstrap'] = "external/bootstrap/3.0.0/js/bootstrap"
         paths['mathjax'] = "external/mathjax/MathJax"
-        paths['raphael'] = "external/raphael/raphael-min"
-
     shims = {
         "jquery" : {
             "exports" : "jQuery"
