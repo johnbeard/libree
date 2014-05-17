@@ -18,6 +18,8 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
             $("#fplt-input-container,#fplib-select-area,#fp-select-area").toggleClass("hidden", false);
             $("#fp-text-area").toggleClass("hidden", true);
 
+            getTable();
+
         } else if (id == "input-fplt-text") {
 
             $("#fplt-url-area").toggleClass("hidden", true);
@@ -26,33 +28,40 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
             $("#fplt-input-container,#fplib-select-area,#fp-select-area").toggleClass("hidden", false);
             $("#fp-text-area").toggleClass("hidden", true);
 
+            getTable();
+
         } else { //manual footprint input
             $("#fplt-input-container").toggleClass("hidden", true);
 
             $("#fplib-select-area").toggleClass("hidden", true);
             $("#fp-select-area").toggleClass("hidden", true);
             $("#fp-text-area").toggleClass("hidden", false);
+
+            renderFootprintFromManualInput();
         }
     }
 
     var getTable = function () {
-
+        $("#fplib,#fp").empty();
         var tab = $("#fptab").val();
+        var mode = getMode();
 
-        if (getMode() == "input-fplt-gh") {
-            Github.setupGithub(function (gh) {
+        Github.setupGithub(function () {
+            if (mode == "input-fplt-gh") {
                 getTableFromGithub();
-            });
-        }
+            } else if (mode == "input-fplt-text") {
+                onNewFPTable($('#fplt-text').val());
+            }
+        });
     }
 
     var getTableFromGithub = function() {
-        var tableRepo = Github.instance.getRepo($("#fplt-gh-owner").val(), $("#fplt-gh-repo").val());
+        var tableRepo = Github.getInstance().getRepo($("#fplt-gh-owner").val(), $("#fplt-gh-repo").val());
 
         tableRepo.read($("#fplt-gh-branch").val(), $("#fplt-gh-path").val(), function(err, contents) {
 
             if (err) {
-                alert("Error getting fp-lib-table from Github: " + err);
+                console.log("Error getting fp-lib-table from Github: " + err);
             } else {
                 onNewFPTable(contents);
             }
@@ -120,7 +129,7 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
 
             var owner = match[1];
             var repo = match[2];
-            libRepo = Github.instance.getRepo(owner, repo);
+            libRepo = Github.getInstance().getRepo(owner, repo);
 
             libRepo.contents("master", "", function(err, contents) {
                 addFootprintsToChooser(JSON.parse(contents));
@@ -145,8 +154,15 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
         var fp = $("#fp").val();
 
         libRepo.read(branch, fp, function (err, contents) {
-            renderFootprint(contents);
+            // make sure github mode is still selected
+            if (getMode() == "input-fplt-gh" || getMode() == "input-fplt-text") {
+                renderFootprint(contents);
+            }
         });
+    }
+
+    var renderFootprintFromManualInput = function () {
+        renderFootprint($('#fp-text').val());
     }
 
     var getColorFromLayers = function (layers) {
@@ -160,7 +176,7 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
         } else if ($.inArray("F.SilkS", layers) !== -1) {
             return "cyan";
         } else if ($.inArray("F.Adhes", layers) !== -1
-                    || $.inArray("F.Mask", layers) !==f -1
+                    || $.inArray("F.Mask", layers) !== -1
                     || $.inArray("F.Paste", layers) !== -1) {
             return "magenta";
         }
@@ -168,12 +184,13 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
         return "white";
     }
 
-    var getSetFromLayers = function (layers) {
-        if ($.inArray("*.Cu", layers) !== -1) {
-            return "F.Cu";
-
+    var getSetFromLayers = function (elemLayers) {
+        if ($.inArray("*.Cu", elemLayers) !== -1) {
+            return layers["F.Cu"];
+        } else if ($.inArray(layers[0], layers) !== -1) {
+            return layers[elemLayers[0]]
         } else {
-            return layers[0]
+            return layers["mod"];
         }
     }
 
@@ -263,7 +280,7 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
             "stroke-linejoin": "round"
         });
 
-        layers[getSetFromLayers(e.layers.values)].push(padElem);
+        getSetFromLayers(e.layers.values).push(padElem);
         layers.overlay.push(textElem);
 
         if (e.drill && e.class !== "np_thru_hole") {
@@ -284,7 +301,7 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
             "stroke-width" : width,
             "stroke-linecap": "round"};
 
-         layers[getSetFromLayers([e.layer.value])].push(
+         getSetFromLayers([e.layer.value]).push(
             paper.path("M" + e.start.x + "," + e.start.y
                         + "L" + e.end.x + "," + e.end.y).attr(options)
         );
@@ -301,7 +318,7 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
         var r = Math.pow(e.center.x - e.end.x, 2) + Math.pow(e.center.y - e.end.y, 2);
         r = Math.sqrt(r);
 
-        layers[getSetFromLayers([e.layer.value])].push(
+        getSetFromLayers([e.layer.value]).push(
             paper.circle(e.center.x, e.center.y, r).attr(options)
         );
     }
@@ -491,6 +508,10 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
     };
 
     var onRepaint = function (pos, scale) {
+
+        if (!fp.at)
+            return;
+
         var options = {
             fill: "none",
             stroke: "blue",
@@ -530,6 +551,7 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
         }
     };
 
+    var typingTimer;
     var makeBindings = function () {
         $("#fplib").change( function() {
             onChooseFPLib($(this))
@@ -540,10 +562,12 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
         });
 
         $('#fetch-libraries').click( function() {
-            getTable(null);
+            getTable();
         });
 
          Libree.setupToggleButton("#mode-select", modeChanged);
+
+         Libree.doneTyping("#fp-text", typingTimer, 500, renderFootprintFromManualInput);
     };
 
     $( document ).ready(function () {
@@ -551,6 +575,8 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
         makeBindings();
         refreshCanvas();
 
+        // default action on load: try to silently load the
+        // KiCad github libs
         Github.executeIfNoAuthRequired( function() {
             getTable();
         });

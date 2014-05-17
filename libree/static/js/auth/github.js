@@ -49,7 +49,11 @@ define(["jquery","github", "bootbox"], function($, Github, Bootbox) {
         return github;
     }
 
-    Github.instance = null;
+    var instance = null;
+
+    Github.getInstance = function () {
+        return this.instance;
+    }
 
     Github.executeIfNoAuthRequired = function (cb) {
 
@@ -105,19 +109,17 @@ LibrEE server does not see your Github credentials.",
             preAuthOriginUri:  window.location.pathname,
             scope: "public_repo",
             state: $.RandString(20),
-            returnTo: "tool/kicad_viewer",
-            redirectUri: "http://localhost:8000/auth/github", //TODO fix hardcoded url
+            redirectUri: "/auth/github", //TODO fix hardcoded url
             clientId: "784a03d1cbb34b2a25c2" //TODO put this in settings
         };
 
         localStorage.setItem("auth.github", JSON.stringify(githubAuth));
 
-        uri = "https://github.com/login/oauth/authorize?" +
+        var uri = "https://github.com/login/oauth/authorize?" +
             "client_id=" + githubAuth.clientId +
             "&state=" + githubAuth.state +
-            "&redirect_uri=" + githubAuth.redirectUri +
+            "&redirect_uri=http://" + window.location.host + githubAuth.redirectUri +
             "&scope=" + githubAuth.scope;
-
         // go to the github auth endpoint
         window.open(uri, '_blank');
     };

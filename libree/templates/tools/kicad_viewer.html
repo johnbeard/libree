@@ -10,8 +10,12 @@
 	text-align: center;
 	margin: 0 auto;
 }
-.menubar {
-	margin-bottom: 10px;
+
+.input-group,
+select,
+.divider,
+textarea {
+	margin-top: 10px;
 }
 {% endblock %}
 
@@ -51,6 +55,15 @@
 							<input type="text" class="form-control main-input" id="fplt-gh-repo"
 								value="kicad-library"
 							/>
+							<!--
+							<div class="input-group-btn">
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu pull-right">
+									<li><a href="#">kicad-library</a></li>
+								</ul>
+							</div>--><!-- /btn-group -->
 						</div>
 					</div>
 					<div class="col-md-4">
@@ -89,13 +102,20 @@
 KIGITHUB=https://github.com/KiCad</textarea>
 			</div>
 		</div>
+		<div class="row" style="text-align:center;">
+			<div class="col-md-12">
+				<table width="100%" class="divider">
+					<td><hr /></td>
+					<td style="width:1px; padding: 0 10px; white-space: nowrap;">
+						<button class="btn btn-primary" id="fetch-libraries">
+							Fetch libraries
+						</button>
+					</td>
+					<td><hr /></td>
+				</table>
+			</div>
+		</div>
 	</div>
-	<div class="row" style="text-align:center;">
-		<button class="btn btn-primary" id="fetch-libraries">
-			Fetch libraries
-		</button>
-	</div>
-	<hr>
 	<div class="row" id="fplib-select-area">
 		<div class="col-md-3">
 			Footprint library:
@@ -114,7 +134,9 @@ KIGITHUB=https://github.com/KiCad</textarea>
 		<div class="col-md-9 hidden" id="fp-text-area">
 			<textarea class="form-control main-input" rows=5 id="fp-text">
 (module
-  (pad)
+  Example
+  (at 0 0)
+  (pad 1 thru_hole circle (at 0 0) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS))
 )</textarea>
 		</div>
 	</div>
