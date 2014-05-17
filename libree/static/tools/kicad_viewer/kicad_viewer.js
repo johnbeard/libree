@@ -437,6 +437,15 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
     var layerList = ["grid", "origin", "B.SilkS", "B.Adhes", "B.Cu", "mod",
                     "F.Cu", "drills", "F.Mask", "F.Paste", "F.Adhes", "F.SilkS", "Edge.Cuts", "overlay"];
 
+    var attemptToRenderElement = function (elem, renderer) {
+        try {
+            renderer(elem);
+        } catch (e) {
+            console.log("Malformed footprint");
+            // do nothing, it's probably malformed
+        }
+    }
+
     var renderFootprint = function (text) {
 
         refreshCanvas();
@@ -446,12 +455,13 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
         for (var type in elementRenderers) {
 
             if (type in fp) {
+                var renderer = elementRenderers[type];
 
                 if (singleElements.indexOf(type) > -1) {
-                    elementRenderers[type](fp[type]);
+                    attemptToRenderElement(fp[type], renderer);
                 } else {
                     for (var j = 0; j < fp[type].length; j++) {
-                        elementRenderers[type](fp[type][j]);
+                        attemptToRenderElement(fp[type][j], renderer);
                     }
                 }
             }
@@ -478,19 +488,19 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
 
     var rescaleView = function () {
 
-        //everythingSet.transform("t" + canvasSize/2 + "," + canvasSize/2 + "...");
-
         var bbox = everythingSet.getBBox();
 
         var cx = bbox.x + bbox.width / 2;
         var cy = bbox.y + bbox.height / 2;
 
+        if (isNaN(cx) || isNaN(cy)) {
+            return;
+        }
+
         var maxDim = Math.max(bbox.width, bbox.height);
 
         var zoomSteps = 100;
-
         var margin = 0.1;
-
         var scale = (1 + 2 * margin) * maxDim / (canvasSize);
 
         panZoom = paper.panzoom({
