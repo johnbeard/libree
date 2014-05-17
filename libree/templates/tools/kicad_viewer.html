@@ -12,7 +12,8 @@
 }
 
 .input-row {
-	padding-bottom: 10px;
+	padding-bottom: 5px;
+	padding-top: 5px;
 }
 {% endblock %}
 
@@ -141,3 +142,26 @@ KIGITHUB=https://github.com/KiCad</textarea>
 {% endblock %}
 
 
+{% block help %}
+
+<p>
+Select the source of the foorprint in the <span data-target="mode-select" class="help-hint">menubar</span>:
+</p>
+<ul>
+	<li>Github-based fp-lib-table of Github libraries</li>
+	<li>Direct entry of an fp-lib-table of Github libraries</li>
+	<li>Direct footprint entry</li>
+</ul>
+
+<p>
+Select the relevant library table <span data-target="fplt-input-container" class="help-hint">form</span>.
+</p>
+
+<p>
+If using a library table, select the <span data-target="fplib-select-area" class="help-hint">library</span> and the <span data-target="fp-select-area" class="help-hint">footprint</span>, or the relvant other fields.
+</p>
+
+<p>
+The footprint will be rendered in the  <span data-target="view_container" class="help-hint">drawing area</span> below the form
+</p>
+{% endblock %}
