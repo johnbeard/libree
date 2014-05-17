@@ -33,58 +33,58 @@ define(["sexpression"], function(SExp) {
         }
 
         return libraries;
-    }
+    };
 
     var parseText = function (s, obj)
     {
         var i = 1;
-        obj["class"] = s[i++].name;
-        obj["text"] = (s[i] instanceof SExp.Symbol) ? s[i++].name : s[i++];
-        obj["text"] = obj["text"].toString();
+        obj.class = s[i++].name;
+        obj.text = (s[i] instanceof SExp.Symbol) ? s[i++].name : s[i++];
+        obj.text = obj.text.toString();
         return i;
-    }
+    };
 
     var parseModule = function (s, obj) {
-        var i = 1
-        obj["name"] = s[i++].name;
+        var i = 1;
+        obj.name = s[i++].name;
 
         return i;
-    }
+    };
 
     var parseCoords = function (s, obj) {
-        var i = 1
-        obj["x"] = s[i++];
-        obj["y"] = s[i++];
+        var i = 1;
+        obj.x = s[i++];
+        obj.y = s[i++];
 
-        obj["rot"] = (s.length >= i) ? s[i++] : 0;
+        obj.rot = (s.length >= i) ? s[i++] : 0;
 
         return i;
-    }
+    };
 
     var parseValue = function (s, obj) {
         var i = 1;
-        obj["value"] = s[i++];
+        obj.value = s[i++];
         return i;
-    }
+    };
 
     var parseIdentifier = function (s, obj) {
         var i = 1;
-        obj["value"] = s[i++].name;
+        obj.value = s[i++].name;
         return i;
-    }
+    };
 
     var parseNone = function (s, obj) {
         return 1;
-    }
+    };
 
     var parsePad = function (s, obj)
     {
         var i = 1;
-        obj["num"] = (s[i] instanceof SExp.Symbol) ? s[i++].name : s[i++];
-        obj["class"] = s[i++].name;
-        obj["shape"] = s[i++].name;
+        obj.num = (s[i] instanceof SExp.Symbol) ? s[i++].name : s[i++];
+        obj.class = s[i++].name;
+        obj.shape = s[i++].name;
         return i;
-    }
+    };
 
     var parseArray = function (s, obj) {
         var i = 1;
@@ -92,11 +92,11 @@ define(["sexpression"], function(SExp) {
         obj.values = [];
 
         while (i < s.length) {
-            obj["values"].push((s[i] instanceof SExp.Symbol) ? s[i].name : s[i]);
+            obj.values.push((s[i] instanceof SExp.Symbol) ? s[i].name : s[i]);
             i++;
         }
         return i;
-    }
+    };
 
     var parsers = {
         "module" : {
@@ -135,8 +135,7 @@ define(["sexpression"], function(SExp) {
     var multipleElements = {
         "module": ["fp_line", "fp_text", "pad", "fp_circle"],
         "fp_lib_table": ["lib"]
-    }
-
+    };
 
     var parsePart = function(s, topType) {
         var sexpType = s[0].name;
@@ -169,9 +168,8 @@ define(["sexpression"], function(SExp) {
                 }
             }
         }
-
         return obj;
-    }
+    };
 
     FPS.prototype.parseFootprint = function (text)
     {
@@ -180,7 +178,7 @@ define(["sexpression"], function(SExp) {
         var fpObj = parsePart(data);
 
         return fpObj;
-    }
+    };
 
     return FPS;
 });

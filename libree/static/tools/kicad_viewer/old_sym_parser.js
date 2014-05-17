@@ -4,9 +4,7 @@ define([], function($, SExp) {
 
     SYM.parseSymbol = function (text) {
 
-
-
-    }
+    };
 
     return SYM;
 });
