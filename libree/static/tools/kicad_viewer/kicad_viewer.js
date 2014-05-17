@@ -433,7 +433,7 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
     var label;
     var fontHeight;
     var everythingSet;
-    var canvasSize = 500;
+    var canvasSize = 650;
     var panZoom, fp;
 
     var layerList = ["grid", "origin", "B.SilkS", "B.Adhes", "B.Cu", "mod",

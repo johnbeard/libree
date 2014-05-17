@@ -1,6 +1,7 @@
 define(["sexpression"], function(SExp) {
+    "use strict";
 
-    FPS = function () {};
+    var FPS = function () {};
 
     FPS.prototype.getLibrariesFromFpTable = function (table, substitutions) {
         var parsed = SExp.parse(table);
