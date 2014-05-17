@@ -217,7 +217,8 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
         } else if (e.shape == "circle") {
             padElem = paper.circle(e.at.x, e.at.y, e.size.x/2);
         } else if (e.shape == "oval") {
-            padElem = paper.rect(e.at.x - e.size.x/2, e.at.y - e.size.y/2, e.size.x, e.size.y, e.size.y/2);
+            var round = Math.min(e.size.x, e.size.y) / 2;
+            padElem = paper.rect(e.at.x - e.size.x/2, e.at.y - e.size.y/2, e.size.x, e.size.y, round);
         } else if (e.shape == "trapezoid") {
             var size = {'t': e.size.x, 'r': e.size.y, 'b': e.size.x, 'l': e.size.y};
 
