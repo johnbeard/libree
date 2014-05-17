@@ -185,7 +185,7 @@ define(["raphael", "jquery", "./fp_parser", "./kicad_hershey", "../../js/auth/gi
     var getSetFromLayers = function (elemLayers) {
         if ($.inArray("*.Cu", elemLayers) !== -1) {
             return layers["F.Cu"];
-        } else if ($.inArray(layers[0], layers) !== -1) {
+        } else if ($.inArray(elemLayers[0], layerList) !== -1) {
             return layers[elemLayers[0]];
         } else {
             return layers.mod;
