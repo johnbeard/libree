@@ -11,18 +11,15 @@
 	margin: 0 auto;
 }
 
-.input-group,
-select,
-.divider,
-textarea {
-	margin-top: 10px;
+.input-row {
+	padding-bottom: 10px;
 }
 {% endblock %}
 
 {% block toolcontent %}
 
 <div class="feature-container container fixed-width text">
-	<div class="row">
+	<div class="row input-row">
 		<div class="menubar">
 			<div id="mode-select" class="btn-group">
 				<button class="btn btn-default active" id="input-fplt-gh">fp-lib-table (Github)
@@ -35,54 +32,46 @@ textarea {
 		</div>
 	</div>
 	<div id="fplt-input-container">
-		<div class="row">
+		<div class="row input-row">
 			<div class="col-md-3">
 				Footprint library table:
 			</div>
 			<div class="col-md-9" id="fplt-url-area">
-				<div class="row">
-					<div class="col-md-4">
-						<div class="input-group">
-							<span class="input-group-addon">Owner</span>
-							<input type="text" class="form-control main-input" id="fplt-gh-owner"
-								value="KiCad"
-							/>
-						</div>
+				<div class="row input-row">
+					<div class="col-md-4 input-group">
+						<span class="input-group-addon">Owner</span>
+						<input type="text" class="form-control main-input" id="fplt-gh-owner"
+							value="KiCad"
+						/>
 					</div>
-					<div class="col-md-4">
-						<div class="input-group">
-							<span class="input-group-addon">Repo</span>
-							<input type="text" class="form-control main-input" id="fplt-gh-repo"
-								value="kicad-library"
-							/>
-							<!--
-							<div class="input-group-btn">
-								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-									<span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu pull-right">
-									<li><a href="#">kicad-library</a></li>
-								</ul>
-							</div>--><!-- /btn-group -->
-						</div>
+					<div class="col-md-4 input-group">
+						<span class="input-group-addon">Repo</span>
+						<input type="text" class="form-control main-input" id="fplt-gh-repo"
+							value="kicad-library"
+						/>
+						<!--
+						<div class="input-group-btn">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu pull-right">
+								<li><a href="#">kicad-library</a></li>
+							</ul>
+						</div>--><!-- /btn-group -->
 					</div>
-					<div class="col-md-4">
-						<div class="input-group">
-							<span class="input-group-addon">Branch</span>
-							<input type="text" class="form-control main-input" id="fplt-gh-branch"
-								value="master"
-							/>
-						</div>
+					<div class="col-md-4 input-group">
+						<span class="input-group-addon">Branch</span>
+						<input type="text" class="form-control main-input" id="fplt-gh-branch"
+							value="master"
+						/>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-12">
-						<div class="input-group">
-							<span class="input-group-addon">Path</span>
-							<input type="text" class="form-control main-input" id="fplt-gh-path"
-								value="template/fp-lib-table.for-github"
-							/>
-						</div>
+					<div class="col-md-12 input-group">
+						<span class="input-group-addon">Path</span>
+						<input type="text" class="form-control main-input" id="fplt-gh-path"
+							value="template/fp-lib-table.for-github"
+						/>
 					</div>
 				</div>
 			</div>
@@ -93,7 +82,7 @@ textarea {
 )</textarea>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row input-row">
 			<div class="col-md-3">
 				Library table substitutions:
 			</div>
@@ -102,7 +91,7 @@ textarea {
 KIGITHUB=https://github.com/KiCad</textarea>
 			</div>
 		</div>
-		<div class="row" style="text-align:center;">
+		<div class="row input-row" style="text-align:center;">
 			<div class="col-md-12">
 				<table width="100%" class="divider">
 					<td><hr /></td>
@@ -116,7 +105,7 @@ KIGITHUB=https://github.com/KiCad</textarea>
 			</div>
 		</div>
 	</div>
-	<div class="row" id="fplib-select-area">
+	<div class="row input-row" id="fplib-select-area">
 		<div class="col-md-3">
 			Footprint library:
 		</div>
@@ -124,7 +113,7 @@ KIGITHUB=https://github.com/KiCad</textarea>
 			<select id="fplib" class="form-control main-input"></select>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row input-row">
 		<div class="col-md-3">
 			Footprint:
 		</div>
