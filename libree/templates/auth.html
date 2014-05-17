@@ -9,7 +9,7 @@
 <div class="hero-unit" id="tool-heading">
     <div class="row">
         <div class="col-md-2" style="text-align:center;">
-
+            <img src="{{ STATIC_URL }}icons/auth-48.svg"/>
         </div>
         <div class="col-md-10" style="position:relative">
             Authentication: {{ authId }}
@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block content %}
-Authenticating with {{ authId }}.
+Authenticating with {{ authId }}. Please wait, you will be redirected back to the page you came from shortly.
 {% endblock %}
 
 
