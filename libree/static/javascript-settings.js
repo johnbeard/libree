@@ -1,0 +1,1 @@
+var configuration = {"libree": {"github": {"clientId": "784a03d1cbb34b2a25c2"}}};

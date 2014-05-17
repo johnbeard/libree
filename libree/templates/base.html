@@ -4,13 +4,14 @@
 {% load settings %}
 {% load render_tools %}
 {% load require_config %}
+{% load javascript_settings_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<title>{% block title %}LibrEE{% endblock %}</title>
-	
+
 	<link rel="shortcut icon" href="{% static 'icons/libree-16.ico' %}">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +19,9 @@
 	<link href="{% cdn 'bootstrap.css' %}" rel="stylesheet" media="screen">
 	<link href="{% static 'css/bootstrap-theme.css' %}" rel="stylesheet" media="screen">
 	<link href="{% static 'css/libree.css' %}" rel="stylesheet" media="screen">
-	
+
+	<script type="text/javascript">{% javascript_settings %}</script>
+
 	<style>
 	{% block pagestyle %}
 	{% endblock %}
@@ -46,13 +49,13 @@
 
 	<script>
 		{# Global require config #}
-		{% require_config %} 
-		
+		{% require_config %}
+
 		{# Load core scripts, along with any page scripts #}
 		require(["jquery.bootstrap"], function() {
 			{% block page_script %}{% endblock %}
 		});
 	</script>
-	
+
 </body>
 </html>

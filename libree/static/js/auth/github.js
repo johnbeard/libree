@@ -109,8 +109,8 @@ LibrEE server does not see your Github credentials.",
             preAuthOriginUri:  window.location.pathname,
             scope: "public_repo",
             state: $.RandString(20),
-            redirectUri: "/auth/github", //TODO fix hardcoded url
-            clientId: "784a03d1cbb34b2a25c2" //TODO put this in settings
+            redirectUri: "/auth/github",
+            clientId: configuration.libree.github.clientId,
         };
 
         localStorage.setItem("auth.github", JSON.stringify(githubAuth));

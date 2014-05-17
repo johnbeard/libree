@@ -57,6 +57,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'javascript_settings.finders.JavascriptSettingsFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
@@ -97,6 +98,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'javascript_settings',
     'libree',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
@@ -125,7 +127,7 @@ LOGGING = {
             'format': '%(levelname)s %(message)s'
         },
     },
-    
+
     'handlers': {
         'mail_admins': {
             'level': 'WARNING',
@@ -139,7 +141,7 @@ LOGGING = {
             'formatter': 'simple'
         }
     },
-    
+
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
