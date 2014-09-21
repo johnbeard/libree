@@ -1,0 +1,34 @@
+
+{% extends "tool.html" %}
+
+{% load render_tools %}
+
+{% block pagestyle %}
+{% endblock %}
+
+{% block toolcontent %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8" id="graphs">
+            Freq response
+            <div id="freq-resp" style="width:100%; height:200px;"></div>
+            <div id="imp-resp"></div>
+            <div id="pz-plot"></div>
+        </div>
+        <div class="col-md-4" id="settings">
+            Filter type:
+            <select class="form-control" id="filter-type">
+                <option value="butter_lp">Butterworth low-pass</option>
+                <option value="butter_hp">Butterworth high-pass</option>
+            </select>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block help %}
+<p>
+Enter filter parameters into the <span data-target="settings" class="help-hint">settings panel</span> on the right.
+</p>
+{% endblock %}

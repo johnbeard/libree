@@ -139,6 +139,17 @@ registry['kicad_viewer'] = {
     "scripts": {}
 }
 
+registry['filters'] = {
+    "description":"View frequency response, impulse response and effect of various filters.",
+    "title": "Filter simulator",
+    "template": "tools/filters.html",
+    "icon": "kicad.png",
+    "tags": ["viewer"],
+    "categories": ['electronics'],
+    "scripts": {}
+}
+
+
 """
 registry['ltc'] = {
     "description":"Linear timecode encoder/decoder",
